@@ -585,7 +585,46 @@
   .wm-progress { display: none; align-items: center; gap: 10px; margin-top: 12px; padding: 12px 14px; background: rgba(212,175,55,0.08); border: 1px solid var(--gold); border-radius: 10px; }
   .wm-progress.show { display: flex; }
   .wm-progress-text { flex: 1; color: var(--gold); font-size: 13px; font-weight: 600; }
-  .wm-progress-pct { color: var(--gold); font-size: 13px; font-weight: 700; }
+  /* ============ MODAL TÉMOIGNAGES ============ */
+  .temo-modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.92); backdrop-filter: blur(10px); z-index: 9997; display: none; align-items: flex-start; justify-content: center; padding: 40px 16px; overflow-y: auto; }
+  .temo-modal-overlay.open { display: flex; animation: fmFadeIn 0.3s ease; }
+  .temo-modal { background: linear-gradient(180deg, #1a1a1a, #0a0a0a); border: 1px solid var(--gold); border-radius: 20px; max-width: 560px; width: 100%; padding: 28px 26px 30px; box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 60px rgba(212,175,55,0.18); position: relative; animation: fmSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+  .tm-slide { display: none; }
+  .tm-slide.active { display: block; animation: fmSlideIn 0.3s ease; }
+
+  /* RATING STARS (sélection) */
+  .tm-rating-wrap { text-align: center; margin: 18px 0 14px; padding: 18px 14px; background: rgba(212,175,55,0.04); border: 1px solid rgba(212,175,55,0.2); border-radius: 14px; }
+  .tm-rating-label { color: var(--gold); font-size: 11px; letter-spacing: 3px; font-weight: 700; margin-bottom: 12px; text-transform: uppercase; }
+  .tm-rating-stars { display: flex; justify-content: center; gap: 8px; margin-bottom: 8px; }
+  .tm-star { font-size: 38px; cursor: pointer; color: rgba(212,175,55,0.25); transition: color 0.15s, transform 0.15s; user-select: none; line-height: 1; }
+  .tm-star:hover { transform: scale(1.15); }
+  .tm-star.active { color: var(--gold); text-shadow: 0 0 12px rgba(212,175,55,0.6); }
+  .tm-rating-hint { color: var(--smoke); font-size: 11px; font-style: italic; min-height: 16px; }
+  .tm-rating-hint.set { color: var(--gold-pale); }
+
+  /* TEXTAREA témoignage */
+  .tm-textarea { width: 100%; background: rgba(0,0,0,0.55); border: 1px solid rgba(212,175,55,0.3); color: var(--cream); padding: 12px 14px; border-radius: 10px; font-family: inherit; font-size: 14px; outline: none; transition: border-color 0.2s, box-shadow 0.2s; min-height: 100px; resize: vertical; line-height: 1.5; }
+  .tm-textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212,175,55,0.12); }
+  .tm-textarea::placeholder { color: var(--smoke); font-style: italic; }
+  .tm-textarea-count { display: flex; justify-content: space-between; margin-top: 6px; font-size: 11px; color: var(--smoke); }
+  .tm-textarea-count .ok { color: #10b981; }
+  .tm-textarea-count .warn { color: #ff8a73; }
+
+  /* LISTE COMPLÈTE TÉMOIGNAGES (modal "Voir tous") */
+  .tm-all-list { max-height: 60vh; overflow-y: auto; padding: 4px; scrollbar-width: thin; scrollbar-color: var(--gold) rgba(212,175,55,0.08); }
+  .tm-all-list::-webkit-scrollbar { width: 6px; }
+  .tm-all-list::-webkit-scrollbar-track { background: rgba(212,175,55,0.08); border-radius: 3px; }
+  .tm-all-list::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+  .tm-all-empty { padding: 30px 16px; text-align: center; color: var(--smoke); font-size: 13px; font-style: italic; }
+  .tm-all-stats { display: flex; justify-content: center; align-items: center; gap: 16px; padding: 10px; background: rgba(212,175,55,0.06); border-radius: 10px; margin-bottom: 14px; font-size: 13px; }
+  .tm-all-stats strong { color: var(--gold); }
+
+  /* SUCCÈS */
+  .tm-success { text-align: center; padding: 20px 0 10px; }
+  .tm-success-icon { font-size: 56px; margin-bottom: 16px; animation: fmBounce 0.6s ease; }
+  .tm-success-title { font-family: var(--serif); color: var(--cream); font-size: 24px; font-weight: 500; margin-bottom: 12px; letter-spacing: 1px; }
+  .tm-success-text { color: var(--cream); font-size: 14px; line-height: 1.6; margin-bottom: 18px; opacity: 0.9; }
+  .tm-success-text strong { color: var(--gold); }
 </style>
 </head>
 <body>
@@ -713,36 +752,38 @@
     <div class="fan-card">
       <div class="fan-card-title" style="margin-bottom: 16px;">Ce qu'ils en disent</div>
 
-      <div class="review-bubble">
-        <div class="review-stars">★★★★★</div>
-        <div class="review-text">« Un super hommage à Freddie, j'en ai eu les larmes aux yeux. Vous êtes tous merveilleux. »</div>
-        <div class="review-meta">
-          <span class="review-author">Béatrice G.</span>
-          <span class="review-location">Angers · 2024</span>
+      <div id="temoignagesList">
+        <!-- Témoignages chargés dynamiquement depuis Supabase -->
+        <!-- Fallback si pas de connexion : 3 témoignages statiques -->
+        <div class="review-bubble">
+          <div class="review-stars">★★★★★</div>
+          <div class="review-text">« Un super hommage à Freddie, j'en ai eu les larmes aux yeux. Vous êtes tous merveilleux. »</div>
+          <div class="review-meta">
+            <span class="review-author">Béatrice G.</span>
+            <span class="review-location">Angers · 2024</span>
+          </div>
         </div>
-      </div>
-
-      <div class="review-bubble">
-        <div class="review-stars">★★★★★</div>
-        <div class="review-text">« Sans aucun doute, le meilleur du meilleur des hommages à notre cher Freddy. Quel spectacle, quelle émotion ! »</div>
-        <div class="review-meta">
-          <span class="review-author">Lauren P.</span>
-          <span class="review-location">Dôme de Paris · 2025</span>
+        <div class="review-bubble">
+          <div class="review-stars">★★★★★</div>
+          <div class="review-text">« Sans aucun doute, le meilleur du meilleur des hommages à notre cher Freddy. Quel spectacle, quelle émotion ! »</div>
+          <div class="review-meta">
+            <span class="review-author">Lauren P.</span>
+            <span class="review-location">Dôme de Paris · 2025</span>
+          </div>
         </div>
-      </div>
-
-      <div class="review-bubble">
-        <div class="review-stars">★★★★★</div>
-        <div class="review-text">« Vu à Caen, j'ai adoré. Love of My Life, Barcelona magnifique. J'en ai eu des frissons ! »</div>
-        <div class="review-meta">
-          <span class="review-author">Steliahuor</span>
-          <span class="review-location">Caen · 2024</span>
+        <div class="review-bubble">
+          <div class="review-stars">★★★★★</div>
+          <div class="review-text">« Vu à Caen, j'ai adoré. Love of My Life, Barcelona magnifique. J'en ai eu des frissons ! »</div>
+          <div class="review-meta">
+            <span class="review-author">Steliahuor</span>
+            <span class="review-location">Caen · 2024</span>
+          </div>
         </div>
       </div>
 
       <div class="review-actions">
-        <a href="https://app.theworldofqueen.com" target="_blank" class="btn-secondary">✨ Voir tous les avis</a>
-        <a href="https://app.theworldofqueen.com" target="_blank" class="btn-secondary">💬 Laisser mon avis</a>
+        <button type="button" class="btn-secondary" onclick="openAllTemoignagesModal()">✨ Voir tous les avis</button>
+        <button type="button" class="btn-secondary" onclick="openTemoignageModal()">💬 Laisser mon avis</button>
       </div>
     </div>
 
@@ -915,6 +956,208 @@
 
   function escapeHtml(s) {
     return String(s).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  }
+
+  // ============ TÉMOIGNAGES ============
+  let TEMO_RATING = 0;
+
+  // Charge les témoignages validés au load de la page
+  async function loadTemoignages() {
+    const container = document.getElementById('temoignagesList');
+    if (!container) return;
+    try {
+      const res = await fetch(`https://nhxqcavianozskxgfcbt.supabase.co/rest/v1/public_temoignages_fans?select=*&order=created_at.desc&limit=3`, {
+        headers: {
+          'apikey': 'sb_publishable_59Pg7368sxCT6y3j9nNw0g_i8ILGRZ3',
+          'Authorization': 'Bearer sb_publishable_59Pg7368sxCT6y3j9nNw0g_i8ILGRZ3'
+        }
+      });
+      if (!res.ok) { console.warn('[Temoignages] HTTP', res.status); return; }
+      const data = await res.json();
+      if (!data || data.length === 0) { console.log('[Temoignages] Aucun témoignage validé — fallback statique conservé'); return; }
+      // Remplacer le contenu par les vrais témoignages
+      container.innerHTML = data.map(t => {
+        const stars = '★'.repeat(Math.max(1, Math.min(5, t.note || 5)));
+        const dotStars = '★★★★★'.substring(stars.length).replace(/★/g, '☆');
+        const author = `${escapeHtml(t.prenom || '')}${t.initiale_nom ? ' ' + escapeHtml(t.initiale_nom) + '.' : ''}`;
+        const year = t.created_at ? new Date(t.created_at).getFullYear() : '';
+        const location = t.ville_concert ? `${escapeHtml(t.ville_concert)}${year ? ' · ' + year : ''}` : (year || '');
+        return `
+          <div class="review-bubble">
+            <div class="review-stars">${stars}<span style="color: rgba(212,175,55,0.25);">${dotStars}</span></div>
+            <div class="review-text">« ${escapeHtml(t.texte || '')} »</div>
+            <div class="review-meta">
+              <span class="review-author">${author}</span>
+              <span class="review-location">${location}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    } catch (e) { console.warn('[Temoignages]', e); }
+  }
+
+  // ===== MODAL LAISSER UN AVIS =====
+  function openTemoignageModal() {
+    document.getElementById('temoModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    tmGoToSlide('form');
+    setRating(0);
+    updateTemoCount();
+  }
+  function closeTemoModal() {
+    document.getElementById('temoModal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function tmGoToSlide(slideName) {
+    document.querySelectorAll('#temoModal .tm-slide').forEach(el => el.classList.remove('active'));
+    const target = document.querySelector(`#temoModal .tm-slide[data-tslide="${slideName}"]`);
+    if (target) target.classList.add('active');
+  }
+  function setRating(n) {
+    TEMO_RATING = n;
+    const stars = document.querySelectorAll('#tmStars .tm-star');
+    stars.forEach((s, i) => {
+      if (i < n) s.classList.add('active');
+      else s.classList.remove('active');
+    });
+    const hint = document.getElementById('tmRatingHint');
+    if (!hint) return;
+    const labels = ['Clique sur les étoiles pour donner ta note', '1 étoile — Décevant', '2 étoiles — Mitigé', '3 étoiles — Correct', '4 étoiles — Très bien', '5 étoiles — Excellent ! 🔥'];
+    hint.textContent = labels[n] || labels[0];
+    if (n > 0) hint.classList.add('set');
+    else hint.classList.remove('set');
+  }
+  function updateTemoCount() {
+    const txt = document.getElementById('tmTexte').value;
+    const count = txt.length;
+    document.getElementById('tmCount').textContent = count;
+    const status = document.getElementById('tmCountStatus');
+    if (count < 30) {
+      status.textContent = `Encore ${30 - count} caractère${30 - count > 1 ? 's' : ''} minimum`;
+      status.className = 'warn';
+    } else if (count > 450) {
+      status.textContent = `${500 - count} restants`;
+      status.className = 'warn';
+    } else {
+      status.textContent = '✓ Longueur OK';
+      status.className = 'ok';
+    }
+  }
+  async function submitTemoForm() {
+    const prenom = document.getElementById('tmPrenom').value.trim();
+    const email = document.getElementById('tmEmail').value.trim().toLowerCase();
+    const texte = document.getElementById('tmTexte').value.trim();
+    const publish = document.getElementById('tmPublish').checked;
+    const err = document.getElementById('tmError');
+    err.classList.remove('show'); err.textContent = '';
+
+    if (TEMO_RATING < 1) { err.textContent = '⚠️ Donne une note en cliquant sur les étoiles.'; err.classList.add('show'); return; }
+    if (!prenom) { err.textContent = '⚠️ Merci d\'indiquer ton prénom.'; err.classList.add('show'); return; }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err.textContent = '⚠️ Email invalide.'; err.classList.add('show'); return; }
+    if (texte.length < 30) { err.textContent = '⚠️ Témoignage trop court (minimum 30 caractères).'; err.classList.add('show'); return; }
+    if (!publish) { err.textContent = '⚠️ Tu dois autoriser la publication de ton avis.'; err.classList.add('show'); return; }
+
+    const btn = document.getElementById('tmSubmitBtn');
+    const txt = document.getElementById('tmSubmitText');
+    const loading = document.getElementById('tmLoading');
+    btn.disabled = true; txt.style.display = 'none'; loading.classList.add('show');
+
+    const payload = {
+      prenom: prenom,
+      nom: document.getElementById('tmNom').value.trim() || null,
+      email: email,
+      note: TEMO_RATING,
+      texte: texte,
+      ville_concert: document.getElementById('tmVille').value.trim() || null,
+      statut: 'en_attente',
+      source: 'site_web'
+    };
+
+    try {
+      const res = await fetch('https://nhxqcavianozskxgfcbt.supabase.co/rest/v1/temoignages_fans', {
+        method: 'POST',
+        headers: {
+          'apikey': 'sb_publishable_59Pg7368sxCT6y3j9nNw0g_i8ILGRZ3',
+          'Authorization': 'Bearer sb_publishable_59Pg7368sxCT6y3j9nNw0g_i8ILGRZ3',
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) {
+        const t = await res.text();
+        console.warn('[Temoignage] HTTP', res.status, t);
+        err.textContent = '⚠️ Erreur lors de l\'envoi. Réessaie.';
+        err.classList.add('show');
+        btn.disabled = false; txt.style.display = ''; loading.classList.remove('show');
+        return;
+      }
+      console.log('[Temoignage] OK');
+      document.getElementById('tmSuccessName').textContent = prenom + ' !';
+      tmGoToSlide('success');
+    } catch (e) {
+      console.error('[Temoignage]', e);
+      err.textContent = '⚠️ Problème de connexion. Réessaie.';
+      err.classList.add('show');
+      btn.disabled = false; txt.style.display = ''; loading.classList.remove('show');
+    }
+  }
+
+  // ===== MODAL "VOIR TOUS LES AVIS" =====
+  function openAllTemoignagesModal() {
+    document.getElementById('allTemoModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    loadAllTemoignages();
+  }
+  function closeAllTemoignagesModal() {
+    document.getElementById('allTemoModal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  async function loadAllTemoignages() {
+    const list = document.getElementById('tmAllList');
+    list.innerHTML = '<div class="tm-all-empty">Chargement des avis...</div>';
+    try {
+      const res = await fetch(`https://nhxqcavianozskxgfcbt.supabase.co/rest/v1/public_temoignages_fans?select=*&order=created_at.desc&limit=200`, {
+        headers: {
+          'apikey': 'sb_publishable_59Pg7368sxCT6y3j9nNw0g_i8ILGRZ3',
+          'Authorization': 'Bearer sb_publishable_59Pg7368sxCT6y3j9nNw0g_i8ILGRZ3'
+        }
+      });
+      if (!res.ok) { list.innerHTML = '<div class="tm-all-empty">⚠️ Impossible de charger les avis pour le moment.</div>'; return; }
+      const data = await res.json();
+      if (!data || data.length === 0) {
+        list.innerHTML = '<div class="tm-all-empty">Aucun avis publié pour le moment. Sois le premier à laisser le tien ! 💬</div>';
+        return;
+      }
+      // Stats
+      const total = data.length;
+      const sum = data.reduce((acc, t) => acc + (t.note || 0), 0);
+      const avg = (sum / total).toFixed(1);
+      document.getElementById('tmAllTotal').textContent = total;
+      document.getElementById('tmAllAvg').textContent = avg;
+      document.getElementById('tmAllStats').style.display = 'flex';
+      // Liste
+      list.innerHTML = data.map(t => {
+        const stars = '★'.repeat(Math.max(1, Math.min(5, t.note || 5)));
+        const dotStars = '★★★★★'.substring(stars.length).replace(/★/g, '☆');
+        const author = `${escapeHtml(t.prenom || '')}${t.initiale_nom ? ' ' + escapeHtml(t.initiale_nom) + '.' : ''}`;
+        const year = t.created_at ? new Date(t.created_at).getFullYear() : '';
+        const location = t.ville_concert ? `${escapeHtml(t.ville_concert)}${year ? ' · ' + year : ''}` : (year || '');
+        return `
+          <div class="review-bubble">
+            <div class="review-stars">${stars}<span style="color: rgba(212,175,55,0.25);">${dotStars}</span></div>
+            <div class="review-text">« ${escapeHtml(t.texte || '')} »</div>
+            <div class="review-meta">
+              <span class="review-author">${author}</span>
+              <span class="review-location">${location}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    } catch (e) {
+      console.error('[All Temoignages]', e);
+      list.innerHTML = '<div class="tm-all-empty">⚠️ Erreur de connexion.</div>';
+    }
   }
 
   // ============ MODAL WALL OF FANS ============
@@ -2010,6 +2253,7 @@
   generateTwinkleStars();
   renderBackstage();
   loadWallOfFans();
+  loadTemoignages();
   checkLiveConcert();
   loadContestStats();
   // ============ NEWSLETTER ============
@@ -2594,6 +2838,126 @@
       </div>
     </div>
 
+  </div>
+</div>
+
+<!-- ============ MODAL LAISSER UN AVIS ============ -->
+<div class="temo-modal-overlay" id="temoModal" onclick="if(event.target.id==='temoModal') closeTemoModal()">
+  <div class="temo-modal">
+    <button class="qm-close" onclick="closeTemoModal()" aria-label="Fermer">✕</button>
+
+    <!-- SLIDE FORM -->
+    <div class="tm-slide active" data-tslide="form">
+      <div class="fm-header">
+        <div class="fm-header-icon" style="background: linear-gradient(135deg, var(--gold), #8a7426); font-size: 28px;">⭐</div>
+        <div class="fm-header-eyebrow">LAISSE TON AVIS</div>
+        <div class="fm-header-title">Ton expérience nous intéresse</div>
+        <div class="fm-header-subtitle">Validation manuelle sous 24-48h</div>
+      </div>
+
+      <form id="temoForm" novalidate onsubmit="event.preventDefault(); submitTemoForm();">
+
+        <!-- ÉTOILES NOTATION -->
+        <div class="tm-rating-wrap">
+          <div class="tm-rating-label">TA NOTE</div>
+          <div class="tm-rating-stars" id="tmStars">
+            <span class="tm-star" data-rating="1" onclick="setRating(1)">★</span>
+            <span class="tm-star" data-rating="2" onclick="setRating(2)">★</span>
+            <span class="tm-star" data-rating="3" onclick="setRating(3)">★</span>
+            <span class="tm-star" data-rating="4" onclick="setRating(4)">★</span>
+            <span class="tm-star" data-rating="5" onclick="setRating(5)">★</span>
+          </div>
+          <div class="tm-rating-hint" id="tmRatingHint">Clique sur les étoiles pour donner ta note</div>
+        </div>
+
+        <!-- TÉMOIGNAGE -->
+        <div class="fm-row">
+          <label class="fm-label" for="tmTexte">Ton témoignage<span class="req">*</span></label>
+          <textarea class="tm-textarea" id="tmTexte" placeholder="Raconte ton expérience au concert TWOQ : émotions, moments forts, ce que tu as ressenti..." maxlength="500" oninput="updateTemoCount()"></textarea>
+          <div class="tm-textarea-count">
+            <span><span id="tmCount">0</span>/500 caractères</span>
+            <span id="tmCountStatus" class="warn">Minimum 30 caractères</span>
+          </div>
+        </div>
+
+        <!-- INFOS -->
+        <div class="fm-row two">
+          <div>
+            <label class="fm-label" for="tmPrenom">Prénom<span class="req">*</span></label>
+            <input class="fm-input" type="text" id="tmPrenom" placeholder="Marie" required />
+          </div>
+          <div>
+            <label class="fm-label" for="tmNom">Nom</label>
+            <input class="fm-input" type="text" id="tmNom" placeholder="Dupont" />
+          </div>
+        </div>
+        <div class="fm-row">
+          <label class="fm-label" for="tmEmail">Email<span class="req">*</span></label>
+          <input class="fm-input" type="email" id="tmEmail" placeholder="marie@exemple.com" required />
+        </div>
+        <div class="fm-row">
+          <label class="fm-label" for="tmVille">Lieu du concert <span style="color:var(--smoke);font-weight:400;text-transform:none;letter-spacing:0;">(ex: Dôme de Paris, Angers, Nantes...)</span></label>
+          <input class="fm-input" type="text" id="tmVille" placeholder="Dôme de Paris" />
+        </div>
+
+        <label class="fm-checkbox required" for="tmPublish">
+          <input type="checkbox" id="tmPublish" required />
+          <span class="fm-checkbox-text">
+            <strong>J'autorise la publication de mon avis</strong> sur le site et l'application TWOQ avec mon prénom (le nom est gardé privé).
+          </span>
+        </label>
+
+        <div class="fm-error" id="tmError"></div>
+
+        <div class="fm-footer">
+          <span></span>
+          <button type="submit" class="fm-btn fm-btn-primary" id="tmSubmitBtn">
+            <span id="tmSubmitText">💬 Envoyer mon avis</span>
+            <span class="fm-loading" id="tmLoading"><span class="fm-spinner"></span> Envoi...</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- SLIDE SUCCESS -->
+    <div class="tm-slide" data-tslide="success">
+      <div class="tm-success">
+        <div class="tm-success-icon">🌟</div>
+        <div class="tm-success-title">Merci pour ton avis !</div>
+        <p class="tm-success-text">Ton témoignage a bien été envoyé <strong id="tmSuccessName">!</strong> Il sera lu et publié par l'équipe dans les <strong>24-48h</strong>.</p>
+        <p style="color:var(--smoke); font-size: 12px; margin: 14px 0; font-style: italic;">
+          Tes mots sont précieux pour la communauté 💛
+        </p>
+        <button type="button" class="fm-btn fm-btn-primary" onclick="closeTemoModal()">Fermer</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============ MODAL TOUS LES TÉMOIGNAGES ============ -->
+<div class="temo-modal-overlay" id="allTemoModal" onclick="if(event.target.id==='allTemoModal') closeAllTemoignagesModal()">
+  <div class="temo-modal">
+    <button class="qm-close" onclick="closeAllTemoignagesModal()" aria-label="Fermer">✕</button>
+    <div class="fm-header">
+      <div class="fm-header-icon" style="background: linear-gradient(135deg, var(--gold), #8a7426); font-size: 28px;">⭐</div>
+      <div class="fm-header-eyebrow">TOUS LES AVIS</div>
+      <div class="fm-header-title">Ce que pensent les fans</div>
+    </div>
+
+    <div class="tm-all-stats" id="tmAllStats" style="display:none;">
+      <span>📊 <strong id="tmAllTotal">0</strong> avis</span>
+      <span>·</span>
+      <span>Moyenne <strong id="tmAllAvg">5.0</strong>/5 ⭐</span>
+    </div>
+
+    <div class="tm-all-list" id="tmAllList">
+      <div class="tm-all-empty">Chargement des avis...</div>
+    </div>
+
+    <div style="text-align:center; margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(212,175,55,0.18);">
+      <button type="button" class="fm-btn fm-btn-primary" onclick="closeAllTemoignagesModal(); openTemoignageModal();">💬 Laisser mon avis</button>
+    </div>
   </div>
 </div>
 
