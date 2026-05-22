@@ -429,6 +429,42 @@
     }
   }
 
+
+  /* ============ BRAND HOVER ============ */
+  .brand {
+    text-decoration: none;
+    transition: filter 0.2s, text-shadow 0.2s;
+    cursor: pointer;
+  }
+  .brand:hover {
+    filter: brightness(1.15);
+    text-shadow: 0 0 14px rgba(212, 175, 55, 0.45);
+  }
+  .brand:hover small { color: var(--gold); }
+
+
+  /* ============ FOOTER MAIL BUTTON ============ */
+  .footer-mail-btn {
+    display: inline-block !important;
+    margin-top: 8px;
+    padding: 8px 16px !important;
+    background: rgba(212, 175, 55, 0.08);
+    border: 1px solid var(--gold);
+    border-radius: 999px;
+    color: var(--gold) !important;
+    font-size: 12px !important;
+    letter-spacing: 1px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.2s;
+    opacity: 1 !important;
+  }
+  .footer-mail-btn:hover {
+    background: var(--gold);
+    color: var(--noir) !important;
+    transform: translateY(-2px);
+  }
+
 </style>
 </head>
 <body>
@@ -534,8 +570,7 @@
     <div class="footer-col">
       <h5>Contact</h5>
       <p>SAS OH MY PROD</p>
-      <p>Production live</p>
-      <p>contact@ohmyprod.com</p>
+      <a href="mailto:contact@theworldofqueen.com" class="footer-mail-btn">✉️ Nous écrire</a>
     </div>
   </div>
   <div class="footer-bottom">
@@ -588,6 +623,7 @@
   const ARTIST_SECTIONS = [
     {
       eyebrow: 'LE GROUPE',
+      divider: true,
       title: 'Sur scène.',
       intro: 'Autour de Fred Caramia, un <span class="gold-text">groupe de musiciens d\'exception</span> donne vie à l\'héritage de Queen avec puissance, virtuosité et émotion.',
       members: [
@@ -619,6 +655,7 @@
     },
     {
       eyebrow: 'LES SOPRANOS',
+      divider: false,
       title: '',
       intro: '',
       members: [
@@ -638,6 +675,7 @@
     },
     {
       eyebrow: 'LES PIANISTES',
+      divider: false,
       title: '',
       intro: '',
       members: [
@@ -657,6 +695,7 @@
     },
     {
       eyebrow: 'LES CASCADEURS',
+      divider: false,
       title: '',
       intro: '',
       members: [
@@ -670,6 +709,7 @@
     },
     {
       eyebrow: 'LA DREAM TEAM',
+      divider: true,
       title: '',
       intro: '',
       members: [
@@ -695,12 +735,14 @@
 
     let html = '';
     for (const section of ARTIST_SECTIONS) {
-      html += `
+      const dividerHtml = section.divider !== false ? `
         <div class="gold-divider">
           <span class="line"></span>
           <span class="crown">♕</span>
           <span class="line"></span>
-        </div>
+        </div>` : '';
+      html += `
+        ${dividerHtml}
         <div class="section-eyebrow">${escapeHtml(section.eyebrow)}</div>
       `;
       if (section.title) {
@@ -746,19 +788,36 @@
   // ===== Init =====
   generateTwinkleStars();
   renderArtistSections();
-
   // ============ NEWSLETTER ============
-  function subscribeNewsletter(form) {
-    const email = form.querySelector('input').value;
-    console.log('[Newsletter] Inscription :', email);
-    form.style.display = 'none';
+  async function subscribeNewsletter(form) {
+    const input = form.querySelector('input');
+    const email = (input.value || '').trim().toLowerCase();
+    if (!email) return;
     const success = document.getElementById('newsletterSuccess');
+    try {
+      const res = await fetch('https://nhxqcavianozskxgfcbt.supabase.co/rest/v1/newsletter_subscribers', {
+        method: 'POST',
+        headers: {
+          'apikey': 'sb_publishable_59Pg7368sxCT6y3j9nNw0g_i8ILGRZ3',
+          'Authorization': 'Bearer sb_publishable_59Pg7368sxCT6y3j9nNw0g_i8ILGRZ3',
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({ email: email, source: window.location.pathname })
+      });
+      if (!res.ok && res.status !== 409) {
+        // 409 = duplicate (déjà inscrit), on considère ça comme un succès
+        console.warn('[Newsletter] HTTP', res.status, await res.text());
+      } else {
+        console.log('[Newsletter] OK :', email);
+      }
+    } catch (e) {
+      console.warn('[Newsletter] Erreur réseau :', e);
+    }
+    form.style.display = 'none';
     if (success) success.classList.add('show');
-    // TODO : connecter à Supabase table 'newsletter_subscribers' ou service email
   }
-
-
-  // ============ DROPDOWN ESPACE PRO ============
+// ============ DROPDOWN ESPACE PRO ============
   function toggleDropdown(e) {
     if (e) e.stopPropagation();
     const dd = document.getElementById('navDropdown');

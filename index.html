@@ -1971,6 +1971,51 @@
     }
   }
 
+
+  /* ============ BRAND HOVER ============ */
+  .brand {
+    text-decoration: none;
+    transition: filter 0.2s, text-shadow 0.2s;
+    cursor: pointer;
+  }
+  .brand:hover {
+    filter: brightness(1.15);
+    text-shadow: 0 0 14px rgba(212, 175, 55, 0.45);
+  }
+  .brand:hover small { color: var(--gold); }
+
+
+  /* ============ CIEL ÉTOILÉ (twinkle) ============ */
+  .twinkle-stars { position: fixed; inset: 0; overflow: hidden; z-index: 0; pointer-events: none; }
+  .twinkle-star { position: absolute; background: #F0D77A; border-radius: 50%; opacity: 0; animation: twinkle 4s infinite ease-in-out; box-shadow: 0 0 4px #D4AF37, 0 0 8px rgba(240,215,122,0.5); }
+  @keyframes twinkle { 0%, 100% { opacity: 0; transform: scale(0.6); } 50% { opacity: 1; transform: scale(1.3); } }
+  .twinkle-star.big { width: 4px; height: 4px; box-shadow: 0 0 8px #D4AF37, 0 0 18px rgba(240,215,122,0.9); }
+  .twinkle-star.medium { width: 2.5px; height: 2.5px; box-shadow: 0 0 5px #D4AF37, 0 0 12px rgba(240,215,122,0.7); }
+  .twinkle-star.small { width: 1.5px; height: 1.5px; }
+
+
+  /* ============ FOOTER MAIL BUTTON ============ */
+  .footer-mail-btn {
+    display: inline-block !important;
+    margin-top: 8px;
+    padding: 8px 16px !important;
+    background: rgba(212, 175, 55, 0.08);
+    border: 1px solid var(--gold);
+    border-radius: 999px;
+    color: var(--gold) !important;
+    font-size: 12px !important;
+    letter-spacing: 1px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.2s;
+    opacity: 1 !important;
+  }
+  .footer-mail-btn:hover {
+    background: var(--gold);
+    color: var(--noir) !important;
+    transform: translateY(-2px);
+  }
+
 </style>
 </head>
 <body>
@@ -2013,6 +2058,8 @@
     </nav>
   </div>
 </header>
+
+<div class="twinkle-stars" id="twinkleStars"></div>
 
 <!-- ============ HERO (continuation du splash) ============ -->
 <section class="hero" id="home">
@@ -2339,7 +2386,7 @@
           <div class="app-cta-phone-crown">♕</div>
           <div class="app-cta-phone-title">THE WORLD<br>OF QUEEN</div>
           <div class="app-cta-phone-sub">L'éternelle légende</div>
-          <div class="app-cta-phone-btn">Ouvrir</div>
+          <div class="app-cta-phone-btn">Installer</div>
         </div>
       </div>
       <!-- Contenu -->
@@ -2368,7 +2415,7 @@
           </span>
         </div>
         <a href="https://app.theworldofqueen.com" target="_blank" rel="noopener" class="app-cta-btn">
-          OUVRIR L'APPLI
+          TÉLÉCHARGER L'APPLI
           <svg class="app-cta-btn-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </a>
       </div>
@@ -2436,11 +2483,19 @@
     <div class="footer-col">
       <h5>THE WORLD OF QUEEN</h5>
       <p>L'Éternelle Légende — Le show référence en hommage à Queen, produit par Oh My Prod.</p>
-      <div class="footer-social">
-        <a href="https://www.facebook.com/theworldofqueen" target="_blank" aria-label="Facebook">f</a>
-        <a href="https://www.instagram.com/theworldofqueen" target="_blank" aria-label="Instagram">📸</a>
-        <a href="https://www.youtube.com/@theworldofqueen" target="_blank" aria-label="YouTube">▶</a>
-        <a href="https://www.tiktok.com/@theworldofqueen" target="_blank" aria-label="TikTok">♪</a>
+            <div class="footer-social">
+        <a href="https://www.facebook.com/theworldofqueenofficiel" target="_blank" aria-label="Facebook">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </a>
+        <a href="https://www.instagram.com/theworldofqueenofficiel/" target="_blank" aria-label="Instagram">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        </a>
+        <a href="https://www.youtube.com/@theworldofqueenofficiel" target="_blank" aria-label="YouTube">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        </a>
+        <a href="https://www.tiktok.com/@theworldofqueenofficiel" target="_blank" aria-label="TikTok">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.84-.1z"/></svg>
+        </a>
       </div>
     </div>
     <div class="footer-col">
@@ -2462,8 +2517,7 @@
     <div class="footer-col">
       <h5>CONTACT</h5>
       <p>SAS OH MY PROD</p>
-      <p>Production live</p>
-      <a href="mailto:contact@ohmyprod.com">contact@ohmyprod.com</a>
+      <a href="mailto:contact@theworldofqueen.com" class="footer-mail-btn">✉️ Nous écrire</a>
     </div>
   </div>
   <div class="footer-bottom">
@@ -2494,11 +2548,23 @@
   const enterBtn = document.getElementById('splashEnterBtn');
   // Flag pour autoriser l'unmute auto de la vidéo après interaction utilisateur
   window.__userInteracted = false;
+
+  // Si splash déjà vu dans cette session, on le skip
+  try {
+    if (sessionStorage.getItem('twoqSplashSeen') === '1') {
+      if (splash) {
+        splash.style.display = 'none';
+      }
+      window.__userInteracted = true;
+    }
+  } catch(e) { /* sessionStorage peut être bloqué */ }
+
   if (enterBtn) {
     enterBtn.addEventListener('click', () => {
       window.__userInteracted = true;
       splash.classList.add('hidden');
       setTimeout(() => { splash.style.display = 'none'; }, 900);
+      try { sessionStorage.setItem('twoqSplashSeen', '1'); } catch(e) {}
     });
   }
   // Backup : tout clic / touch / scroll compte aussi comme interaction
@@ -3097,19 +3163,36 @@
       console.log(`[Lightbox] ${playlist.length} vidéos chargées (youtube-nocookie)`);
     }
   })();
-
   // ============ NEWSLETTER ============
-  function subscribeNewsletter(form) {
-    const email = form.querySelector('input').value;
-    console.log('[Newsletter] Inscription :', email);
-    form.style.display = 'none';
+  async function subscribeNewsletter(form) {
+    const input = form.querySelector('input');
+    const email = (input.value || '').trim().toLowerCase();
+    if (!email) return;
     const success = document.getElementById('newsletterSuccess');
+    try {
+      const res = await fetch('https://nhxqcavianozskxgfcbt.supabase.co/rest/v1/newsletter_subscribers', {
+        method: 'POST',
+        headers: {
+          'apikey': 'sb_publishable_59Pg7368sxCT6y3j9nNw0g_i8ILGRZ3',
+          'Authorization': 'Bearer sb_publishable_59Pg7368sxCT6y3j9nNw0g_i8ILGRZ3',
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({ email: email, source: window.location.pathname })
+      });
+      if (!res.ok && res.status !== 409) {
+        // 409 = duplicate (déjà inscrit), on considère ça comme un succès
+        console.warn('[Newsletter] HTTP', res.status, await res.text());
+      } else {
+        console.log('[Newsletter] OK :', email);
+      }
+    } catch (e) {
+      console.warn('[Newsletter] Erreur réseau :', e);
+    }
+    form.style.display = 'none';
     if (success) success.classList.add('show');
-    // TODO : connecter à Supabase table 'newsletter_subscribers' ou service email
   }
-
-
-  // ============ DROPDOWN ESPACE PRO ============
+// ============ DROPDOWN ESPACE PRO ============
   function toggleDropdown(e) {
     if (e) e.stopPropagation();
     const dd = document.getElementById('navDropdown');
@@ -3123,6 +3206,28 @@
     const dd = document.getElementById('navDropdown');
     if (dd && !dd.contains(e.target)) dd.classList.remove('open');
   });
+
+
+  // ============ CIEL ÉTOILÉ ============
+  (function generateTwinkleStars() {
+    const bg = document.getElementById('twinkleStars');
+    if (!bg) return;
+    const frag = document.createDocumentFragment();
+    for (let i = 0; i < 220; i++) {
+      const star = document.createElement('div');
+      const r = Math.random();
+      let size = 'small';
+      if (r < 0.12) size = 'big';
+      else if (r < 0.40) size = 'medium';
+      star.className = 'twinkle-star ' + size;
+      star.style.left = Math.random() * 100 + '%';
+      star.style.top = Math.random() * 100 + '%';
+      star.style.animationDelay = (Math.random() * 4) + 's';
+      star.style.animationDuration = (2.5 + Math.random() * 3.5) + 's';
+      frag.appendChild(star);
+    }
+    bg.appendChild(frag);
+  })();
 
 </script>
 

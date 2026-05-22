@@ -502,12 +502,14 @@
   }
   .month-title {
     font-family: var(--serif);
-    color: var(--cream);
+    color: var(--gold);
     font-size: 22px;
+    font-weight: 700;
     margin-bottom: 14px;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
     padding-left: 4px;
     text-transform: capitalize;
+    text-shadow: 0 0 12px rgba(212, 175, 55, 0.25);
   }
   .date-row {
     display: grid;
@@ -856,6 +858,68 @@
     }
   }
 
+
+  /* ============ BRAND HOVER ============ */
+  .brand {
+    text-decoration: none;
+    transition: filter 0.2s, text-shadow 0.2s;
+    cursor: pointer;
+  }
+  .brand:hover {
+    filter: brightness(1.15);
+    text-shadow: 0 0 14px rgba(212, 175, 55, 0.45);
+  }
+  .brand:hover small { color: var(--gold); }
+
+
+  /* ============ MODAL NIVEAUX ============ */
+  .levels-modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(8px); z-index: 9997; display: none; align-items: flex-start; justify-content: center; padding: 50px 20px; overflow-y: auto; }
+  .levels-modal-overlay.open { display: flex; animation: fadeIn 0.25s ease; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .levels-modal { background: linear-gradient(180deg, #1a1a1a, #0a0a0a); border: 1px solid var(--gold); border-radius: 18px; max-width: 600px; width: 100%; padding: 28px 24px 32px; box-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 50px rgba(212,175,55,0.15); position: relative; }
+  .levels-modal-close { position: absolute; top: 18px; right: 18px; width: 36px; height: 36px; border-radius: 50%; background: rgba(0,0,0,0.6); border: 1px solid var(--gold); color: var(--gold); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+  .levels-modal-close:hover { background: var(--gold); color: var(--noir); }
+  .levels-modal-eyebrow { color: var(--gold); font-size: 11px; letter-spacing: 4px; font-weight: 700; margin-bottom: 6px; text-transform: uppercase; }
+  .levels-modal-title { font-family: var(--serif); color: var(--cream); font-size: 26px; font-weight: 500; margin-bottom: 6px; letter-spacing: 1px; }
+  .levels-modal-subtitle { color: var(--gold-pale); font-size: 13px; font-style: italic; margin-bottom: 20px; }
+  .level-card { background: rgba(0,0,0,0.4); border: 1px solid rgba(212,175,55,0.18); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+  .level-card.or { background: linear-gradient(135deg, rgba(212,175,55,0.12), rgba(212,175,55,0.02)); border-color: rgba(212,175,55,0.5); }
+  .level-card.platine { background: linear-gradient(135deg, rgba(179,212,245,0.10), rgba(179,212,245,0.02)); border-color: rgba(179,212,245,0.4); }
+  .level-head { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+  .level-emoji { font-size: 24px; }
+  .level-name { font-family: var(--serif); color: var(--cream); font-size: 17px; font-weight: 500; letter-spacing: 1px; }
+  .level-tag { color: var(--smoke); font-size: 11px; margin-left: auto; }
+  .level-list { list-style: none; padding: 0; margin: 0; }
+  .level-list li { color: var(--cream); font-size: 13px; line-height: 1.7; padding-left: 22px; position: relative; opacity: 0.92; }
+  .level-list li::before { content: '✓'; position: absolute; left: 0; top: 0; color: var(--gold); font-weight: 700; }
+  .levels-modal-footer { margin-top: 18px; padding-top: 16px; border-top: 1px solid rgba(212,175,55,0.18); text-align: center; }
+  .levels-modal-footer p { color: var(--smoke); font-size: 11px; margin-bottom: 12px; font-style: italic; }
+  .levels-modal-cta { display: inline-block; background: var(--gold); color: var(--noir); padding: 12px 24px; border-radius: 999px; font-size: 13px; letter-spacing: 1.5px; font-weight: 700; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; }
+  .levels-modal-cta:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(212,175,55,0.3); }
+
+
+  /* ============ FOOTER MAIL BUTTON ============ */
+  .footer-mail-btn {
+    display: inline-block !important;
+    margin-top: 8px;
+    padding: 8px 16px !important;
+    background: rgba(212, 175, 55, 0.08);
+    border: 1px solid var(--gold);
+    border-radius: 999px;
+    color: var(--gold) !important;
+    font-size: 12px !important;
+    letter-spacing: 1px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.2s;
+    opacity: 1 !important;
+  }
+  .footer-mail-btn:hover {
+    background: var(--gold);
+    color: var(--noir) !important;
+    transform: translateY(-2px);
+  }
+
 </style>
 </head>
 <body>
@@ -982,8 +1046,7 @@
     <div class="footer-col">
       <h5>Contact</h5>
       <p>SAS OH MY PROD</p>
-      <p>Production live</p>
-      <p>contact@ohmyprod.com</p>
+      <a href="mailto:contact@theworldofqueen.com" class="footer-mail-btn">✉️ Nous écrire</a>
     </div>
   </div>
   <div class="footer-bottom">
@@ -1189,14 +1252,14 @@
 
   function renderPromoBanner() {
     return `
-      <a href="https://app.theworldofqueen.com" target="_blank" class="promo-banner promo-banner-inline">
+      <div class="promo-banner promo-banner-inline" onclick="toggleLevelsModal()" role="button" tabindex="0" style="cursor:pointer;">
         <div class="promo-banner-icon">⚡</div>
         <div class="promo-banner-content">
           <div class="promo-banner-title">TARIFS RÉDUITS<span class="pct">-10%</span></div>
           <div class="promo-banner-text">Réservés aux membres 🥇 OR &amp; 💎 PLATINE · Sur ~90% des dates*</div>
           <span class="promo-banner-link">→ Voir les avantages des niveaux</span>
         </div>
-      </a>
+      </div>
     `;
   }
 
@@ -1437,19 +1500,36 @@
     _allDates = await loadAllDates();
     applyFilters();
   })();
-
   // ============ NEWSLETTER ============
-  function subscribeNewsletter(form) {
-    const email = form.querySelector('input').value;
-    console.log('[Newsletter] Inscription :', email);
-    form.style.display = 'none';
+  async function subscribeNewsletter(form) {
+    const input = form.querySelector('input');
+    const email = (input.value || '').trim().toLowerCase();
+    if (!email) return;
     const success = document.getElementById('newsletterSuccess');
+    try {
+      const res = await fetch('https://nhxqcavianozskxgfcbt.supabase.co/rest/v1/newsletter_subscribers', {
+        method: 'POST',
+        headers: {
+          'apikey': 'sb_publishable_59Pg7368sxCT6y3j9nNw0g_i8ILGRZ3',
+          'Authorization': 'Bearer sb_publishable_59Pg7368sxCT6y3j9nNw0g_i8ILGRZ3',
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({ email: email, source: window.location.pathname })
+      });
+      if (!res.ok && res.status !== 409) {
+        // 409 = duplicate (déjà inscrit), on considère ça comme un succès
+        console.warn('[Newsletter] HTTP', res.status, await res.text());
+      } else {
+        console.log('[Newsletter] OK :', email);
+      }
+    } catch (e) {
+      console.warn('[Newsletter] Erreur réseau :', e);
+    }
+    form.style.display = 'none';
     if (success) success.classList.add('show');
-    // TODO : connecter à Supabase table 'newsletter_subscribers' ou service email
   }
-
-
-  // ============ DROPDOWN ESPACE PRO ============
+// ============ DROPDOWN ESPACE PRO ============
   function toggleDropdown(e) {
     if (e) e.stopPropagation();
     const dd = document.getElementById('navDropdown');
@@ -1464,7 +1544,96 @@
     if (dd && !dd.contains(e.target)) dd.classList.remove('open');
   });
 
+
+  // ============ MODAL NIVEAUX D'AVANTAGES ============
+  function toggleLevelsModal() {
+    const m = document.getElementById('levelsModal');
+    if (!m) return;
+    const isOpen = m.classList.toggle('open');
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  }
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      const m = document.getElementById('levelsModal');
+      if (m && m.classList.contains('open')) {
+        m.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+    }
+  });
+
 </script>
+
+
+<!-- ============ MODAL NIVEAUX D'AVANTAGES ============ -->
+<div class="levels-modal-overlay" id="levelsModal" onclick="if(event.target.id==='levelsModal') toggleLevelsModal()">
+  <div class="levels-modal">
+    <button class="levels-modal-close" onclick="toggleLevelsModal()" aria-label="Fermer">✕</button>
+    <div class="levels-modal-eyebrow">PROGRAMME DE FIDÉLITÉ</div>
+    <h2 class="levels-modal-title">Les 4 niveaux d'avantages</h2>
+    <p class="levels-modal-subtitle">Crée ton compte fan et débloque des avantages exclusifs.</p>
+
+    <div class="level-card">
+      <div class="level-head">
+        <span class="level-emoji">👤</span>
+        <span class="level-name">FAN</span>
+        <span class="level-tag">Gratuit</span>
+      </div>
+      <ul class="level-list">
+        <li>Accès au Wall of Fans et aux concours</li>
+        <li>Newsletter exclusive avec les nouvelles dates</li>
+        <li>Vote pour la chanson surprise en concert</li>
+      </ul>
+    </div>
+
+    <div class="level-card">
+      <div class="level-head">
+        <span class="level-emoji">⭐</span>
+        <span class="level-name">VIP</span>
+        <span class="level-tag">Atteint par engagement</span>
+      </div>
+      <ul class="level-list">
+        <li>Tous les avantages FAN</li>
+        <li>Badge VIP sur le Wall of Fans</li>
+        <li>Concours exclusifs réservés VIP</li>
+        <li>Notifications prioritaires</li>
+      </ul>
+    </div>
+
+    <div class="level-card or">
+      <div class="level-head">
+        <span class="level-emoji">🥇</span>
+        <span class="level-name">OR</span>
+        <span class="level-tag" style="color:var(--gold);font-weight:700;">−10% sur les billets</span>
+      </div>
+      <ul class="level-list">
+        <li>Tous les avantages VIP</li>
+        <li><strong style="color:var(--gold);">Tarif réduit −10%</strong> sur ~90% des dates</li>
+        <li>Accès anticipé aux nouvelles tournées</li>
+        <li>Cadeaux et goodies exclusifs</li>
+      </ul>
+    </div>
+
+    <div class="level-card platine">
+      <div class="level-head">
+        <span class="level-emoji">💎</span>
+        <span class="level-name">PLATINE</span>
+        <span class="level-tag" style="color:#b3d4f5;font-weight:700;">L'élite TWOQ</span>
+      </div>
+      <ul class="level-list">
+        <li>Tous les avantages OR</li>
+        <li>Accès backstage exclusif sur dates sélectionnées</li>
+        <li>Meet &amp; greet avec Fred et l'équipe</li>
+        <li>Invitations aux événements privés TWOQ</li>
+      </ul>
+    </div>
+
+    <div class="levels-modal-footer">
+      <p>Inscription gratuite · 1 minute · Aucun spam</p>
+      <a href="https://app.theworldofqueen.com" target="_blank" class="levels-modal-cta">Je crée mon compte →</a>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
