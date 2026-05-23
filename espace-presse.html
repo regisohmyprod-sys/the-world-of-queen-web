@@ -209,7 +209,27 @@
   .resource-action:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(212,175,55,0.3); }
   .resource-action-icon { font-size: 14px; }
 
-  /* À PROPOS DU SHOW */
+  /* ============ KIT DE PRESSE — SÉLECTEUR 2 TOURNÉES ============ */
+  .kit-presse-card { grid-column: span 2; }
+  @media (max-width: 800px) { .kit-presse-card { grid-column: span 1; } }
+  .kit-versions { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 18px; }
+  @media (max-width: 700px) { .kit-versions { grid-template-columns: 1fr; } }
+  .kit-version { position: relative; background: linear-gradient(135deg, rgba(0,0,0,0.5), rgba(20,20,20,0.5)); border: 1px solid rgba(212,175,55,0.25); border-radius: 14px; padding: 18px; transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s; }
+  .kit-version:hover { border-color: var(--gold); transform: translateY(-3px); box-shadow: 0 10px 24px rgba(212,175,55,0.12); }
+  .kit-version.highlight { background: linear-gradient(135deg, rgba(212,175,55,0.10), rgba(139,0,0,0.04)); border-color: rgba(212,175,55,0.55); }
+  .kit-version.highlight:hover { border-color: var(--gold); box-shadow: 0 10px 30px rgba(212,175,55,0.2); }
+  .kit-version-badge { position: absolute; top: -8px; right: 12px; background: var(--cramoisi); color: #fff; padding: 3px 10px; border-radius: 999px; font-size: 9px; letter-spacing: 1.5px; font-weight: 800; text-transform: uppercase; box-shadow: 0 4px 10px rgba(139,0,0,0.4); }
+  .kit-version-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .kit-version-icon { width: 42px; height: 42px; border-radius: 10px; background: linear-gradient(135deg, var(--gold), #8a7426); color: var(--noir); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+  .kit-version-info { flex: 1; min-width: 0; }
+  .kit-version-title { font-family: var(--serif); color: var(--cream); font-size: 15px; font-weight: 500; letter-spacing: 0.5px; margin-bottom: 3px; }
+  .kit-version-period { color: var(--gold-pale); font-size: 11px; font-style: italic; }
+  .kit-version-desc { color: var(--smoke); font-size: 12px; line-height: 1.5; margin-bottom: 14px; }
+  .kit-version-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--gold); color: var(--noir); padding: 9px 18px; border-radius: 999px; font-size: 11px; letter-spacing: 1.5px; font-weight: 700; text-decoration: none; text-transform: uppercase; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; border: none; font-family: inherit; }
+  .kit-version-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(212,175,55,0.3); }
+  .kit-version.highlight .kit-version-btn { background: linear-gradient(135deg, var(--gold), #b8941d); }
+
+  /* ============ À PROPOS DU SHOW ============ */
   .about-section {
     max-width: 900px;
     margin: 50px auto;
@@ -438,17 +458,53 @@
 
 <div class="resources-grid">
 
-  <div class="resource-card soon">
+  <div class="resource-card kit-presse-card" id="kitPresseCard">
     <div class="resource-icon">📦</div>
     <div class="resource-title">Kit de presse complet</div>
-    <div class="resource-desc">Le dossier de presse officiel TWOQ avec présentation du show, biographies, photos HD et fiches techniques.</div>
-    <span class="resource-soon-badge">📩 Sur demande</span>
+    <div class="resource-desc">Le dossier de presse officiel TWOQ avec présentation du show, biographies, photos HD et fiches techniques. <strong style="color:var(--gold);">2 tournées disponibles :</strong></div>
+
+    <div class="kit-versions">
+
+      <div class="kit-version">
+        <div class="kit-version-header">
+          <div class="kit-version-icon">🎤</div>
+          <div class="kit-version-info">
+            <div class="kit-version-title">L'Hommage à la Légende</div>
+            <div class="kit-version-period">Tournée 2022 → mai 2026</div>
+          </div>
+        </div>
+        <div class="kit-version-desc">Le show originel — le tribute incontournable qui a accueilli plus d'un million de spectateurs.</div>
+        <!-- POULETTE : remplace le href ci-dessous par l'URL du kit de presse Hommage -->
+        <a href="#" onclick="event.preventDefault(); requestKit('hommage');" class="kit-version-btn">
+          <span>📥</span>
+          <span>Télécharger</span>
+        </a>
+      </div>
+
+      <div class="kit-version highlight">
+        <div class="kit-version-badge">NOUVEAU</div>
+        <div class="kit-version-header">
+          <div class="kit-version-icon">👑</div>
+          <div class="kit-version-info">
+            <div class="kit-version-title">L'Éternelle Légende</div>
+            <div class="kit-version-period">Tournée sept. 2026 → déc. 2028</div>
+          </div>
+        </div>
+        <div class="kit-version-desc">La nouvelle tournée — Dôme de Paris, Zéniths, Arenas. Le show événement de la décennie.</div>
+        <!-- POULETTE : remplace le href ci-dessous par l'URL du kit de presse Éternelle Légende -->
+        <a href="#" onclick="event.preventDefault(); requestKit('eternelle');" class="kit-version-btn">
+          <span>📥</span>
+          <span>Télécharger</span>
+        </a>
+      </div>
+
+    </div>
   </div>
 
   <div class="resource-card soon">
     <div class="resource-icon">📄</div>
-    <div class="resource-title">Communiqué de presse 2026</div>
-    <div class="resource-desc">Le CP officiel de la tournée L'Éternelle Légende — annonce du Dôme de Paris et des dates 2026/2027.</div>
+    <div class="resource-title">Articles de presse</div>
+    <div class="resource-desc">La revue de presse de TWOQ — articles parus dans la presse écrite, web, radios et télés.</div>
     <span class="resource-soon-badge">📩 Sur demande</span>
   </div>
 
@@ -460,9 +516,9 @@
   </div>
 
   <div class="resource-card soon">
-    <div class="resource-icon">🎤</div>
-    <div class="resource-title">Biographies & fiches artistes</div>
-    <div class="resource-desc">Bio de Fred Caramia, parcours, distinctions, philosophie du show — tout pour vos interviews.</div>
+    <div class="resource-icon">🎨</div>
+    <div class="resource-title">Visuels officiels</div>
+    <div class="resource-desc">Affiches, visuels promotionnels et clés de communication TWOQ — pour vos publications et supports médias.</div>
     <span class="resource-soon-badge">📩 Sur demande</span>
   </div>
 
@@ -654,6 +710,38 @@
     const dd = document.getElementById('navDropdown');
     if (dd && !dd.contains(e.target)) dd.classList.remove('open');
   });
+
+  // ============ KIT DE PRESSE ============
+  // Quand le PDF est en ligne, remplace ces URLs :
+  const KIT_PRESSE_URLS = {
+    hommage:   '',  // ← POULETTE : colle ici l'URL du PDF Hommage à la Légende (2022-2026)
+    eternelle: ''   // ← POULETTE : colle ici l'URL du PDF Éternelle Légende (2026-2028)
+  };
+
+  function requestKit(version) {
+    const url = KIT_PRESSE_URLS[version];
+    if (url && url.length > 0) {
+      // Le kit est disponible → ouvrir le PDF
+      window.open(url, '_blank');
+    } else {
+      // Pas encore disponible → scroll vers le formulaire avec pré-remplissage
+      const label = (version === 'hommage')
+        ? 'L\'Hommage à la Légende (2022-mai 2026)'
+        : 'L\'Éternelle Légende (sept. 2026-déc. 2028)';
+      // Pré-remplir le formulaire
+      document.getElementById('pfType').value = 'autre';
+      document.getElementById('pfMessage').value = `Bonjour,\n\nJe souhaiterais recevoir le kit de presse complet de la tournée "${label}".\n\nMerci par avance.`;
+      // Scroll fluide vers le formulaire
+      document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Petit feedback visuel
+      const card = document.querySelector('.form-card');
+      card.style.transition = 'box-shadow 0.4s';
+      card.style.boxShadow = '0 30px 80px rgba(0,0,0,0.6), 0 0 80px rgba(212,175,55,0.4)';
+      setTimeout(() => {
+        card.style.boxShadow = '';
+      }, 1500);
+    }
+  }
 
   // FORMULAIRE PRESSE → SUPABASE
   async function submitPresseForm() {
