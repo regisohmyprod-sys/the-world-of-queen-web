@@ -671,6 +671,22 @@
   /* ============ ESPACE CONNECTÉ ============ */
   .connected-zone { display: none; }
   .connected-zone.active { display: block; }
+  /* Quand on est connecté, la section moi-page (qui contient la zone visiteur) est complètement cachée */
+  body.is-connected .moi-page { display: none !important; }
+  body.is-connected #newsletterSection { display: none !important; }
+  /* La zone connectée hérite du look de la page (ciel étoilé + padding) */
+  .connected-zone.active {
+    position: relative;
+    background: #000;
+    padding: 110px 20px 40px;
+    min-height: 100vh;
+  }
+  .connected-zone.active::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(212,175,55,0.10) 0%, transparent 60%);
+    z-index: 0; pointer-events: none;
+  }
+  .connected-zone.active > * { position: relative; z-index: 2; max-width: 760px; margin-left: auto; margin-right: auto; }
 
   /* État "checking" : on cache la zone visiteur pendant la vérif (max 1.5s) */
   .checking-login #visitorZone { visibility: hidden; }
@@ -2185,11 +2201,8 @@
   function renderConnectedZone() {
     if (!_currentFan) return;
 
-    // Masquer la zone visiteur + la newsletter
-    const visitor = document.getElementById('visitorZone');
-    if (visitor) visitor.style.display = 'none';
-    const news = document.getElementById('newsletterSection');
-    if (news) news.style.display = 'none';
+    // Marquer le body comme connecté → masque toute la moi-page et la newsletter via CSS
+    document.body.classList.add('is-connected');
 
     // Afficher la zone connectée
     document.getElementById('connectedZone').classList.add('active');
@@ -2411,6 +2424,7 @@
   function logout() {
     if (confirm('Tu es sûr·e de vouloir te déconnecter ?')) {
       localStorage.removeItem(STORAGE_KEY);
+      document.body.classList.remove('is-connected');
       window.location.reload();
     }
   }
