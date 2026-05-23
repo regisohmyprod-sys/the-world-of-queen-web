@@ -200,7 +200,11 @@
     position: relative;
     box-shadow: 0 25px 60px rgba(0,0,0,0.7), 0 0 80px rgba(212, 175, 55, 0.4), 0 0 120px rgba(212, 175, 55, 0.2) !important;
     animation: fredGlow 3s ease-in-out infinite;
+    overflow: visible !important;
   }
+  /* Empêcher la photo et l'overlay de déborder visuellement */
+  .artist-card-fred .artist-photo { border-radius: 18px; }
+  .artist-card-fred .artist-overlay { border-radius: 0 0 18px 18px; }
   @keyframes fredGlow {
     0%, 100% {
       box-shadow: 0 25px 60px rgba(0,0,0,0.7), 0 0 80px rgba(212, 175, 55, 0.4), 0 0 120px rgba(212, 175, 55, 0.2);
@@ -208,6 +212,26 @@
     50% {
       box-shadow: 0 25px 60px rgba(0,0,0,0.7), 0 0 110px rgba(212, 175, 55, 0.6), 0 0 180px rgba(212, 175, 55, 0.3);
     }
+  }
+
+  /* ============ CIEL ÉTOILÉ LOCAL autour de Fred ============ */
+  .fred-starfield {
+    position: absolute;
+    inset: -90px;
+    pointer-events: none;
+    z-index: 1;
+    overflow: visible;
+  }
+  .fred-star {
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    animation: fredStarTwinkle linear infinite;
+    box-shadow: 0 0 4px rgba(255,255,255,0.6);
+  }
+  @keyframes fredStarTwinkle {
+    0%, 100% { opacity: 0; transform: scale(0.4); }
+    50% { opacity: 1; transform: scale(1.1); }
   }
   .artist-card-fred .splash-particles {
     position: absolute;
@@ -401,8 +425,34 @@
   .newsletter-form input { flex: 1; min-width: 200px; background: rgba(0,0,0,0.5); border: 1px solid rgba(212,175,55,0.3); color: var(--cream); padding: 12px 18px; border-radius: 999px; font-family: inherit; font-size: 14px; outline: none; transition: border-color 0.2s; }
   .newsletter-form input:focus { border-color: var(--gold); }
   .newsletter-form input::placeholder { color: var(--smoke); }
-  .newsletter-form button { background: var(--gold); color: var(--noir); border: none; border-radius: 999px; padding: 12px 24px; font-family: inherit; font-size: 13px; letter-spacing: 1px; font-weight: 700; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
-  .newsletter-form button:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(212,175,55,0.3); }
+  .newsletter-form button {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--noir); color: var(--gold);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    border-left: 4px solid var(--gold);
+    border-radius: 0;
+    padding: 12px 22px;
+    font-family: inherit; font-size: 12px;
+    letter-spacing: 3px; font-weight: 800;
+    cursor: pointer; text-transform: uppercase;
+    position: relative;
+    transition: all 0.3s;
+    animation: royalEcarlate 1.5s ease-in-out infinite;
+  }
+  .newsletter-form button::before {
+    content: '♕'; font-size: 14px; line-height: 1; color: var(--gold);
+    transition: color 0.3s;
+  }
+  @keyframes royalEcarlate {
+    0%, 100% { background: var(--noir); box-shadow: inset 0 0 0 rgba(139, 0, 0, 0); }
+    50% { background: linear-gradient(90deg, var(--noir) 0%, rgba(139, 0, 0, 0.85) 50%, var(--noir) 100%); box-shadow: inset 0 0 20px rgba(139, 0, 0, 0.5), 0 0 16px rgba(139, 0, 0, 0.3); }
+  }
+  .newsletter-form button:hover {
+    background: var(--gold); color: var(--noir);
+    border-color: var(--gold); transform: translateX(4px);
+    animation: none;
+  }
+  .newsletter-form button:hover::before { color: var(--noir); }
   .newsletter-helper { color: var(--smoke); font-size: 11px; font-style: italic; }
   .newsletter-success { color: #10b981; font-size: 13px; margin-top: 12px; display: none; }
   .newsletter-success.show { display: block; }
@@ -569,6 +619,7 @@
     <h1 class="section-title">Artistes.</h1>
 
     <div class="artist-card artist-card-fred">
+      <div class="fred-starfield" id="fredStarfield" aria-hidden="true"></div>
       <div class="splash-particles" aria-hidden="true">
         <span></span><span></span><span></span><span></span><span></span><span></span>
         <span></span><span></span><span></span><span></span><span></span><span></span>
@@ -604,7 +655,7 @@
     <p class="newsletter-text">Nouvelles dates, coulisses exclusives, concours &amp; promos — directement dans ta boîte mail.</p>
     <form class="newsletter-form" onsubmit="event.preventDefault(); subscribeNewsletter(this);">
       <input type="email" placeholder="ton.email@exemple.com" required />
-      <button type="submit">S'abonner →</button>
+      <button type="submit">S'abonner</button>
     </form>
     <div class="newsletter-helper">📧 Tu peux te désabonner à tout moment · Aucun spam, promis.</div>
     <div class="newsletter-success" id="newsletterSuccess">✅ Merci ! Tu es bien inscrit·e à la newsletter TWOQ 🎤</div>
@@ -684,6 +735,33 @@
     }
     bg.appendChild(frag);
   }
+
+  // ===== Ciel étoilé local autour de la photo de Fred =====
+  function generateFredStarfield() {
+    const sf = document.getElementById('fredStarfield');
+    if (!sf) return;
+    const count = 55;
+    const frag = document.createDocumentFragment();
+    for (let i = 0; i < count; i++) {
+      const star = document.createElement('div');
+      star.className = 'fred-star';
+      const size = 0.8 + Math.random() * 2.2;
+      star.style.width = size + 'px';
+      star.style.height = size + 'px';
+      star.style.left = Math.random() * 100 + '%';
+      star.style.top = Math.random() * 100 + '%';
+      star.style.animationDelay = (Math.random() * 4) + 's';
+      star.style.animationDuration = (2 + Math.random() * 3) + 's';
+      // 25% des étoiles ont une teinte dorée pour cohérence
+      if (Math.random() < 0.25) {
+        star.style.background = '#F0D77A';
+        star.style.boxShadow = '0 0 6px rgba(240,215,122,0.7)';
+      }
+      frag.appendChild(star);
+    }
+    sf.appendChild(frag);
+  }
+  generateFredStarfield();
 
   // ===== Toutes les sections d'artistes (générées dynamiquement) =====
   const ARTIST_SECTIONS = [
