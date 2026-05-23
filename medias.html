@@ -694,7 +694,7 @@
     <div class="section-eyebrow">GALERIE PHOTOS</div>
     <h2 class="section-subtitle">Photos du show.</h2>
     <div class="photos-grid" id="photosGrid"></div>
-    <div class="btn-wrap"><button type="button" class="btn-secondary" id="btnMorePhotos">✨ VOIR PLUS DE PHOTOS ↓</button></div>
+    <div class="btn-wrap"><button type="button" class="btn-secondary" id="btnMorePhotos">Voir plus de photos</button></div>
     <div class="photos-helper">Touche une photo pour la voir en grand · diaporama auto</div>
 
   </div>
@@ -958,12 +958,12 @@
   videoLightbox.addEventListener('click', e => { if (e.target === videoLightbox) closeVideoLightbox(); });
 
   // ============ GALERIE PHOTOS ============
-  // Tentative de chargement automatique : show-01.jpg → show-NN.jpg
-  // À l'utilisateur d'uploader des fichiers nommés ainsi dans twoq-pwa/assets/photos/
+  // L'app TWOQ contient 49 photos dans twoq-pwa/assets/photos/show-01.jpg → show-49.jpg
+  // Le probe teste jusqu'à 60 au cas où il y en aurait plus à l'avenir.
   const PHOTOS_BASE = 'https://regisohmyprod-sys.github.io/twoq-pwa/assets/photos/';
-  const PHOTOS_MAX_PROBE = 30; // teste les 30 premières
+  const PHOTOS_MAX_PROBE = 60; // teste les 60 premières
   let _photos = []; // liste des photos qui ont chargé OK
-  let _photosShown = 12;
+  let _photosShown = 16;
 
   async function probePhotos() {
     const candidates = [];
@@ -1003,18 +1003,18 @@
     });
     if (_photosShown < _photos.length) {
       btn.style.display = 'inline-block';
-      btn.textContent = `✨ VOIR PLUS DE PHOTOS (+${Math.min(12, _photos.length - _photosShown)} sur ${_photos.length - _photosShown} restantes) ↓`;
-    } else if (_photos.length > 12) {
+      btn.textContent = `Voir plus de photos (+${Math.min(16, _photos.length - _photosShown)} sur ${_photos.length - _photosShown} restantes)`;
+    } else if (_photos.length > 16) {
       btn.style.display = 'inline-block';
-      btn.textContent = '↑ Réduire la galerie';
+      btn.textContent = 'Réduire la galerie';
     } else {
       btn.style.display = 'none';
     }
   }
   document.getElementById('btnMorePhotos').addEventListener('click', () => {
-    _photosShown = _photosShown >= _photos.length ? 12 : _photosShown + 12;
+    _photosShown = _photosShown >= _photos.length ? 16 : _photosShown + 16;
     if (_photosShown > _photos.length) _photosShown = _photos.length;
-    if (_photosShown === 12 && _photos.length <= 12) _photosShown = 12;
+    if (_photosShown === 16 && _photos.length <= 16) _photosShown = 16;
     renderPhotos();
   });
 
