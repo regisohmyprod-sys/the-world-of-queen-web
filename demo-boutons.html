@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DEMO BOUTONS — TWOQ</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    --noir: #0A0A0A;
+    --charcoal: #141414;
+    --gold: #D4AF37;
+    --gold-pale: #F0D77A;
+    --cramoisi: #8B0000;
+    --cream: #F5F1E8;
+    --smoke: #8B8580;
+    --serif: 'Cinzel', serif;
+    --sans: 'Inter', sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: var(--noir); color: var(--cream); font-family: var(--sans); }
+  body { padding: 40px 20px; min-height: 100vh; background: radial-gradient(ellipse at top, #1a1410 0%, #0A0A0A 60%); }
+
+  .container { max-width: 1100px; margin: 0 auto; }
+
+  h1 {
+    font-family: var(--serif);
+    color: var(--gold);
+    font-size: 32px;
+    letter-spacing: 3px;
+    text-align: center;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  .subtitle {
+    text-align: center;
+    color: var(--cream);
+    font-size: 14px;
+    margin-bottom: 40px;
+    font-style: italic;
+  }
+  .subtitle strong { color: var(--gold); }
+
+  .style-section {
+    background: linear-gradient(180deg, #141414, #0c0c0c);
+    border: 1px solid rgba(212, 175, 55, 0.15);
+    border-radius: 18px;
+    padding: 32px 30px;
+    margin-bottom: 22px;
+    transition: border-color 0.3s;
+  }
+  .style-section:hover { border-color: rgba(212, 175, 55, 0.4); }
+
+  .style-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 18px;
+    padding-bottom: 16px;
+    border-bottom: 1px dashed rgba(212, 175, 55, 0.2);
+  }
+  .style-number {
+    font-family: var(--serif);
+    color: var(--gold);
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1;
+    opacity: 0.5;
+  }
+  .style-info { flex: 1; }
+  .style-name {
+    font-family: var(--serif);
+    color: var(--cream);
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .style-desc { color: var(--smoke); font-size: 12px; font-style: italic; }
+  .style-tag {
+    background: rgba(212, 175, 55, 0.15);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 5px 14px;
+    border-radius: 999px;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .style-tag.current { background: var(--cramoisi); border-color: var(--cramoisi); color: #fff; }
+  .style-tag.new { background: rgba(16, 185, 129, 0.15); border-color: #10b981; color: #10b981; }
+
+  .style-buttons {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+  }
+  .style-buttons .label {
+    color: var(--smoke);
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+    min-width: 80px;
+    text-transform: uppercase;
+  }
+
+  /* ============ STYLE 1 : ACTUEL (référence) ============ */
+  .btn-style-1, .btn-style-1-sec {
+    display: inline-block; text-decoration: none;
+    padding: 14px 32px; border-radius: 999px;
+    font-size: 12px; letter-spacing: 3px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+    border: 1px solid; font-family: var(--sans);
+  }
+  .btn-style-1 {
+    background: var(--gold); color: var(--noir);
+    border-color: var(--gold);
+    box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+  }
+  .btn-style-1:hover { background: var(--gold-pale); box-shadow: 0 0 40px rgba(212, 175, 55, 0.6); }
+  .btn-style-1-sec {
+    background: transparent; color: var(--cream);
+    border-color: rgba(212, 175, 55, 0.5);
+  }
+  .btn-style-1-sec:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* ============ STYLE 2 : OUTLINE LUXURIEUX ============ */
+  .btn-style-2 {
+    display: inline-block; text-decoration: none;
+    padding: 14px 36px; border-radius: 0;
+    font-size: 11px; letter-spacing: 4px; font-weight: 700;
+    cursor: pointer;
+    background: transparent;
+    color: var(--gold);
+    border: 2px solid var(--gold);
+    font-family: var(--sans);
+    position: relative; overflow: hidden;
+    transition: color 0.4s;
+    z-index: 1;
+  }
+  .btn-style-2::before {
+    content: ''; position: absolute; inset: 0;
+    background: var(--gold);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.4s ease;
+    z-index: -1;
+  }
+  .btn-style-2:hover { color: var(--noir); }
+  .btn-style-2:hover::before { transform: scaleX(1); }
+
+  /* ============ STYLE 3 : SHINY SHIMMER ============ */
+  .btn-style-3 {
+    display: inline-flex; align-items: center; gap: 10px;
+    text-decoration: none;
+    padding: 16px 36px; border-radius: 12px;
+    font-size: 12px; letter-spacing: 2px; font-weight: 800;
+    cursor: pointer;
+    background: linear-gradient(135deg, #b8941d 0%, var(--gold) 50%, var(--gold-pale) 100%);
+    color: var(--noir);
+    border: none;
+    font-family: var(--sans);
+    position: relative; overflow: hidden;
+    box-shadow: 0 10px 28px rgba(212, 175, 55, 0.3), inset 0 1px 0 rgba(255,255,255,0.3);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .btn-style-3::after {
+    content: ''; position: absolute;
+    top: 0; left: -75%;
+    width: 50%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+    transition: left 0.6s;
+    transform: skewX(-20deg);
+  }
+  .btn-style-3:hover { transform: translateY(-3px); box-shadow: 0 14px 36px rgba(212, 175, 55, 0.5); }
+  .btn-style-3:hover::after { left: 130%; }
+
+  /* ============ STYLE 4 : DOUBLE BORDURE ============ */
+  .btn-style-4 {
+    display: inline-block; text-decoration: none;
+    padding: 14px 32px; border-radius: 4px;
+    font-size: 12px; letter-spacing: 3px; font-weight: 700;
+    cursor: pointer;
+    background: var(--noir);
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    font-family: var(--sans);
+    position: relative;
+    transition: all 0.3s;
+    box-shadow: inset 0 0 0 4px var(--noir), 0 0 0 1px var(--gold);
+  }
+  .btn-style-4:hover {
+    background: var(--gold);
+    color: var(--noir);
+    box-shadow: inset 0 0 0 4px var(--gold), 0 0 0 1px var(--gold), 0 8px 24px rgba(212,175,55,0.4);
+  }
+
+  /* ============ STYLE 5 : NEON GLOW ============ */
+  .btn-style-5 {
+    display: inline-block; text-decoration: none;
+    padding: 14px 32px; border-radius: 999px;
+    font-size: 12px; letter-spacing: 3px; font-weight: 700;
+    cursor: pointer;
+    background: transparent;
+    color: var(--gold);
+    border: 2px solid var(--gold);
+    font-family: var(--sans);
+    position: relative;
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.5), inset 0 0 8px rgba(212, 175, 55, 0.2);
+    text-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
+    transition: all 0.3s;
+  }
+  .btn-style-5:hover {
+    box-shadow: 0 0 20px rgba(212, 175, 55, 1), 0 0 40px rgba(212, 175, 55, 0.6), inset 0 0 20px rgba(212, 175, 55, 0.4);
+    background: rgba(212, 175, 55, 0.1);
+    color: var(--gold-pale);
+  }
+
+  /* ============ STYLE 6 : RECTANGLE COURONNE ============ */
+  .btn-style-6 {
+    display: inline-flex; align-items: center; gap: 12px;
+    text-decoration: none;
+    padding: 14px 28px; border-radius: 0;
+    font-size: 11px; letter-spacing: 4px; font-weight: 800;
+    cursor: pointer;
+    background: var(--noir);
+    color: var(--gold);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    border-left: 4px solid var(--gold);
+    font-family: var(--sans);
+    transition: all 0.3s;
+    text-transform: uppercase;
+  }
+  .btn-style-6:hover {
+    background: var(--gold);
+    color: var(--noir);
+    border-color: var(--gold);
+    transform: translateX(4px);
+  }
+  .btn-style-6::before { content: '♕'; font-size: 14px; }
+
+  /* ============ STYLE 7 : 3D RELIEF ============ */
+  .btn-style-7 {
+    display: inline-block; text-decoration: none;
+    padding: 14px 32px; border-radius: 10px;
+    font-size: 12px; letter-spacing: 2px; font-weight: 800;
+    cursor: pointer;
+    background: linear-gradient(180deg, var(--gold-pale) 0%, var(--gold) 50%, #b8941d 100%);
+    color: var(--noir);
+    border: none;
+    font-family: var(--sans);
+    box-shadow:
+      0 6px 0 #6b5510,
+      0 8px 20px rgba(0,0,0,0.4);
+    transition: transform 0.15s, box-shadow 0.15s;
+    position: relative;
+  }
+  .btn-style-7:hover {
+    transform: translateY(2px);
+    box-shadow:
+      0 3px 0 #6b5510,
+      0 6px 16px rgba(0,0,0,0.4);
+  }
+  .btn-style-7:active {
+    transform: translateY(6px);
+    box-shadow: 0 0 0 #6b5510, 0 2px 8px rgba(0,0,0,0.4);
+  }
+
+  /* ============ STYLE 8 : MINIMALIST UNDERLINE ============ */
+  .btn-style-8 {
+    display: inline-block; text-decoration: none;
+    padding: 14px 4px; border-radius: 0;
+    font-size: 13px; letter-spacing: 4px; font-weight: 700;
+    cursor: pointer;
+    background: transparent;
+    color: var(--gold);
+    border: none;
+    border-bottom: 2px solid var(--gold);
+    font-family: var(--sans);
+    position: relative;
+    transition: color 0.3s, letter-spacing 0.3s;
+  }
+  .btn-style-8::after {
+    content: ' →';
+    margin-left: 6px;
+    transition: margin-left 0.3s;
+    display: inline-block;
+  }
+  .btn-style-8:hover {
+    color: var(--gold-pale);
+    letter-spacing: 5px;
+  }
+  .btn-style-8:hover::after { margin-left: 14px; }
+
+  /* ============ STYLE 9 : VINTAGE TICKET ============ */
+  .btn-style-9 {
+    display: inline-flex; align-items: center; gap: 10px;
+    text-decoration: none;
+    padding: 14px 30px;
+    font-size: 11px; letter-spacing: 3px; font-weight: 800;
+    cursor: pointer;
+    background: linear-gradient(90deg, #c9a447 0%, var(--gold) 100%);
+    color: var(--noir);
+    border: 2px dashed var(--noir);
+    font-family: var(--sans);
+    border-radius: 4px;
+    box-shadow: 0 0 0 4px var(--gold);
+    transition: transform 0.3s, box-shadow 0.3s;
+    text-transform: uppercase;
+    position: relative;
+  }
+  .btn-style-9::before {
+    content: ''; position: absolute;
+    left: -8px; top: 50%; transform: translateY(-50%);
+    width: 14px; height: 14px;
+    background: var(--noir);
+    border-radius: 50%;
+  }
+  .btn-style-9::after {
+    content: ''; position: absolute;
+    right: -8px; top: 50%; transform: translateY(-50%);
+    width: 14px; height: 14px;
+    background: var(--noir);
+    border-radius: 50%;
+  }
+  .btn-style-9:hover {
+    transform: rotate(-2deg) scale(1.05);
+    box-shadow: 0 0 0 4px var(--gold-pale), 0 10px 24px rgba(212,175,55,0.4);
+  }
+
+  /* ============ STYLE 10 : CRAMOISI (urgences) ============ */
+  .btn-style-10 {
+    display: inline-block; text-decoration: none;
+    padding: 14px 32px; border-radius: 999px;
+    font-size: 12px; letter-spacing: 3px; font-weight: 800;
+    cursor: pointer;
+    background: var(--cramoisi);
+    color: #fff;
+    border: 1px solid #b00000;
+    font-family: var(--sans);
+    box-shadow: 0 0 24px rgba(139, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.2);
+    transition: all 0.25s;
+    text-transform: uppercase;
+  }
+  .btn-style-10:hover {
+    background: #b00000;
+    box-shadow: 0 0 40px rgba(139, 0, 0, 0.8), inset 0 1px 0 rgba(255,255,255,0.3);
+    transform: translateY(-2px);
+  }
+
+  /* ============ STYLE 11 : DOUBLE GOLDEN LINE ============ */
+  .btn-style-11 {
+    display: inline-flex; align-items: center; gap: 14px;
+    text-decoration: none;
+    padding: 14px 32px; border-radius: 0;
+    font-size: 11px; letter-spacing: 4px; font-weight: 800;
+    cursor: pointer;
+    background: transparent;
+    color: var(--gold);
+    border: none;
+    font-family: var(--sans);
+    position: relative;
+    text-transform: uppercase;
+    transition: gap 0.3s;
+  }
+  .btn-style-11::before,
+  .btn-style-11::after {
+    content: '';
+    flex: 0 0 30px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    transition: flex 0.3s, background 0.3s;
+  }
+  .btn-style-11:hover { gap: 22px; color: var(--gold-pale); }
+  .btn-style-11:hover::before,
+  .btn-style-11:hover::after {
+    flex: 0 0 45px;
+    background: linear-gradient(90deg, transparent, var(--gold-pale), transparent);
+  }
+
+  /* ============ STYLE 12 : VICTORIEN ============ */
+  .btn-style-12 {
+    display: inline-block; text-decoration: none;
+    padding: 16px 40px; border-radius: 0;
+    font-size: 11px; letter-spacing: 4px; font-weight: 800;
+    cursor: pointer;
+    background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
+    color: var(--gold);
+    border: 2px solid var(--gold);
+    font-family: var(--serif);
+    position: relative;
+    transition: all 0.3s;
+    text-transform: uppercase;
+  }
+  .btn-style-12::before,
+  .btn-style-12::after {
+    content: '';
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border: 2px solid var(--gold);
+  }
+  .btn-style-12::before { top: -8px; left: -8px; border-right: none; border-bottom: none; }
+  .btn-style-12::after { bottom: -8px; right: -8px; border-left: none; border-top: none; }
+  .btn-style-12:hover {
+    background: var(--gold);
+    color: var(--noir);
+    letter-spacing: 5px;
+  }
+  .btn-style-12:hover::before,
+  .btn-style-12:hover::after {
+    border-color: var(--gold);
+  }
+
+  /* CHOICE SECTION en bas */
+  .choose-box {
+    margin-top: 40px;
+    padding: 30px;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.08), rgba(139, 0, 0, 0.04));
+    border: 1px solid var(--gold);
+    border-radius: 20px;
+    text-align: center;
+  }
+  .choose-title { font-family: var(--serif); color: var(--gold); font-size: 22px; margin-bottom: 8px; letter-spacing: 1.5px; }
+  .choose-text { color: var(--cream); font-size: 14px; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <h1>♕ DEMO BOUTONS TWOQ ♕</h1>
+  <p class="subtitle">12 styles différents — choisis ton préféré pour <strong>"RÉSERVER"</strong> et autres CTAs</p>
+
+  <!-- STYLE 1 : ACTUEL -->
+  <div class="style-section">
+    <div class="style-header">
+      <div style="display:flex; align-items:center; gap:14px;">
+        <div class="style-number">01</div>
+        <div class="style-info">
+          <div class="style-name">Pilule dorée pleine</div>
+          <div class="style-desc">Style ACTUEL du site — Rond, plein doré, glow doux</div>
+        </div>
+      </div>
+      <span class="style-tag current">ACTUEL</span>
+    </div>
+    <div class="style-buttons">
+      <span class="label">Primary</span>
+      <a href="#" class="btn-style-1">RÉSERVER</a>
+      <span class="label" style="margin-left:20px;">Secondary</span>
+      <a href="#" class="btn-style-1-sec">VOIR PLUS</a>
+    </div>
+  </div>
+
+  <!-- STYLE 2 : OUTLINE LUXURIEUX -->
+  <div class="style-section">
+    <div class="style-header">
+      <div style="display:flex; align-items:center; gap:14px;">
+        <div class="style-number">02</div>
+        <div class="style-info">
+          <div class="style-name">Outline minimaliste</div>
+          <div class="style-desc">Carré, contour doré épais — se remplit au hover</div>
+        </div>
+      </div>
+      <span class="style-tag">CHIC</span>
+    </div>
+    <div class="style-buttons">
+      <a href="#" class="btn-style-2">RÉSERVER</a>
+      <a href="#" class="btn-style-2">VOIR LES DATES</a>
+    </div>
+  </div>
+
+  <!-- STYLE 3 : SHIMMER -->
+  <div class="style-section">
+    <div class="style-header">
+      <div style="display:flex; align-items:center; gap:14px;">
+        <div class="style-number">03</div>
+        <div class="style-info">
+          <div class="style-name">Shiny shimmer</div>
+          <div class="style-desc">Dégradé or 3D + reflet brillant qui passe au hover ✨</div>
+        </div>
+      </div>
+      <span class="style-tag">PREMIUM</span>
+    </div>
+    <div class="style-buttons">
+      <a href="#" class="btn-style-3">🎟️ RÉSERVER</a>
+      <a href="#" class="btn-style-3">VOIR PLUS</a>
+    </div>
+  </div>
+
+  <!-- STYLE 4 : DOUBLE BORDURE -->
+  <div class="style-section">
+    <div class="style-header">
+      <div style="display:flex; align-items:center; gap:14px;">
+        <div class="style-number">04</div>
+        <div class="style-info">
+          <div class="style-name">Double bordure</div>
+          <div class="style-desc">Effet "encadré" double trait — style certificat officiel</div>
+        </div>
+      </div>
+      <span class="style-tag">CLASSIQUE</span>
+    </div>
+    <div class="style-buttons">
+      <a href="#" class="btn-style-4">RÉSERVER</a>
+      <a href="#" class="btn-style-4">PROCHAINE DATE</a>
+    </div>
+  </div>
+
+  <!-- STYLE 5 : NEON GLOW -->
+  <div class="style-section">
+    <div class="style-header">
+      <div style="display:flex; align-items:center; gap:14px;">
+        <div class="style-number">05</div>
+        <div class="style-info">
+          <div class="style-name">Néon doré</div>
+          <div class="style-desc">Contour qui brille avec halo lumineux intense au hover 💡</div>
+        </div>
+      </div>
+      <span class="style-tag">SHOW</span>
+    </div>
+    <div class="style-buttons">
+      <a href="#" class="btn-style-5">RÉSERVER</a>
+      <a href="#" class="btn-style-5">BILLETTERIE</a>
+    </div>
+  </div>
+
+  <!-- STYLE 6 : COURONNE -->
+  <div class="style-section">
+    <div class="style-header">
+      <div style="display:flex; align-items:center; gap:14px;">
+        <div class="style-number">06</div>
+        <div class="style-info">
+          <div class="style-name">Couronne royale ♕</div>
+          <div class="style-desc">Bordure gauche dorée + icône couronne — très TWOQ</div>
+        </div>
+      </div>
+      <span class="style-tag new">QUEEN</span>
+    </div>
+    <div class="style-buttons">
+      <a href="#" class="btn-style-6">RÉSERVER</a>
+      <a href="#" class="btn-style-6">VOIR PLUS</a>
+    </div>
+  </div>
+
+  <!-- STYLE 7 : 3D RELIEF -->
+  <div class="style-section">
+    <div class="style-header">
+      <div style="display:flex; align-items:center; gap:14px;">
+        <div class="style-number">07</div>
+        <div class="style-info">
+          <div class="style-name">3D relief or massif</div>
+          <div class="style-desc">Effet bouton "physique" avec ombre épaisse, s'enfonce au clic</div>
+        </div>
+      </div>
+      <span class="style-tag">FUN</span>
+    </div>
+    <div class="style-buttons">
+      <a href="#" class="btn-style-7">RÉSERVER</a>
+      <a href="#" class="btn-style-7">JE TENTE</a>
+    </div>
+  </div>
+
+  <!-- STYLE 8 : UNDERLINE -->
+  <div class="style-section">
+    <div class="style-header">
+      <div style="display:flex; align-items:center; gap:14px;">
+        <div class="style-number">08</div>
+        <div class="style-info">
+          <div class="style-name">Lien souligné élégant</div>
+          <div class="style-desc">Minimaliste — juste un soulignement doré avec flèche</div>
+        </div>
+      </div>
+      <span class="style-tag">DISCRET</span>
+    </div>
+    <div class="style-buttons">
+      <a href="#" class="btn-style-8">RÉSERVER</a>
+      <a href="#" class="btn-style-8">VOIR LE SHOW</a>
+    </div>
+  </div>
+
+  <!-- STYLE 9 : TICKET -->
+  <div class="style-section">
+    <div class="style-header">
+      <div style="display:flex; align-items:center; gap:14px;">
+        <div class="style-number">09</div>
+        <div class="style-info">
+          <div class="style-name">Ticket de concert 🎟️</div>
+          <div class="style-desc">Forme de billet vintage avec encoches — très spectacle</div>
+        </div>
+      </div>
+      <span class="style-tag">FUN</span>
+    </div>
+    <div class="style-buttons" style="padding-left: 30px;">
+      <a href="#" class="btn-style-9">🎟️ RÉSERVER</a>
+      <a href="#" class="btn-style-9" style="margin-left: 14px;">MA PLACE</a>
+    </div>
+  </div>
+
+  <!-- STYLE 10 : CRAMOISI -->
+  <div class="style-section">
+    <div class="style-header">
+      <div style="display:flex; align-items:center; gap:14px;">
+        <div class="style-number">10</div>
+        <div class="style-info">
+          <div class="style-name">Cramoisi urgence</div>
+          <div class="style-desc">Rouge profond pour les urgences/dernières places</div>
+        </div>
+      </div>
+      <span class="style-tag" style="background:rgba(139,0,0,0.2);border-color:#8B0000;color:#ff8a73;">URGENCE</span>
+    </div>
+    <div class="style-buttons">
+      <a href="#" class="btn-style-10">🔥 DERNIÈRES PLACES</a>
+      <a href="#" class="btn-style-10">RÉSERVER VITE</a>
+    </div>
+  </div>
+
+  <!-- STYLE 11 : DOUBLE LIGNE -->
+  <div class="style-section">
+    <div class="style-header">
+      <div style="display:flex; align-items:center; gap:14px;">
+        <div class="style-number">11</div>
+        <div class="style-info">
+          <div class="style-name">Lignes décoratives</div>
+          <div class="style-desc">Texte encadré par des fines lignes dorées qui s'étendent au hover</div>
+        </div>
+      </div>
+      <span class="style-tag">ARTISTIQUE</span>
+    </div>
+    <div class="style-buttons">
+      <a href="#" class="btn-style-11">RÉSERVER</a>
+      <a href="#" class="btn-style-11">DÉCOUVRIR</a>
+    </div>
+  </div>
+
+  <!-- STYLE 12 : VICTORIEN -->
+  <div class="style-section">
+    <div class="style-header">
+      <div style="display:flex; align-items:center; gap:14px;">
+        <div class="style-number">12</div>
+        <div class="style-info">
+          <div class="style-name">Victorien (Cinzel)</div>
+          <div class="style-desc">Police serif Cinzel + équerres dorées aux coins — très Queen</div>
+        </div>
+      </div>
+      <span class="style-tag new">ROYAL</span>
+    </div>
+    <div class="style-buttons" style="padding: 30px 20px;">
+      <a href="#" class="btn-style-12">RÉSERVER</a>
+      <a href="#" class="btn-style-12">EN SAVOIR PLUS</a>
+    </div>
+  </div>
+
+  <!-- CHOIX -->
+  <div class="choose-box">
+    <div class="choose-title">🎯 Quel style choisis-tu ?</div>
+    <p class="choose-text">Réponds-moi avec le <strong>numéro du style</strong> (01 à 12) — je l'appliquerai automatiquement <strong>partout sur le site</strong> (LE SHOW, DATES, FAN ZONE, BOUTIQUE, MOI, etc.).<br><br>Tu peux aussi me dire <strong>"je veux le 03 pour les primaires + le 08 pour les secondaires"</strong> — je peux combiner !</p>
+  </div>
+
+</div>
+
+</body>
+</html>
