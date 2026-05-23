@@ -465,23 +465,23 @@
         <div class="request-desc">Inscrire le show dans votre salle, festival ou événement. Tournées 2026-2028.</div>
         <div class="request-meta">→ Booking</div>
       </div>
-      <div class="request-card" onclick="selectRequestType('presse')">
+      <a href="espace-presse.html" class="request-card" style="text-decoration:none; color:inherit;">
         <div class="request-icon presse">📰</div>
         <div class="request-title">Presse &amp; Médias</div>
         <div class="request-desc">Interviews, reportages, accréditations, dossier de presse, photos HD.</div>
-        <div class="request-meta">→ Presse</div>
-      </div>
+        <div class="request-meta">→ Kit Presse</div>
+      </a>
       <div class="request-card" onclick="selectRequestType('partenariat')">
         <div class="request-icon partenariat">🤝</div>
         <div class="request-title">Partenariat &amp; Sponsoring</div>
         <div class="request-desc">Marques, sponsors, opérations co-brandées, dotations concours.</div>
         <div class="request-meta">→ Partenariat</div>
       </div>
-      <div class="request-card" onclick="selectRequestType('production')">
-        <div class="request-icon prod">🎬</div>
-        <div class="request-title">Production &amp; Tournage</div>
-        <div class="request-desc">Captation, documentaire, événement privé, tournage corporate.</div>
-        <div class="request-meta">→ Production</div>
+      <div class="request-card" onclick="selectRequestType('technique')">
+        <div class="request-icon prod">🎚️</div>
+        <div class="request-title">Technique &amp; Rider</div>
+        <div class="request-desc">Fiches techniques, riders, plans de scène, contacts régie son &amp; lumière.</div>
+        <div class="request-meta">→ Technique</div>
       </div>
     </div>
 
@@ -518,7 +518,7 @@
             <option value="booking">🎤 Booking &amp; Programmation</option>
             <option value="presse">📰 Presse &amp; Médias</option>
             <option value="partenariat">🤝 Partenariat &amp; Sponsoring</option>
-            <option value="production">🎬 Production &amp; Tournage</option>
+            <option value="technique">🎚️ Technique &amp; Rider</option>
             <option value="autre">Autre</option>
           </select>
         </div>
@@ -546,17 +546,23 @@
       <div class="info-card">
         <div class="info-icon">✉️</div>
         <div class="info-label">EMAIL</div>
-        <div class="info-value"><a href="mailto:contact@ohmyprod.com">contact@ohmyprod.com</a></div>
+        <div class="info-value">
+          <a href="#" class="hidden-email" data-user="regis.ohmyprod" data-domain="gmail.com" onclick="revealEmail(event, this)">📩 Cliquer pour afficher</a>
+        </div>
       </div>
       <div class="info-card">
         <div class="info-icon">🎤</div>
         <div class="info-label">BOOKING</div>
-        <div class="info-value"><a href="mailto:booking@ohmyprod.com">booking@ohmyprod.com</a></div>
+        <div class="info-value">
+          <a href="#" class="hidden-email" data-user="regis.ohmyprod" data-domain="gmail.com" data-subject="Demande de Booking TWOQ" onclick="revealEmail(event, this)">📩 Cliquer pour afficher</a>
+        </div>
       </div>
       <div class="info-card">
         <div class="info-icon">📰</div>
         <div class="info-label">PRESSE</div>
-        <div class="info-value"><a href="mailto:presse@ohmyprod.com">presse@ohmyprod.com</a></div>
+        <div class="info-value">
+          <a href="#" class="hidden-email" data-user="regis.ohmyprod" data-domain="gmail.com" data-subject="Demande Presse TWOQ" onclick="revealEmail(event, this)">📩 Cliquer pour afficher</a>
+        </div>
       </div>
     </div>
 
@@ -621,6 +627,34 @@
 <script>
   function toggleMenu() { document.getElementById('mainNav').classList.toggle('open'); }
   function closeMenu() { document.getElementById('mainNav').classList.remove('open'); }
+
+  // Anti-bot : assemble l'email dynamiquement au clic + ouvre le client mail
+  function revealEmail(event, el) {
+    event.preventDefault();
+    const user = el.getAttribute('data-user') || '';
+    const domain = el.getAttribute('data-domain') || '';
+    const subject = el.getAttribute('data-subject') || '';
+    if (!user || !domain) return;
+    const email = user + '@' + domain;
+    // Si déjà révélé : ouvrir le mail
+    if (el.dataset.revealed === '1') {
+      window.location.href = 'mailto:' + email + (subject ? '?subject=' + encodeURIComponent(subject) : '');
+      return;
+    }
+    // Sinon : afficher l'email
+    el.textContent = email;
+    el.dataset.revealed = '1';
+    el.style.fontWeight = '700';
+    el.style.color = 'var(--gold)';
+    // Petite indication
+    const note = document.createElement('div');
+    note.textContent = '↻ Re-cliquer pour ouvrir ton client mail';
+    note.style.fontSize = '10px';
+    note.style.color = 'var(--smoke)';
+    note.style.fontStyle = 'italic';
+    note.style.marginTop = '4px';
+    el.parentElement.appendChild(note);
+  }
 
   function selectRequestType(type) {
     const select = document.getElementById('ctType');
