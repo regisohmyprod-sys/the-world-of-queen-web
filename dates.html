@@ -690,26 +690,37 @@
     flex-direction: column;
     gap: 10px;
   }
+  /* Style "ticket mini" pour les liens billetterie dans la popup */
   .modal-cta {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 14px 18px;
-    background: var(--charcoal);
-    border: 1px solid rgba(212,175,55,0.25);
-    border-radius: 12px;
+    padding: 14px 22px;
+    background: linear-gradient(90deg, rgba(20,20,20,0.95), rgba(30,25,15,0.95));
+    border: 1px dashed rgba(212,175,55,0.4);
+    border-left: 4px solid var(--gold);
+    border-right: 4px solid var(--gold);
+    border-radius: 4px;
     color: var(--cream);
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: 0.5px;
-    transition: all 0.2s;
+    transition: all 0.25s;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 13px;
+    position: relative;
   }
   .modal-cta:hover {
-    background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(212,175,55,0.05));
+    background: linear-gradient(90deg, rgba(212,175,55,0.18), rgba(212,175,55,0.06));
     border-color: var(--gold);
-    transform: translateX(4px);
+    border-left-color: var(--gold);
+    border-right-color: var(--gold);
+    transform: translateX(6px);
+    box-shadow: 0 6px 20px rgba(212,175,55,0.15);
   }
   .modal-cta-icon { font-size: 22px; }
-  .modal-cta-arrow { margin-left: auto; color: var(--gold); }
+  .modal-cta-arrow { margin-left: auto; color: var(--gold); transition: transform 0.25s; }
+  .modal-cta:hover .modal-cta-arrow { transform: translateX(4px); }
   .modal-empty { color: var(--smoke); font-style: italic; text-align: center; padding: 20px; }
 
   /* ============ FOOTER (identique index) ============ */
