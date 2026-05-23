@@ -1008,6 +1008,43 @@
     transform: translateY(-2px);
   }
 
+
+  /* ============ 🎨 CHARTE TYPOGRAPHIQUE UNIFIÉE (toutes pages) ============ */
+  /* Titres principaux de page (hero, page-title) */
+  .hero-title, .page-title, .moi-hero h1 {
+    font-size: clamp(40px, 6vw, 56px) !important;
+    line-height: 1.05 !important;
+    letter-spacing: 2px !important;
+  }
+  /* Titres de section H2 */
+  .section-title, .newsletter-title, h2:not(.signup-title):not(.login-title):not(.levels-detail-title) {
+    font-size: clamp(28px, 4.5vw, 40px) !important;
+    line-height: 1.15 !important;
+    letter-spacing: 1px !important;
+  }
+  /* Titres de cartes / sous-sections */
+  .fan-card-title, .show-card-title, .artist-name, .shop-title,
+  .live-card-title, .review-bubble .review-author,
+  .reels-card-title, .backstage-card-real .backstage-cap-real {
+    font-size: 19px !important;
+    line-height: 1.3 !important;
+    letter-spacing: 0.5px !important;
+  }
+  /* Eyebrows (libellés au-dessus des sections) */
+  .section-eyebrow, .shop-eyebrow, .live-card-eyebrow,
+  .reels-eyebrow, .accordion-eyebrow {
+    font-size: 11px !important;
+    letter-spacing: 4px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+  }
+  /* Texte courant (paragraphes) */
+  .section-text, .fan-card-text, .show-card-text, .shop-text {
+    font-size: 14px !important;
+    line-height: 1.65 !important;
+  }
+  /* ============ FIN CHARTE TYPOGRAPHIQUE ============ */
+
 </style>
 </head>
 <body>
