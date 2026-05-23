@@ -169,6 +169,48 @@
   .footer-links a { color: var(--smoke); text-decoration: none; transition: color 0.2s; }
   .footer-links a:hover { color: var(--gold); }
   .footer-copy { color: var(--smoke); font-size: 10px; margin-top: 8px; letter-spacing: 1px; }
+
+  /* ============ 🎨 CHARTE TYPOGRAPHIQUE UNIFIÉE (toutes pages) ============ */
+  /* Titres principaux de page (hero, page-title) */
+  .hero-title, .page-title, .moi-hero h1, .boutique-hero h1, .medias-hero h1, .presse-hero h1, .contact-hero h1 {
+    font-size: clamp(40px, 6vw, 56px) !important;
+    line-height: 1.05 !important;
+    letter-spacing: 2px !important;
+  }
+  /* Titres de section H2 */
+  .section-title, .newsletter-title, .boutique-title, .category-title,
+  h2:not(.signup-title):not(.login-title):not(.levels-detail-title):not(.profile-name) {
+    font-size: clamp(28px, 4.5vw, 40px) !important;
+    line-height: 1.15 !important;
+    letter-spacing: 1px !important;
+  }
+  /* Titres de cartes / sous-sections */
+  .fan-card-title, .show-card-title, .artist-name, .shop-title,
+  .live-card-title, .review-bubble .review-author,
+  .reels-card-title, .backstage-card-real .backstage-cap-real,
+  .product-title, .category-card-title, .perk-title, .feature-title,
+  .resource-title, .info-title {
+    font-size: 19px !important;
+    line-height: 1.3 !important;
+    letter-spacing: 0.5px !important;
+  }
+  /* Eyebrows */
+  .section-eyebrow, .shop-eyebrow, .live-card-eyebrow,
+  .reels-eyebrow, .accordion-eyebrow, .boutique-eyebrow,
+  .category-eyebrow, .perk-eyebrow {
+    font-size: 11px !important;
+    letter-spacing: 4px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+  }
+  /* Texte courant */
+  .section-text, .fan-card-text, .show-card-text, .shop-text,
+  .boutique-subtitle, .category-text, .perk-text {
+    font-size: 14px !important;
+    line-height: 1.65 !important;
+  }
+  /* ============ FIN CHARTE TYPOGRAPHIQUE ============ */
+
 </style>
 </head>
 <body>
