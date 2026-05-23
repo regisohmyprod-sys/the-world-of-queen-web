@@ -672,6 +672,24 @@
   .connected-zone { display: none; }
   .connected-zone.active { display: block; }
 
+  /* État "checking" : on cache la zone visiteur pendant la vérif (max 1.5s) */
+  .checking-login #visitorZone { visibility: hidden; }
+  .checking-login #newsletterSection { visibility: hidden; }
+  /* Petit indicateur discret pendant le check */
+  .login-checking-pill {
+    position: fixed; top: 80px; left: 50%;
+    transform: translateX(-50%);
+    background: rgba(212, 175, 55, 0.12);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 8px 18px; border-radius: 999px;
+    font-size: 11px; letter-spacing: 1.5px;
+    font-weight: 700;
+    z-index: 999;
+    display: none;
+  }
+  .checking-login .login-checking-pill { display: block; }
+
   /* Header profil */
   .profile-header {
     text-align: center;
@@ -1013,7 +1031,116 @@
     color: #ff7070;
     border-color: #ff5050;
   }
-  /* ============ FIN PROFIL CONNECTÉ ============ */
+  /* ============ MODAL DÉTAIL NIVEAUX ============ */
+  .levels-detail-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.88);
+    backdrop-filter: blur(10px);
+    display: none;
+    align-items: flex-start; justify-content: center;
+    z-index: 9999;
+    padding: 20px 16px;
+    overflow-y: auto;
+  }
+  .levels-detail-overlay.open { display: flex; }
+  .levels-detail-card {
+    background: linear-gradient(180deg, #141414, #0a0a0a);
+    border: 1px solid var(--gold);
+    border-radius: 22px;
+    max-width: 600px;
+    width: 100%;
+    padding: 28px 24px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 60px rgba(212,175,55,0.15);
+    position: relative;
+    margin: 20px auto;
+  }
+  .levels-detail-close {
+    position: absolute; top: 14px; right: 14px;
+    background: rgba(0,0,0,0.5); border: 1px solid rgba(212,175,55,0.3);
+    color: var(--gold); width: 34px; height: 34px;
+    border-radius: 50%; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-family: inherit;
+  }
+  .levels-detail-title {
+    font-family: var(--serif); color: var(--gold);
+    font-size: 24px; font-weight: 500;
+    letter-spacing: 1px; margin-bottom: 6px; text-align: center;
+  }
+  .levels-detail-subtitle {
+    color: var(--cream); font-size: 12px;
+    text-align: center; opacity: 0.85;
+    margin-bottom: 22px; font-style: italic;
+  }
+  .level-detail-card {
+    background: linear-gradient(135deg, rgba(20,20,20,0.85), rgba(10,10,10,0.85));
+    border: 1px solid rgba(212,175,55,0.18);
+    border-radius: 14px;
+    padding: 18px 16px;
+    margin-bottom: 12px;
+    transition: all 0.3s;
+  }
+  .level-detail-card.is-current {
+    border-color: var(--gold);
+    background: linear-gradient(135deg, rgba(212,175,55,0.12), rgba(20,20,20,0.85));
+    box-shadow: 0 8px 24px rgba(212,175,55,0.15);
+  }
+  .level-detail-header {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 12px;
+  }
+  .level-detail-icon-wrap {
+    width: 46px; height: 46px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+  .level-detail-info { flex: 1; min-width: 0; }
+  .level-detail-name {
+    font-family: var(--serif);
+    font-size: 18px; font-weight: 600;
+    letter-spacing: 1.5px;
+    margin-bottom: 2px;
+  }
+  .level-detail-desc {
+    color: var(--smoke); font-size: 11px;
+    letter-spacing: 1px; font-style: italic;
+  }
+  .level-detail-current-badge {
+    background: var(--gold); color: var(--noir);
+    padding: 4px 12px; border-radius: 999px;
+    font-size: 10px; letter-spacing: 1.5px; font-weight: 800;
+    flex-shrink: 0;
+  }
+  .level-detail-benefits {
+    list-style: none; padding: 0; margin: 0;
+  }
+  .level-detail-benefits li {
+    color: var(--cream); font-size: 13px;
+    padding: 6px 0 6px 22px;
+    position: relative;
+    line-height: 1.5;
+    border-bottom: 1px dashed rgba(212,175,55,0.08);
+  }
+  .level-detail-benefits li:last-child { border-bottom: none; }
+  .level-detail-benefits li::before {
+    content: '✓';
+    position: absolute; left: 0; top: 6px;
+    color: var(--gold); font-weight: 800;
+  }
+  .level-detail-benefits li.locked { color: var(--smoke); opacity: 0.7; }
+  .level-detail-benefits li.locked::before { content: '🔒'; }
+  .level-detail-tip {
+    text-align: center; padding: 14px;
+    background: linear-gradient(135deg, rgba(212,175,55,0.08), rgba(139,0,0,0.04));
+    border: 1px dashed rgba(212,175,55,0.3);
+    border-radius: 12px; margin-top: 10px;
+    color: var(--gold-pale); font-size: 12px;
+    line-height: 1.5;
+  }
+  .level-detail-tip strong { color: var(--gold); }
+  /* ============ FIN MODAL NIVEAUX ============ */
 </style>
 </head>
 <body>
@@ -1681,6 +1808,8 @@
 </script>
 
 <!-- ============ MODAL CONNEXION ============ -->
+<div class="login-checking-pill">⏳ Connexion en cours...</div>
+
 <div class="login-overlay" id="loginOverlay" onclick="if(event.target===this)closeLoginModal()">
   <div class="login-card">
     <button class="login-close" onclick="closeLoginModal()" aria-label="Fermer">✕</button>
@@ -1738,7 +1867,7 @@
     <div class="progress-bar-bg">
       <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
     </div>
-    <button type="button" class="levels-info-btn" onclick="toggleLevels()">ⓘ En savoir plus sur les niveaux</button>
+    <button type="button" class="levels-info-btn" onclick="openLevelsDetail()">ⓘ En savoir plus sur les niveaux</button>
   </div>
 
   <!-- MES NOTIFICATIONS -->
@@ -1857,6 +1986,22 @@
 
   <button type="button" class="logout-btn" onclick="logout()">→] Se déconnecter</button>
 </section>
+
+<!-- ============ MODAL DÉTAIL NIVEAUX ============ -->
+<div class="levels-detail-overlay" id="levelsDetailOverlay" onclick="if(event.target===this)closeLevelsDetail()">
+  <div class="levels-detail-card">
+    <button class="levels-detail-close" onclick="closeLevelsDetail()" aria-label="Fermer">✕</button>
+    <h2 class="levels-detail-title">👑 Les niveaux TWOQ</h2>
+    <div class="levels-detail-subtitle">Plus tu es engagé·e, plus tu débloques d'avantages exclusifs !</div>
+    <div id="levelsDetailList">
+      <!-- Généré en JS -->
+    </div>
+    <div class="level-detail-tip">
+      💡 <strong>Comment monter en niveau ?</strong><br>
+      Compléter ton profil, participer aux concours, voter pour les chansons surprises, parrainer des amis, venir aux concerts — chaque action te rapporte des points !
+    </div>
+  </div>
+</div>
 
 <script>
   // ============ SYSTÈME CONNEXION + PROFIL CONNECTÉ ============
@@ -1993,30 +2138,45 @@
   // ===== Vérification connexion au chargement =====
   async function checkLoginStatus() {
     const saved = localStorage.getItem(STORAGE_KEY);
-    if (!saved) return; // Pas connecté → mode visiteur
+    if (!saved) return; // Pas connecté → mode visiteur immédiatement
+
+    // Un user est sauvegardé : on cache la zone visiteur pendant la vérification
+    document.body.classList.add('checking-login');
+
     try {
       const { email } = JSON.parse(saved);
-      if (!email) return;
-      // Recharge les données fraîches depuis Supabase
+      if (!email) { document.body.classList.remove('checking-login'); return; }
+
+      // Timeout de 2s max — si Supabase rame, on affiche quand même la zone visiteur
+      const ctrl = new AbortController();
+      const timeout = setTimeout(() => ctrl.abort(), 2000);
+
       const res = await fetch(SUPA_URL_L + '/rest/v1/fans?email=eq.' + encodeURIComponent(email) + '&select=*', {
         headers: {
           'apikey': SUPA_KEY_L,
           'Authorization': 'Bearer ' + SUPA_KEY_L
-        }
+        },
+        signal: ctrl.signal
       });
+      clearTimeout(timeout);
+
       if (res.ok) {
         const data = await res.json();
         if (data && data.length > 0) {
           _currentFan = data[0];
           renderConnectedZone();
+          document.body.classList.remove('checking-login');
+          return;
         } else {
           // Compte supprimé → on déconnecte
           localStorage.removeItem(STORAGE_KEY);
         }
       }
     } catch (e) {
-      console.warn('[CheckLogin]', e);
+      console.warn('[CheckLogin]', e.message);
     }
+    // En cas d'échec : on revient au mode visiteur
+    document.body.classList.remove('checking-login');
   }
 
   // ===== Affichage de la zone connectée =====
@@ -2186,6 +2346,48 @@
   function toggleAccordion(id) {
     document.getElementById(id).classList.toggle('open');
   }
+
+  // ===== Modal "En savoir plus sur les niveaux" =====
+  function openLevelsDetail() {
+    const currentLevel = _currentFan ? getFanLevel(_currentFan) : null;
+    const currentIdx = currentLevel ? FAN_LEVELS.findIndex(l => l.key === currentLevel.key) : -1;
+    const list = document.getElementById('levelsDetailList');
+    list.innerHTML = FAN_LEVELS.map((lvl, idx) => {
+      const isCurrent = currentLevel && lvl.key === currentLevel.key;
+      const isUnlocked = idx <= currentIdx;
+      return `
+        <div class="level-detail-card ${isCurrent ? 'is-current' : ''}">
+          <div class="level-detail-header">
+            <div class="level-detail-icon-wrap" style="background: ${lvl.color}22; color: ${lvl.color};">
+              ${lvl.icon}
+            </div>
+            <div class="level-detail-info">
+              <div class="level-detail-name" style="color: ${lvl.color};">${lvl.label}</div>
+              <div class="level-detail-desc">${lvl.desc}</div>
+            </div>
+            ${isCurrent ? '<div class="level-detail-current-badge">TON NIVEAU</div>' : ''}
+          </div>
+          <ul class="level-detail-benefits">
+            ${lvl.benefits.map(b => `<li class="${isUnlocked ? '' : 'locked'}">${b}</li>`).join('')}
+          </ul>
+        </div>
+      `;
+    }).join('');
+    document.getElementById('levelsDetailOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLevelsDetail() {
+    document.getElementById('levelsDetailOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // ESC pour fermer modal niveaux
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && document.getElementById('levelsDetailOverlay').classList.contains('open')) {
+      closeLevelsDetail();
+    }
+  });
 
   function goToDatesPage() {
     window.location.href = 'dates.html';
