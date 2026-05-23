@@ -569,9 +569,13 @@
     background: linear-gradient(135deg, rgba(212,175,55,0.18), rgba(212,175,55,0.05));
     border: 1px solid rgba(212,175,55,0.45);
     border-radius: 10px;
-    padding: 10px 12px;
+    padding: 10px 14px 10px 14px;
     text-align: left;
-    min-width: 60px;
+    min-width: 72px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
   }
   .date-num {
     font-family: var(--serif);
@@ -580,14 +584,16 @@
     font-weight: 700;
     line-height: 1;
     text-align: left;
+    width: 100%;
   }
   .date-mois {
     color: var(--cream);
     font-size: 10px;
     letter-spacing: 2px;
     text-transform: uppercase;
-    margin-top: 3px;
+    margin-top: 4px;
     text-align: left;
+    width: 100%;
   }
   .date-info { min-width: 0; }
   .date-ville {
