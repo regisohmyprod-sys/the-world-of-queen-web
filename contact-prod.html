@@ -1,35 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<script>
-// 📱 Redirection automatique mobile → PWA TWOQ
-(function(){
-  try {
-    // Si déjà sur la PWA, ne rien faire
-    if (location.hostname === 'app.theworldofqueen.com') return;
-    
-    // Détection mobile : User-Agent + largeur écran
-    var ua = navigator.userAgent || '';
-    var isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
-    var isSmallScreen = window.innerWidth < 768;
-    var isMobile = isMobileUA || isSmallScreen;
-    
-    // Bypass : si paramètre ?desktop=1 dans l'URL, on reste sur le site web
-    var url = new URL(location.href);
-    if (url.searchParams.get('desktop') === '1') {
-      sessionStorage.setItem('twoq_force_desktop', '1');
-      return;
-    }
-    if (sessionStorage.getItem('twoq_force_desktop') === '1') return;
-    
-    // Si mobile : redirection vers PWA
-    if (isMobile) {
-      window.location.replace('https://app.theworldofqueen.com/');
-    }
-  } catch(e) { /* fail silently */ }
-})();
-</script>
-
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Contact Prod — THE WORLD OF QUEEN — L'Éternelle Légende</title>
@@ -813,6 +784,8 @@
   });
 
 </script>
+<!-- 📊 OMP Analytics tracker (site web TWOQ) -->
+<script src="analytics.js" defer></script>
 
 </body>
 </html>
