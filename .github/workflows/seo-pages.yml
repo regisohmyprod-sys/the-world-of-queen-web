@@ -1,0 +1,44 @@
+# .github/workflows/seo-pages.yml
+# Régénère les pages SEO par date + sitemap automatiquement.
+# - tous les jours à 5h (heure FR) pour refléter les nouvelles dates / dates passées
+# - manuellement depuis l'onglet "Actions" (bouton "Run workflow")
+#
+# PRÉREQUIS : dans Settings > Secrets and variables > Actions, créer le secret
+#   SUPABASE_ANON_KEY  = ta clé anon publique Supabase
+
+name: Générer les pages SEO TWOQ
+
+on:
+  schedule:
+    - cron: '0 3 * * *'      # 03:00 UTC = 05:00 Paris (été)
+  workflow_dispatch:          # lancement manuel
+
+permissions:
+  contents: write             # autorise le commit des pages générées
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Générer les pages
+        env:
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: node generate-seo-pages.mjs
+
+      - name: Commit si changement
+        run: |
+          git config user.name "twoq-seo-bot"
+          git config user.email "bot@theworldofqueen.com"
+          git add concerts sitemap.xml robots.txt
+          if git diff --staged --quiet; then
+            echo "Aucun changement."
+          else
+            git commit -m "SEO: regénération des pages dates [skip ci]"
+            git push
+          fi
