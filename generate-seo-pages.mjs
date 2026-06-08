@@ -199,8 +199,12 @@ function renderPage(ev, others) {
     ...(offers ? { offers } : {}),
   };
 
-  // Autres dates (maillage interne)
-  const othersHtml = others.slice(0, 8).map(o =>
+  // Prochaines dates (maillage interne) : on privilégie les dates APRÈS celle consultée
+  const after = others.filter(o => o.dt.iso >= ev.dt.iso);
+  const before = others.filter(o => o.dt.iso < ev.dt.iso);
+  let picked = after.slice(0, 6);
+  if (picked.length < 6) picked = picked.concat(before.slice(-(6 - picked.length)));
+  const othersHtml = picked.map(o =>
     `<li><a href="${SITE_ORIGIN}/${OUTPUT_DIR}/${o.slug}/"><span class="o-ville">${esc(o.ville)}</span><span class="o-date">${esc(o.dt.label)}</span></a></li>`
   ).join('\n          ');
 
@@ -225,21 +229,63 @@ function renderPage(ev, others) {
 <meta name="twitter:image" content="${ogImg}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<base href="${SITE_ORIGIN}/">
 <script type="application/ld+json">${JSON.stringify(jsonld)}</script>
 <style>
-  :root{--noir:#0A0A0A;--or:#D4AF37;--cramoisi:#8B0000;--creme:#F5F1E8;}
+  :root{--noir:#0A0A0A;--charcoal:#141414;--gold:#D4AF37;--gold-pale:#F0D77A;--cramoisi:#8B0000;--cream:#F5F1E8;--smoke:#8B8580;--serif:'Cinzel',serif;--sans:'Inter',system-ui,sans-serif;--or:#D4AF37;--creme:#F5F1E8;}
   *{margin:0;padding:0;box-sizing:border-box}
-  body{background:var(--noir);color:var(--creme);font-family:'Manrope',sans-serif;line-height:1.6;
-    background-image:radial-gradient(ellipse at 50% -10%,rgba(212,175,55,.10),transparent 55%),
-      radial-gradient(ellipse at 50% 110%,rgba(139,0,0,.18),transparent 55%);min-height:100vh}
   a{color:inherit;text-decoration:none}
+  body{background:var(--noir);color:var(--cream);font-family:var(--sans);line-height:1.6;padding-top:62px;min-height:100vh;
+    background-image:radial-gradient(ellipse at 50% -10%,rgba(212,175,55,.10),transparent 55%),
+      radial-gradient(ellipse at 50% 110%,rgba(139,0,0,.18),transparent 55%)}
   .wrap{max-width:760px;margin:0 auto;padding:0 24px}
-  header{padding:28px 0;text-align:center;border-bottom:1px solid rgba(212,175,55,.18)}
-  header .logo{height:46px;width:auto;opacity:.95}
-  nav{display:flex;gap:22px;justify-content:center;margin-top:16px;font-size:.74rem;letter-spacing:.14em;text-transform:uppercase}
-  nav a{color:rgba(245,241,232,.6);transition:color .2s}
-  nav a:hover{color:var(--or)}
+
+  /* ===== HEADER (identique au site) ===== */
+  .site-header{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,10,0.96);
+    backdrop-filter:blur(12px);border-bottom:1px solid rgba(212,175,55,0.15);transition:background 0.3s}
+  .header-inner{position:relative;max-width:1280px;margin:0 auto;padding:14px 24px;display:flex;
+    justify-content:flex-start;align-items:center;gap:50px;min-height:60px}
+  .brand{font-family:var(--serif);color:var(--gold);font-size:16px;letter-spacing:3px;font-weight:600;
+    line-height:1.1;flex-shrink:0;text-decoration:none;transition:filter 0.2s,text-shadow 0.2s;cursor:pointer}
+  .brand:hover{filter:brightness(1.15)}
+  .brand small{display:block;font-family:var(--sans);color:var(--cream);font-size:9px;letter-spacing:4px;
+    font-weight:400;margin-top:2px;opacity:0.8}
+  .menu-toggle{display:none;background:transparent;color:var(--gold);border:1px solid var(--gold);
+    border-radius:6px;padding:6px 12px;font-size:18px;cursor:pointer}
+  nav.main-nav{display:flex;gap:22px;align-items:center}
+  nav.main-nav a{color:var(--cream);font-size:12px;letter-spacing:2px;font-weight:600;text-transform:uppercase;
+    transition:color 0.2s;padding:6px 0;border-bottom:2px solid transparent}
+  nav.main-nav a:hover{color:var(--gold);border-bottom-color:var(--gold)}
+  .nav-dropdown{position:relative}
+  .nav-dropdown-toggle{color:var(--gold);font-size:12px;letter-spacing:2px;font-weight:600;text-transform:uppercase;
+    cursor:pointer;padding:6px 0;border-bottom:2px solid transparent;display:inline-flex;align-items:center;gap:5px;
+    user-select:none;background:none;border-top:none;border-left:none;border-right:none;font-family:inherit;transition:border-color 0.2s}
+  .nav-dropdown-toggle:hover{border-bottom-color:var(--gold)}
+  .nav-dropdown-toggle .chev{font-size:9px;transition:transform 0.2s}
+  .nav-dropdown.open .nav-dropdown-toggle .chev{transform:rotate(180deg)}
+  .nav-dropdown-menu{position:absolute;top:calc(100% + 8px);right:0;min-width:200px;background:rgba(10,10,10,0.98);
+    border:1px solid rgba(212,175,55,0.35);border-radius:12px;padding:6px;display:none;flex-direction:column;gap:2px;
+    box-shadow:0 14px 36px rgba(0,0,0,0.7),0 0 30px rgba(212,175,55,0.1);z-index:200}
+  .nav-dropdown.open .nav-dropdown-menu,.nav-dropdown:hover .nav-dropdown-menu{display:flex}
+  .nav-dropdown-menu a{color:var(--cream)!important;font-size:11px!important;letter-spacing:2px;font-weight:600;
+    text-transform:uppercase;padding:10px 14px!important;border-radius:8px;border-bottom:none!important;
+    transition:background 0.15s,color 0.15s;white-space:nowrap}
+  .nav-dropdown-menu a:hover{background:rgba(212,175,55,0.15);color:var(--gold)!important}
+  @media(max-width:980px){
+    .header-inner{justify-content:space-between}
+    .menu-toggle{display:block}
+    nav.main-nav{position:absolute;top:100%;right:0;background:rgba(10,10,10,0.98);flex-direction:column;gap:0;
+      padding:14px 20px;border-radius:0 0 0 12px;border-left:1px solid rgba(212,175,55,0.15);
+      border-bottom:1px solid rgba(212,175,55,0.15);max-height:0;overflow:hidden;transition:max-height 0.3s ease}
+    nav.main-nav.open{max-height:90vh}
+    nav.main-nav a{padding:12px 0;width:100%;border-bottom:1px solid rgba(212,175,55,0.10)}
+    .nav-dropdown{width:100%}
+    .nav-dropdown-toggle{width:100%;justify-content:space-between;padding:12px 0!important;border-bottom:1px solid rgba(212,175,55,0.10)!important}
+    .nav-dropdown-menu{position:static;background:rgba(0,0,0,0.4);margin:4px 0 8px;width:100%;border:none;
+      border-left:2px solid rgba(212,175,55,0.3);border-radius:0;padding:4px 0 4px 14px;box-shadow:none}
+    .nav-dropdown-menu a{padding:8px 0!important}
+  }
   .hero{text-align:center;padding:64px 0 32px}
   .hero h1{font-family:'Cinzel',serif;font-weight:900;font-size:clamp(2.6rem,9vw,4.8rem);line-height:1.0;
     margin:0 0 4px;text-shadow:0 0 38px rgba(212,175,55,.3)}
@@ -256,15 +302,15 @@ function renderPage(ev, others) {
   .infos{display:grid;grid-template-columns:1fr 1fr;gap:20px 28px;margin-bottom:8px}
   .infos .item .lab{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--or);opacity:.85}
   .infos .item .val{font-family:'Cinzel',serif;font-size:1.28rem;margin-top:4px}
-  .cta{display:block;text-align:center;margin-top:26px;padding:18px;border-radius:12px;
+  .cta{display:block;text-align:center;margin-top:26px;padding:13px;border-radius:12px;
     background:linear-gradient(135deg,var(--or),#b8902b);color:#1a1206;font-family:'Cinzel',serif;
-    font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:1rem;
+    font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:.72rem;
     transition:transform .15s,box-shadow .15s;box-shadow:0 10px 30px rgba(212,175,55,.3)}
   .cta:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(212,175,55,.45)}
   .book-wrap{margin-top:26px}
   .book-lab{text-align:center;font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--or);opacity:.85;margin-bottom:12px}
   .book-opts{display:flex;gap:12px;flex-wrap:wrap}
-  .book-opts .cta{flex:1;min-width:150px;margin-top:0}
+  .book-opts .cta{flex:1;min-width:105px;margin-top:0}
   .cta-sec{background:transparent;border:1px solid var(--or);color:var(--or);box-shadow:none}
   .cta-sec:hover{background:rgba(212,175,55,.12);box-shadow:0 10px 30px rgba(212,175,55,.2)}
   .pitch{text-align:center;color:rgba(245,241,232,.82);font-size:1.02rem;margin:8px auto 0;max-width:580px}
@@ -281,24 +327,78 @@ function renderPage(ev, others) {
   .others li a:hover{border-color:var(--or);background:rgba(212,175,55,.06)}
   .others .o-ville{font-weight:700}
   .others .o-date{color:rgba(245,241,232,.6);font-size:.82rem}
-  .dome{text-align:center;font-family:'Cinzel',serif;letter-spacing:.12em;color:var(--or);
-    border-top:1px solid rgba(212,175,55,.18);border-bottom:1px solid rgba(212,175,55,.18);padding:18px;margin:40px 0}
-  footer{text-align:center;padding:40px 0 60px;border-top:1px solid rgba(212,175,55,.14);
-    color:rgba(245,241,232,.5);font-size:.82rem}
+  .dome{position:relative;text-align:center;font-family:'Cinzel',serif;letter-spacing:.1em;color:var(--creme);
+    background:linear-gradient(180deg,rgba(212,175,55,.12),rgba(212,175,55,.04));
+    border:1px solid rgba(212,175,55,.45);border-radius:14px;padding:18px 20px;margin:40px 0;
+    animation:domeGlow 2.2s ease-in-out infinite}
+  .dome strong{color:var(--or)}
+  .dome-star{color:var(--or);display:inline-block;animation:domeBlink 1s steps(2,start) infinite}
+  @keyframes domeBlink{0%,100%{opacity:1}50%{opacity:.12}}
+  @keyframes domeGlow{0%,100%{box-shadow:0 0 18px rgba(212,175,55,.15)}50%{box-shadow:0 0 32px rgba(212,175,55,.45)}}
+  /* ===== FOOTER + NEWSLETTER (identiques au site) ===== */
+  footer{background:#050505;border-top:1px solid rgba(212,175,55,0.15);padding:50px 20px 24px;margin-top:60px}
+  .footer-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:40px}
+  .footer-col h5{color:var(--gold);font-size:12px;letter-spacing:4px;font-weight:700;text-transform:uppercase;margin-bottom:14px}
+  .footer-col p,.footer-col a{color:var(--cream);font-size:13px;line-height:1.8;opacity:0.85;display:block}
+  .footer-col a:hover{color:var(--gold);opacity:1}
+  .footer-bottom{border-top:1px solid rgba(212,175,55,0.1);margin-top:36px;padding-top:20px;text-align:center;
+    color:var(--smoke);font-size:11px;letter-spacing:1px}
+  .gold-text{color:var(--gold);font-weight:700}
+  @media(max-width:768px){.footer-inner{grid-template-columns:1fr 1fr;gap:26px}}
+  @media(max-width:500px){.footer-inner{grid-template-columns:1fr;gap:22px}}
+  .newsletter-block{position:relative;z-index:3;background:linear-gradient(180deg,#0a0a0a 0%,#050505 100%);
+    border-top:1px solid rgba(212,175,55,0.15);border-bottom:1px solid rgba(212,175,55,0.15);padding:50px 20px}
+  .newsletter-wrap{max-width:600px;margin:0 auto;text-align:center}
+  .newsletter-eyebrow{color:var(--gold);font-size:11px;letter-spacing:5px;font-weight:700;margin-bottom:10px}
+  .newsletter-title{font-family:var(--serif);color:var(--cream);font-size:clamp(24px,4vw,32px);font-weight:500;letter-spacing:1px;margin-bottom:8px}
+  .newsletter-text{color:var(--cream);font-size:13px;line-height:1.5;opacity:0.85;margin-bottom:22px}
+  .newsletter-form{display:flex;gap:10px;max-width:480px;margin:0 auto 12px;flex-wrap:wrap;justify-content:center}
+  .newsletter-form input{flex:1;min-width:200px;background:rgba(0,0,0,0.5);border:1px solid rgba(212,175,55,0.3);
+    color:var(--cream);padding:12px 18px;border-radius:999px;font-family:inherit;font-size:14px;outline:none;transition:border-color 0.2s}
+  .newsletter-form input:focus{border-color:var(--gold)}
+  .newsletter-form input::placeholder{color:var(--smoke)}
+  .newsletter-form button{display:inline-flex;align-items:center;gap:10px;background:var(--noir);color:var(--gold);
+    border:1px solid rgba(212,175,55,0.4);border-left:4px solid var(--gold);border-radius:0;padding:12px 22px;
+    font-family:inherit;font-size:12px;letter-spacing:3px;font-weight:800;cursor:pointer;text-transform:uppercase;
+    position:relative;overflow:hidden;transition:all 0.3s;animation:royalEcarlate 1.5s ease-in-out infinite}
+  .newsletter-form button::before{content:'\u2655';font-size:14px;line-height:1;color:var(--gold);transition:color 0.3s}
+  .newsletter-form button:hover{background:var(--gold);color:var(--noir);border-color:var(--gold);transform:translateX(4px);animation:none}
+  .newsletter-form button:hover::before{color:var(--noir)}
+  .newsletter-helper{color:var(--smoke);font-size:11px;font-style:italic}
+  .newsletter-success{color:#10b981;font-size:13px;margin-top:12px;display:none}
+  .newsletter-success.show{display:block}
+  @keyframes royalEcarlate{0%,100%{background:var(--noir);box-shadow:inset 0 0 0 rgba(139,0,0,0)}
+    50%{background:linear-gradient(90deg,var(--noir) 0%,rgba(139,0,0,0.85) 50%,var(--noir) 100%);
+      box-shadow:inset 0 0 20px rgba(139,0,0,0.5),0 0 16px rgba(139,0,0,0.3)}}
   footer .soc{display:flex;gap:18px;justify-content:center;margin-bottom:16px}
   footer .soc a{color:var(--or);letter-spacing:.1em;text-transform:uppercase;font-size:.72rem}
   @media(max-width:560px){.infos{grid-template-columns:1fr}.others ul{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-  <header>
-    <div class="wrap">
-      <a href="${SITE_ORIGIN}/"><img class="logo" src="${LOGO}" alt="The World of Queen \u2013 L'\u00c9ternelle L\u00e9gende"></a>
-      <nav>
-        <a href="${SITE_ORIGIN}/index.html">Le Show</a>
-        <a href="${SITE_ORIGIN}/${OUTPUT_DIR}/">Dates</a>
-        <a href="${SITE_ORIGIN}/artistes.html">Artistes</a>
-        <a href="https://app.theworldofqueen.com">Appli TWOQ</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="brand">
+        THE WORLD OF QUEEN
+        <small>L'\u00c9TERNELLE L\u00c9GENDE</small>
+      </a>
+      <button class="menu-toggle" onclick="toggleMenu()" aria-label="Menu">\u2630</button>
+      <nav class="main-nav" id="mainNav">
+        <a href="index.html" onclick="closeMenu()">LE SHOW</a>
+        <a href="${SITE_ORIGIN}/${OUTPUT_DIR}/" onclick="closeMenu()" style="color:var(--gold);border-bottom-color:var(--gold);">DATES</a>
+        <a href="artistes.html" onclick="closeMenu()">ARTISTES</a>
+        <a href="fanzone.html" onclick="closeMenu()">FAN ZONE</a>
+        <a href="medias.html" onclick="closeMenu()">M\u00c9DIAS</a>
+        <a href="boutique.html" onclick="closeMenu()">\ud83d\udecd\ufe0f BOUTIQUE</a>
+        <a href="moi.html" onclick="closeMenu()">MOI</a>
+        <a href="contact-prod.html" onclick="closeMenu()">CONTACT PROD</a>
+        <div class="nav-dropdown" id="navDropdown">
+          <button type="button" class="nav-dropdown-toggle" onclick="toggleDropdown(event)">ESPACE PRO <span class="chev">\u25be</span></button>
+          <div class="nav-dropdown-menu">
+            <a href="espace-pro.html" onclick="closeMenu(); closeDropdown();">Espace Pro</a>
+            <a href="espace-presse.html" onclick="closeMenu(); closeDropdown();">Espace Presse</a>
+          </div>
+        </div>
       </nav>
     </div>
   </header>
@@ -331,28 +431,86 @@ function renderPage(ev, others) {
       <div><div class="n">N\u00b01</div><div class="l">Hommage Queen</div></div>
     </div>
 
-    <div class="dome">\u2605 Et le grand rendez-vous : ${DOME_RAPPEL} \u2605</div>
+    <div class="dome"><span class="dome-star">\u2605</span> Et le grand rendez-vous : <strong>${DOME_RAPPEL}</strong> <span class="dome-star">\u2605</span></div>
 
-    ${others.length ? `<section class="others">
-      <h2>Les autres dates de la tourn\u00e9e</h2>
+    ${picked.length ? `<section class="others">
+      <h2>Les prochaines dates</h2>
       <ul>
           ${othersHtml}
       </ul>
     </section>` : ''}
   </main>
 
+  <section class="newsletter-block">
+    <div class="newsletter-wrap">
+      <div class="newsletter-eyebrow">RESTE INFORM\u00c9</div>
+      <h3 class="newsletter-title">Abonnez-vous \u00e0 la newsletter</h3>
+      <p class="newsletter-text">Nouvelles dates, coulisses exclusives, concours &amp; promos \u2014 directement dans ta bo\u00eete mail.</p>
+      <form class="newsletter-form" onsubmit="event.preventDefault(); subscribeNewsletter(this);">
+        <input type="email" placeholder="ton.email@exemple.com" required />
+        <button type="submit">S'abonner</button>
+      </form>
+      <div class="newsletter-helper">\ud83d\udce7 Tu peux te d\u00e9sabonner \u00e0 tout moment \u00b7 Aucun spam, promis.</div>
+      <div class="newsletter-success" id="newsletterSuccess">\u2705 Merci ! Tu es bien inscrit\u00b7e \u00e0 la newsletter TWOQ \ud83c\udfa4</div>
+    </div>
+  </section>
+
   <footer>
-    <div class="wrap">
-      <div class="soc">
-        <a href="https://www.facebook.com/theworldofqueen/">Facebook</a>
-        <a href="https://www.instagram.com/theworldofqueenofficiel/">Instagram</a>
-        <a href="https://www.youtube.com/@THEWORLDOFQUEENOFFICIEL-pn9xl">YouTube</a>
-        <a href="https://www.tiktok.com/@theworldofqueenofficiel">TikTok</a>
+    <div class="footer-inner">
+      <div class="footer-col">
+        <h5>THE WORLD OF QUEEN</h5>
+        <p>L'\u00c9ternelle L\u00e9gende \u2014 Le show r\u00e9f\u00e9rence en hommage \u00e0 Queen, produit par Oh My Prod.</p>
       </div>
-      THE WORLD OF QUEEN \u2014 L'\u00c9ternelle L\u00e9gende \u00b7 Production ${ORG_NAME}<br>
-      <a href="${SITE_ORIGIN}/${OUTPUT_DIR}/" style="color:var(--or)">Voir toutes les dates de tourn\u00e9e \u2192</a>
+      <div class="footer-col">
+        <h5>Navigation</h5>
+        <a href="index.html">Le Show</a>
+        <a href="${SITE_ORIGIN}/${OUTPUT_DIR}/">Dates Tour</a>
+        <a href="artistes.html">Artistes</a>
+        <a href="fanzone.html">Fan Zone</a>
+        <a href="medias.html">M\u00e9dias</a>
+        <a href="moi.html">Mon Espace</a>
+      </div>
+      <div class="footer-col">
+        <h5>Professionnels</h5>
+        <a href="contact-prod.html">Contact Prod</a>
+        <a href="espace-pro.html">Espace Pro</a>
+        <a href="espace-presse.html">Espace Presse</a>
+        <a href="https://app.theworldofqueen.com" target="_blank">Appli TWOQ \u2197</a>
+      </div>
+      <div class="footer-col">
+        <h5>Contact</h5>
+        <p>SAS OH MY PROD</p>
+        <a href="mailto:contact@theworldofqueen.com" class="footer-mail-btn">\u2709\ufe0f Nous \u00e9crire</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      \u00a9 2026 <span class="gold-text">THE WORLD OF QUEEN</span> \u2014 Production <span class="gold-text">OH MY PROD</span>. Tous droits r\u00e9serv\u00e9s.
     </div>
   </footer>
+
+  <script>
+    function toggleMenu(){ var n=document.getElementById('mainNav'); if(n) n.classList.toggle('open'); }
+    function closeMenu(){ var n=document.getElementById('mainNav'); if(n) n.classList.remove('open'); }
+    function toggleDropdown(e){ if(e) e.stopPropagation(); var dd=document.getElementById('navDropdown'); if(dd) dd.classList.toggle('open'); }
+    function closeDropdown(){ var dd=document.getElementById('navDropdown'); if(dd) dd.classList.remove('open'); }
+    document.addEventListener('click', function(e){ var dd=document.getElementById('navDropdown'); if(dd && !dd.contains(e.target)) dd.classList.remove('open'); });
+    async function subscribeNewsletter(form){
+      var input=form.querySelector('input');
+      var email=(input.value||'').trim().toLowerCase();
+      if(!email) return;
+      var success=document.getElementById('newsletterSuccess');
+      try{
+        var res=await fetch('https://nhxqcavianozskxgfcbt.supabase.co/rest/v1/newsletter_subscribers',{
+          method:'POST',
+          headers:{'apikey':'sb_publishable_59Pg7368sxCT6y3j9nNw0g_i8ILGRZ3','Authorization':'Bearer sb_publishable_59Pg7368sxCT6y3j9nNw0g_i8ILGRZ3','Content-Type':'application/json','Prefer':'return=minimal'},
+          body:JSON.stringify({email:email, source:window.location.pathname})
+        });
+        if(!res.ok && res.status!==409) console.warn('[Newsletter] HTTP', res.status);
+      }catch(e){ console.warn('[Newsletter]', e); }
+      form.style.display='none';
+      if(success) success.classList.add('show');
+    }
+  </script>
 </body>
 </html>`;
 }
