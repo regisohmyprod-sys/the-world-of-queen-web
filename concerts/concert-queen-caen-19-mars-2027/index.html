@@ -223,10 +223,10 @@
         <div class="item"><div class="lab">Heure</div><div class="val">20h30</div></div>
         
       </div>
-      <a class="cta fan-cta" href="https://www.theworldofqueen.com/fanzone.html?utm_source=site&amp;utm_medium=date-page&amp;utm_campaign=tarif-fan-org&amp;date=concert-queen-caen-19-mars-2027">
-        <span class="fan-badge">💎 −10&nbsp;%</span> Tarif fan — OR &amp; PLATINE
+      <a class="cta fan-cta" href="https://billetterie-lesdernierscouches.tickandlive.com/reserver/the-world-of-queen-26/130582?idwl=10" onclick="return twoqFanGate(event)">
+        <span class="fan-badge">💎 −10&nbsp;%</span> Tarif fan TWOQ
       </a>
-      <p class="fan-note">Tarif organisateur −10&nbsp;% réservé aux membres <strong>OR &amp; PLATINE</strong> de l'appli TWOQ — inscription gratuite sur l'appli ou le site. Disponible sur ~90&nbsp;% des dates.</p>
+      <p class="fan-note">Tarif organisateur −10&nbsp;% (remise déjà déduite). <strong>Entre ton email</strong> pour débloquer la billetterie au tarif réduit — réservé à la communauté fan TWOQ.</p>
       <div class="book-wrap">
         <div class="book-lab">Ou réserver au tarif public</div>
         <div class="book-opts">
@@ -234,6 +234,34 @@
           <a class="cta cta-sec" href="https://www.fnacspectacles.com/event/the-world-of-queen-leternelle-legende-tournee-zenith-de-caen-normandie-19729227/#tab=?utm_source=site&utm_medium=seo&utm_campaign=concert-queen-caen-19-mars-2027" rel="nofollow noopener" target="_blank">Fnac Spectacles</a>
         </div>
       </div>
+      
+      <div id="fanGate" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.78);align-items:center;justify-content:center;padding:20px;">
+        <div style="background:#141414;border:1px solid rgba(212,175,55,.45);border-radius:16px;max-width:380px;width:100%;padding:28px 24px;text-align:center;box-shadow:0 24px 70px rgba(0,0,0,.6);">
+          <div style="font-family:'Cinzel',serif;color:#D4AF37;font-size:1.05rem;letter-spacing:.04em;">💎 Tarif fan −10&nbsp;%</div>
+          <p style="color:#F5F1E8;font-size:.9rem;line-height:1.5;margin:12px 0 16px;">Entre ton email pour débloquer la billetterie au tarif fan (−10&nbsp;% déjà déduit) pour <strong>CAEN</strong>.</p>
+          <input id="fanGateEmail" type="email" placeholder="ton@email.com" style="width:100%;box-sizing:border-box;background:#0a0a0a;border:1px solid rgba(212,175,55,.4);border-radius:10px;color:#fff;padding:12px 14px;font-size:.95rem;margin-bottom:12px;">
+          <button id="fanGateBtn" onclick="twoqFanSubmit()" style="display:block;width:100%;padding:13px;border:none;border-radius:10px;cursor:pointer;background:linear-gradient(135deg,#F0D77A,#D4AF37 55%,#b8902b);color:#1a1206;font-family:'Cinzel',serif;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:.8rem;">Accéder au tarif −10&nbsp;%</button>
+          <p style="color:#8B8580;font-size:.72rem;margin-top:12px;line-height:1.4;">En continuant, tu rejoins la communauté fan TWOQ (désinscription possible à tout moment).</p>
+          <button onclick="twoqFanClose()" style="background:none;border:none;color:#8B8580;font-size:.78rem;margin-top:8px;cursor:pointer;text-decoration:underline;">Plus tard</button>
+        </div>
+      </div>
+      <script>
+      (function(){
+        var BK="https://billetterie-lesdernierscouches.tickandlive.com/reserver/the-world-of-queen-26/130582?idwl=10";
+        var SRC='tarif-fan:concert-queen-caen-19-mars-2027';
+        function $(id){return document.getElementById(id);}
+        window.twoqFanGate=function(e){if(e)e.preventDefault();var g=$('fanGate');if(g){g.style.display='flex';setTimeout(function(){var i=$('fanGateEmail');if(i)i.focus();},60);}return false;};
+        window.twoqFanClose=function(){var g=$('fanGate');if(g)g.style.display='none';};
+        window.twoqFanSubmit=function(){
+          var i=$('fanGateEmail');var email=((i&&i.value)||'').trim().toLowerCase();
+          if(!email||email.indexOf('@')<1||email.lastIndexOf('.')<email.indexOf('@')+2||email.lastIndexOf('.')>=email.length-1){if(i){i.style.borderColor='#8B0000';i.focus();}return;}
+          var b=$('fanGateBtn');if(b){b.textContent='Un instant…';b.disabled=true;}
+          try{fetch('https://nhxqcavianozskxgfcbt.supabase.co/rest/v1/newsletter_subscribers',{method:'POST',keepalive:true,headers:{'apikey':'sb_publishable_59Pg7368sxCT6y3j9nNw0g_i8ILGRZ3','Authorization':'Bearer sb_publishable_59Pg7368sxCT6y3j9nNw0g_i8ILGRZ3','Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({email:email,source:SRC})}).catch(function(){});}catch(err){}
+          window.location.href=BK;
+        };
+        var g=$('fanGate');if(g)g.addEventListener('click',function(e){if(e.target===this)twoqFanClose();});
+      })();
+      </script>
     </section>
 
     <p class="pitch">Plongez pendant plus de deux heures dans le répertoire de Queen — Bohemian Rhapsody, We Will Rock You, The Show Must Go On, Don't Stop Me Now — dans une mise en scène spectaculaire faite d'effets spéciaux et de pyrotechnie.</p>
