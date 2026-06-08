@@ -27,6 +27,7 @@ import { join } from 'node:path';
 const SUPABASE_URL  = process.env.SUPABASE_URL  || 'https://nhxqcavianozskxgfcbt.supabase.co';
 const SUPABASE_ANON = process.env.SUPABASE_ANON_KEY || '';      // clé "anon" publique (déjà présente dans le JS de ton site)
 const SOURCE_VIEW   = process.env.SOURCE_VIEW   || 'public_dates_twoq'; // vue publique des dates
+const SUPABASE_PUB  = 'sb_publishable_59Pg7368sxCT6y3j9nNw0g_i8ILGRZ3'; // clé publishable (côté navigateur, déjà publique sur le site) pour capter l'email
 const SITE_ORIGIN   = 'https://www.theworldofqueen.com';
 const OUTPUT_DIR    = 'concerts';                              // dossier de sortie (relatif à la racine du repo site)
 const TOUR_NAME     = "THE WORLD OF QUEEN \u2013 L'\u00c9ternelle L\u00e9gende";
@@ -163,6 +164,39 @@ function fanOrganisateur(ev) {
   return null;
 }
 
+// Popup "tarif fan" : on capte l'email (newsletter_subscribers, source = la date) PUIS on ouvre la billetterie -10%.
+function fanGateMarkup(ev, fanUrl) {
+  const fanJson = JSON.stringify(fanUrl);
+  return `
+      <div id="fanGate" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.78);align-items:center;justify-content:center;padding:20px;">
+        <div style="background:#141414;border:1px solid rgba(212,175,55,.45);border-radius:16px;max-width:380px;width:100%;padding:28px 24px;text-align:center;box-shadow:0 24px 70px rgba(0,0,0,.6);">
+          <div style="font-family:'Cinzel',serif;color:#D4AF37;font-size:1.05rem;letter-spacing:.04em;">\ud83d\udc8e Tarif fan \u221210&nbsp;%</div>
+          <p style="color:#F5F1E8;font-size:.9rem;line-height:1.5;margin:12px 0 16px;">Entre ton email pour d\u00e9bloquer la billetterie au tarif fan (\u221210&nbsp;% d\u00e9j\u00e0 d\u00e9duit) pour <strong>${esc(ev.ville)}</strong>.</p>
+          <input id="fanGateEmail" type="email" placeholder="ton@email.com" style="width:100%;box-sizing:border-box;background:#0a0a0a;border:1px solid rgba(212,175,55,.4);border-radius:10px;color:#fff;padding:12px 14px;font-size:.95rem;margin-bottom:12px;">
+          <button id="fanGateBtn" onclick="twoqFanSubmit()" style="display:block;width:100%;padding:13px;border:none;border-radius:10px;cursor:pointer;background:linear-gradient(135deg,#F0D77A,#D4AF37 55%,#b8902b);color:#1a1206;font-family:'Cinzel',serif;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:.8rem;">Acc\u00e9der au tarif \u221210&nbsp;%</button>
+          <p style="color:#8B8580;font-size:.72rem;margin-top:12px;line-height:1.4;">En continuant, tu rejoins la communaut\u00e9 fan TWOQ (d\u00e9sinscription possible \u00e0 tout moment).</p>
+          <button onclick="twoqFanClose()" style="background:none;border:none;color:#8B8580;font-size:.78rem;margin-top:8px;cursor:pointer;text-decoration:underline;">Plus tard</button>
+        </div>
+      </div>
+      <script>
+      (function(){
+        var BK=${fanJson};
+        var SRC='tarif-fan:${ev.slug}';
+        function $(id){return document.getElementById(id);}
+        window.twoqFanGate=function(e){if(e)e.preventDefault();var g=$('fanGate');if(g){g.style.display='flex';setTimeout(function(){var i=$('fanGateEmail');if(i)i.focus();},60);}return false;};
+        window.twoqFanClose=function(){var g=$('fanGate');if(g)g.style.display='none';};
+        window.twoqFanSubmit=function(){
+          var i=$('fanGateEmail');var email=((i&&i.value)||'').trim().toLowerCase();
+          if(!email||email.indexOf('@')<1||email.lastIndexOf('.')<email.indexOf('@')+2||email.lastIndexOf('.')>=email.length-1){if(i){i.style.borderColor='#8B0000';i.focus();}return;}
+          var b=$('fanGateBtn');if(b){b.textContent='Un instant\u2026';b.disabled=true;}
+          try{fetch('${SUPABASE_URL}/rest/v1/newsletter_subscribers',{method:'POST',keepalive:true,headers:{'apikey':'${SUPABASE_PUB}','Authorization':'Bearer ${SUPABASE_PUB}','Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({email:email,source:SRC})}).catch(function(){});}catch(err){}
+          window.location.href=BK;
+        };
+        var g=$('fanGate');if(g)g.addEventListener('click',function(e){if(e.target===this)twoqFanClose();});
+      })();
+      </script>`;
+}
+
 /* ============================================================
    Template d'une page de date
    ============================================================ */
@@ -180,17 +214,17 @@ function renderPage(ev, others) {
     .join('\n          ');
   let ctaHtml;
   if (fanUrl) {
-    const fanHref = `${SITE_ORIGIN}/fanzone.html?utm_source=site&amp;utm_medium=date-page&amp;utm_campaign=tarif-fan-org&amp;date=${encodeURIComponent(ev.slug)}`;
-    ctaHtml = `<a class="cta fan-cta" href="${fanHref}">
-        <span class="fan-badge">\ud83d\udc8e \u221210&nbsp;%</span> Tarif fan \u2014 OR &amp; PLATINE
+    ctaHtml = `<a class="cta fan-cta" href="${esc(fanUrl)}" onclick="return twoqFanGate(event)">
+        <span class="fan-badge">\ud83d\udc8e \u221210&nbsp;%</span> Tarif fan TWOQ
       </a>
-      <p class="fan-note">Tarif organisateur \u221210&nbsp;% r\u00e9serv\u00e9 aux membres <strong>OR &amp; PLATINE</strong> de l'appli TWOQ \u2014 inscription gratuite sur l'appli ou le site. Disponible sur ~90&nbsp;% des dates.</p>
+      <p class="fan-note">Tarif organisateur \u221210&nbsp;% (remise d\u00e9j\u00e0 d\u00e9duite). <strong>Entre ton email</strong> pour d\u00e9bloquer la billetterie au tarif r\u00e9duit \u2014 r\u00e9serv\u00e9 \u00e0 la communaut\u00e9 fan TWOQ.</p>
       <div class="book-wrap">
         <div class="book-lab">Ou r\u00e9server au tarif public</div>
         <div class="book-opts">
           ${optBtns}
         </div>
-      </div>`;
+      </div>
+      ${fanGateMarkup(ev, fanUrl)}`;
   } else if (opts.length <= 1) {
     ctaHtml = `<a class="cta" href="${withUtm(opts[0].url, ev.slug)}" rel="nofollow noopener" target="_blank">R\u00e9server mes billets</a>`;
   } else {
