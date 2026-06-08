@@ -28,6 +28,44 @@ const SUPABASE_URL  = process.env.SUPABASE_URL  || 'https://nhxqcavianozskxgfcbt
 const SUPABASE_ANON = process.env.SUPABASE_ANON_KEY || '';      // clé "anon" publique (déjà présente dans le JS de ton site)
 const SOURCE_VIEW   = process.env.SOURCE_VIEW   || 'public_dates_twoq'; // vue publique des dates
 const SUPABASE_PUB  = 'sb_publishable_59Pg7368sxCT6y3j9nNw0g_i8ILGRZ3'; // clé publishable (côté navigateur, déjà publique sur le site) pour capter l'email
+const JOIN_POPUP = `
+<!-- TWOQ — Popup exit-intent : rejoindre les fans (gratuit) -->
+<div id="twoqJoin" style="display:none;position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.8);align-items:center;justify-content:center;padding:18px;font-family:'Inter',Arial,sans-serif;">
+  <div style="position:relative;background:#141414;border:1px solid rgba(212,175,55,.5);border-radius:18px;max-width:420px;width:100%;padding:30px 26px 26px;text-align:center;box-shadow:0 28px 80px rgba(0,0,0,.65);">
+    <button onclick="twoqJoinClose()" aria-label="Fermer" style="position:absolute;top:8px;right:14px;background:none;border:none;color:#8B8580;font-size:26px;line-height:1;cursor:pointer;">&times;</button>
+    <div style="font-family:'Cinzel',serif;color:#D4AF37;font-size:1.3rem;letter-spacing:.03em;margin-bottom:6px;">&#127915; Avant de partir&hellip;</div>
+    <div style="color:#F5F1E8;font-size:1.02rem;font-weight:600;margin-bottom:16px;">Rejoins les fans TWOQ &mdash; c'est gratuit&nbsp;!</div>
+    <ul style="list-style:none;padding:0;margin:0 auto 20px;text-align:left;display:inline-block;color:#F5F1E8;font-size:.93rem;line-height:1.95;">
+      <li>&#9989; <strong style="color:#D4AF37;">&minus;10&nbsp;%</strong> sur tes billets</li>
+      <li>&#9989; Jeux concours exclusifs</li>
+      <li>&#9989; Pr&eacute;-r&eacute;servation 48&nbsp;h avant tout le monde</li>
+      <li>&#9989; Des places &agrave; gagner</li>
+      <li>&#9989; &hellip;et plein d'autres avantages</li>
+    </ul>
+    <a href="https://app.theworldofqueen.com/?utm_source=site&amp;utm_medium=exit-popup&amp;utm_campaign=join-fan" target="_blank" rel="noopener" style="display:block;text-decoration:none;padding:14px;border-radius:12px;background:linear-gradient(135deg,#F0D77A,#D4AF37 55%,#b8902b);color:#1a1206;font-family:'Cinzel',serif;font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:.85rem;">Je m'inscris gratuitement</a>
+    <button onclick="twoqJoinClose()" style="background:none;border:none;color:#8B8580;font-size:.8rem;margin-top:12px;cursor:pointer;text-decoration:underline;">Plus tard</button>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY='twoq_join_popup_seen', DAYS=7, shown=false;
+  function seen(){ try{ var t=parseInt(localStorage.getItem(KEY)||'0',10); return t && (Date.now()-t)<DAYS*864e5; }catch(e){ return false; } }
+  function mark(){ try{ localStorage.setItem(KEY,String(Date.now())); }catch(e){} }
+  function show(){ if(shown||seen()) return; var el=document.getElementById('twoqJoin'); if(!el) return; el.style.display='flex'; shown=true; mark(); }
+  window.twoqJoinClose=function(){ var el=document.getElementById('twoqJoin'); if(el) el.style.display='none'; };
+  var bg=document.getElementById('twoqJoin'); if(bg) bg.addEventListener('click',function(e){ if(e.target===this) twoqJoinClose(); });
+  if(seen()) return;
+  var isTouch=('ontouchstart' in window)||navigator.maxTouchPoints>0;
+  if(!isTouch){
+    document.addEventListener('mouseout',function(e){ if(!e.relatedTarget && e.clientY<=0) show(); });
+  } else {
+    var lastY=window.scrollY, down=false;
+    window.addEventListener('scroll',function(){ var y=window.scrollY; if(y>300) down=true; if(down && y<lastY-40 && y<220) show(); lastY=y; }, {passive:true});
+    setTimeout(show, 30000);
+  }
+})();
+</script>
+`; // popup exit-intent (inscription fan), injecté avant </body>
 const SITE_ORIGIN   = 'https://www.theworldofqueen.com';
 const OUTPUT_DIR    = 'concerts';                              // dossier de sortie (relatif à la racine du repo site)
 const TOUR_NAME     = "THE WORLD OF QUEEN \u2013 L'\u00c9ternelle L\u00e9gende";
@@ -957,7 +995,7 @@ function normalize(rows) {
     const others = events.filter(o => o.slug !== ev.slug);
     const dir = join(OUTPUT_DIR, ev.slug);
     mkdirSync(dir, { recursive: true });
-    writeFileSync(join(dir, 'index.html'), renderPage(ev, others), 'utf8');
+    writeFileSync(join(dir, 'index.html'), renderPage(ev, others).replace('</body>', JOIN_POPUP + '\n</body>'), 'utf8');
     console.log(`  \u2713 /${OUTPUT_DIR}/${ev.slug}/`);
   });
 
@@ -965,7 +1003,7 @@ function normalize(rows) {
   let datesTpl = null;
   try { datesTpl = readFileSync('dates.html', 'utf8'); } catch { datesTpl = null; }
   if (datesTpl) {
-    writeFileSync(join(OUTPUT_DIR, 'index.html'), buildHubFromTemplate(events, datesTpl), 'utf8');
+    writeFileSync(join(OUTPUT_DIR, 'index.html'), buildHubFromTemplate(events, datesTpl).replace('</body>', JOIN_POPUP + '\n</body>'), 'utf8');
     console.log(`  \u2713 /${OUTPUT_DIR}/  (hub clon\u00e9 de dates.html \u2014 ${events.length} dates en dur)`);
   } else {
     writeFileSync(join(OUTPUT_DIR, 'index.html'), renderIndex(events), 'utf8');
