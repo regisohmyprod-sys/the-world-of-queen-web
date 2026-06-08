@@ -37,6 +37,7 @@ const OG_IMAGE      = 'https://regisohmyprod-sys.github.io/twoq-pwa/assets/banne
 const LOGO          = 'https://regisohmyprod-sys.github.io/twoq-pwa/icons/logo-twoq-titre.png';
 const DOME_RAPPEL   = 'D\u00f4me de Paris \u2014 28 novembre 2026';
 const TM_ARTISTE    = 'https://www.ticketmaster.fr/fr/artiste/the-world-of-queen/idartiste/33538'; // billetterie de secours (m\u00eame logique que dates.html)
+const APP_URL       = 'https://app.theworldofqueen.com/'; // appli TWOQ : c'est l\u00e0 que le fan OR/PLATINE r\u00e9cup\u00e8re son tarif -10%
 const INCLUDE_PAST  = false;  // true = g\u00e9n\u00e8re aussi les dates pass\u00e9es
 
 // Noms de colonnes possibles dans ta vue (on prend le 1er trouv\u00e9). AJUSTE si besoin.
@@ -150,6 +151,18 @@ function bookingOptions(ev) {
   return opts;
 }
 
+// Lien billetterie "organisateur" (marque blanche -10% fans OR/PLATINE), si pr\u00e9sent pour la date.
+// Renvoie l'URL (preuve que la date a un tarif fan) ou null. La PAGE n'affiche que le bouton vers l'appli ;
+// le vrai lien -10% est servi dans l'appli au fan connect\u00e9 OR/PLATINE.
+function fanOrganisateur(ev) {
+  let lb = ev.liens;
+  if (typeof lb === 'string') { try { lb = JSON.parse(lb); } catch { lb = null; } }
+  if (lb && typeof lb === 'object' && typeof lb.organisateur === 'string' && lb.organisateur.trim()) {
+    return lb.organisateur.trim();
+  }
+  return null;
+}
+
 /* ============================================================
    Template d'une page de date
    ============================================================ */
@@ -160,14 +173,34 @@ function renderPage(ev, others) {
   const booking = resolveBooking(ev);
   const reserveUrl = withUtm(booking, ev.slug);
   const opts = bookingOptions(ev);
-  const ctaHtml = opts.length <= 1
-    ? `<a class="cta" href="${withUtm(opts[0].url, ev.slug)}" rel="nofollow noopener" target="_blank">R\u00e9server mes billets</a>`
-    : `<div class="book-wrap">
+  const fanUrl = fanOrganisateur(ev);
+  // Si un tarif fan existe, TOUTES les billetteries classiques passent en secondaire (le bouton fan est le h\u00e9ros).
+  const optBtns = opts
+    .map((o, i) => `<a class="cta ${(!fanUrl && i === 0) ? '' : 'cta-sec'}" href="${withUtm(o.url, ev.slug)}" rel="nofollow noopener" target="_blank">${esc(o.label)}</a>`)
+    .join('\n          ');
+  let ctaHtml;
+  if (fanUrl) {
+    const appHref = `${APP_URL}?utm_source=site&amp;utm_medium=date-page&amp;utm_campaign=tarif-fan-org&amp;date=${encodeURIComponent(ev.slug)}`;
+    ctaHtml = `<a class="cta fan-cta" href="${appHref}" target="_blank" rel="noopener">
+        <span class="fan-badge">\ud83d\udc8e \u221210&nbsp;%</span> Tarif fan \u2014 OR &amp; PLATINE
+      </a>
+      <div class="book-wrap">
+        <div class="book-lab">Ou r\u00e9server au tarif public</div>
+        <div class="book-opts">
+          ${optBtns}
+        </div>
+      </div>
+      <p class="fan-note">Tarif organisateur \u221210&nbsp;% r\u00e9serv\u00e9 aux membres <strong>OR &amp; PLATINE</strong> de l'appli TWOQ \u2014 inscription gratuite sur l'appli ou le site. Disponible sur ~90&nbsp;% des dates.</p>`;
+  } else if (opts.length <= 1) {
+    ctaHtml = `<a class="cta" href="${withUtm(opts[0].url, ev.slug)}" rel="nofollow noopener" target="_blank">R\u00e9server mes billets</a>`;
+  } else {
+    ctaHtml = `<div class="book-wrap">
         <div class="book-lab">R\u00e9server sur</div>
         <div class="book-opts">
-          ${opts.map((o, i) => `<a class="cta ${i === 0 ? '' : 'cta-sec'}" href="${withUtm(o.url, ev.slug)}" rel="nofollow noopener" target="_blank">${esc(o.label)}</a>`).join('\n          ')}
+          ${optBtns}
         </div>
       </div>`;
+  }
   const ogImg = ev.photo || OG_IMAGE;
 
   // JSON-LD MusicEvent
@@ -313,6 +346,19 @@ function renderPage(ev, others) {
   .book-opts .cta{flex:1;min-width:105px;margin-top:0}
   .cta-sec{background:transparent;border:1px solid var(--or);color:var(--or);box-shadow:none}
   .cta-sec:hover{background:rgba(212,175,55,.12);box-shadow:0 10px 30px rgba(212,175,55,.2)}
+  .fan-cta{position:relative;overflow:hidden;font-size:.8rem;padding:16px;
+    background:linear-gradient(135deg,#F0D77A,var(--or) 55%,#b8902b);
+    box-shadow:0 12px 36px rgba(212,175,55,.45);border:1px solid rgba(245,241,232,.35)}
+  .fan-cta:hover{transform:translateY(-2px);box-shadow:0 18px 48px rgba(212,175,55,.6)}
+  .fan-cta::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;
+    background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);
+    transform:skewX(-20deg);animation:fanShine 3.2s ease-in-out infinite}
+  @keyframes fanShine{0%,60%{left:-60%}100%{left:130%}}
+  .fan-badge{display:inline-block;background:rgba(10,10,10,.82);color:var(--gold,#D4AF37);
+    font-weight:800;padding:3px 9px;border-radius:999px;margin-right:8px;font-size:.74rem;letter-spacing:.04em;vertical-align:middle}
+  .fan-note{text-align:center;color:var(--smoke,#8B8580);font-size:.78rem;line-height:1.45;
+    margin:14px auto 0;max-width:420px;font-style:italic}
+  .fan-note strong{color:var(--cream,#F5F1E8);font-style:normal}
   .pitch{text-align:center;color:rgba(245,241,232,.82);font-size:1.02rem;margin:8px auto 0;max-width:580px}
   .stats{display:flex;justify-content:center;gap:34px;margin:30px 0;flex-wrap:wrap}
   .stats div{text-align:center}
