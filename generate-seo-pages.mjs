@@ -180,17 +180,17 @@ function renderPage(ev, others) {
     .join('\n          ');
   let ctaHtml;
   if (fanUrl) {
-    const appHref = `${APP_URL}?utm_source=site&amp;utm_medium=date-page&amp;utm_campaign=tarif-fan-org&amp;date=${encodeURIComponent(ev.slug)}`;
-    ctaHtml = `<a class="cta fan-cta" href="${appHref}" target="_blank" rel="noopener">
+    const fanHref = `${SITE_ORIGIN}/fanzone.html?utm_source=site&amp;utm_medium=date-page&amp;utm_campaign=tarif-fan-org&amp;date=${encodeURIComponent(ev.slug)}`;
+    ctaHtml = `<a class="cta fan-cta" href="${fanHref}">
         <span class="fan-badge">\ud83d\udc8e \u221210&nbsp;%</span> Tarif fan \u2014 OR &amp; PLATINE
       </a>
+      <p class="fan-note">Tarif organisateur \u221210&nbsp;% r\u00e9serv\u00e9 aux membres <strong>OR &amp; PLATINE</strong> de l'appli TWOQ \u2014 inscription gratuite sur l'appli ou le site. Disponible sur ~90&nbsp;% des dates.</p>
       <div class="book-wrap">
         <div class="book-lab">Ou r\u00e9server au tarif public</div>
         <div class="book-opts">
           ${optBtns}
         </div>
-      </div>
-      <p class="fan-note">Tarif organisateur \u221210&nbsp;% r\u00e9serv\u00e9 aux membres <strong>OR &amp; PLATINE</strong> de l'appli TWOQ \u2014 inscription gratuite sur l'appli ou le site. Disponible sur ~90&nbsp;% des dates.</p>`;
+      </div>`;
   } else if (opts.length <= 1) {
     ctaHtml = `<a class="cta" href="${withUtm(opts[0].url, ev.slug)}" rel="nofollow noopener" target="_blank">R\u00e9server mes billets</a>`;
   } else {
