@@ -103,6 +103,19 @@
   .book-opts .cta{flex:1;min-width:105px;margin-top:0}
   .cta-sec{background:transparent;border:1px solid var(--or);color:var(--or);box-shadow:none}
   .cta-sec:hover{background:rgba(212,175,55,.12);box-shadow:0 10px 30px rgba(212,175,55,.2)}
+  .fan-cta{position:relative;overflow:hidden;font-size:.8rem;padding:16px;
+    background:linear-gradient(135deg,#F0D77A,var(--or) 55%,#b8902b);
+    box-shadow:0 12px 36px rgba(212,175,55,.45);border:1px solid rgba(245,241,232,.35)}
+  .fan-cta:hover{transform:translateY(-2px);box-shadow:0 18px 48px rgba(212,175,55,.6)}
+  .fan-cta::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;
+    background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);
+    transform:skewX(-20deg);animation:fanShine 3.2s ease-in-out infinite}
+  @keyframes fanShine{0%,60%{left:-60%}100%{left:130%}}
+  .fan-badge{display:inline-block;background:rgba(10,10,10,.82);color:var(--gold,#D4AF37);
+    font-weight:800;padding:3px 9px;border-radius:999px;margin-right:8px;font-size:.74rem;letter-spacing:.04em;vertical-align:middle}
+  .fan-note{text-align:center;color:var(--smoke,#8B8580);font-size:.78rem;line-height:1.45;
+    margin:14px auto 0;max-width:420px;font-style:italic}
+  .fan-note strong{color:var(--cream,#F5F1E8);font-style:normal}
   .pitch{text-align:center;color:rgba(245,241,232,.82);font-size:1.02rem;margin:8px auto 0;max-width:580px}
   .stats{display:flex;justify-content:center;gap:34px;margin:30px 0;flex-wrap:wrap}
   .stats div{text-align:center}
