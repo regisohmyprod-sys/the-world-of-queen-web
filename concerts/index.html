@@ -1,0 +1,2334 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<base href="https://www.theworldofqueen.com/">
+<link rel="canonical" href="https://www.theworldofqueen.com/concerts/">
+<script>
+// 📱 Redirection automatique mobile → PWA TWOQ
+(function(){
+  try {
+    // Si déjà sur la PWA, ne rien faire
+    if (location.hostname === 'app.theworldofqueen.com') return;
+    
+    // Détection mobile : User-Agent + largeur écran
+    var ua = navigator.userAgent || '';
+    var isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+    var isSmallScreen = window.innerWidth < 768;
+    var isMobile = isMobileUA || isSmallScreen;
+    
+    // Bypass : si paramètre ?desktop=1 dans l'URL, on reste sur le site web
+    var url = new URL(location.href);
+    if (url.searchParams.get('desktop') === '1') {
+      sessionStorage.setItem('twoq_force_desktop', '1');
+      return;
+    }
+    if (sessionStorage.getItem('twoq_force_desktop') === '1') return;
+    
+    // Si mobile : redirection vers PWA
+    if (isMobile) {
+      window.location.replace('https://app.theworldofqueen.com/');
+    }
+  } catch(e) { /* fail silently */ }
+})();
+</script>
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dates de tournée — THE WORLD OF QUEEN — L'Éternelle Légende</title>
+<meta name="description" content="Toutes les dates de tournée de THE WORLD OF QUEEN — L'Éternelle Légende. Réserve ta place dans la ville la plus proche." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root {
+    --noir: #0A0A0A;
+    --charcoal: #141414;
+    --gold: #D4AF37;
+    --gold-pale: #F0D77A;
+    --cramoisi: #8B0000;
+    --cream: #F5F1E8;
+    --smoke: #8B8580;
+    --serif: 'Cinzel', serif;
+    --sans: 'Inter', system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--noir); color: var(--cream); font-family: var(--sans); min-height: 100vh; }
+  a { color: inherit; text-decoration: none; }
+
+  /* ============ HEADER (identique à index.html) ============ */
+  .site-header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(10, 10, 10, 0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+    transition: background 0.3s;
+  }
+  .header-inner {
+    position: relative;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 14px 24px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 50px;
+    min-height: 60px;
+  }
+  .brand {
+    font-family: var(--serif);
+    color: var(--gold);
+    font-size: 16px;
+    letter-spacing: 3px;
+    font-weight: 600;
+    line-height: 1.1;
+    flex-shrink: 0;
+  }
+  .brand small {
+    display: block;
+    font-family: var(--sans);
+    color: var(--cream);
+    font-size: 9px;
+    letter-spacing: 4px;
+    font-weight: 400;
+    margin-top: 2px;
+    opacity: 0.8;
+  }
+  .menu-toggle {
+    display: none;
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 18px;
+    cursor: pointer;
+  }
+  nav.main-nav { display: flex; gap: 22px; align-items: center; }
+  nav.main-nav a {
+    color: var(--cream);
+    font-size: 12px;
+    letter-spacing: 2px;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    padding: 6px 0;
+    border-bottom: 2px solid transparent;
+  }
+  nav.main-nav a:hover { color: var(--gold); border-bottom-color: var(--gold); }
+  nav.main-nav a.pro {
+    border: 1px solid var(--gold);
+    border-radius: 999px;
+    padding: 6px 14px;
+    color: var(--gold);
+  }
+  nav.main-nav a.pro:hover { background: var(--gold); color: var(--noir); }
+
+  @media (max-width: 980px) {
+    .header-inner { justify-content: space-between; }
+    .brand { position: static; transform: none; }
+    .menu-toggle { display: block; }
+    nav.main-nav {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: rgba(10, 10, 10, 0.98);
+      flex-direction: column;
+      gap: 0;
+      padding: 14px 20px;
+      border-radius: 0 0 0 12px;
+      border-left: 1px solid rgba(212, 175, 55, 0.15);
+      border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+    nav.main-nav.open { max-height: 90vh; }
+    nav.main-nav a {
+      padding: 12px 0;
+      width: 100%;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.10);
+    }
+  }
+
+  /* ============ PAGE COMPLÈTE avec 2 effets stellaires ============ */
+  .dates-page {
+    position: relative;
+    overflow: hidden;
+    background: #000;
+    padding-bottom: 50px;
+  }
+  /* Halo doré subtil en surimpression (n'écrase pas les étoiles fixed derrière) */
+  .dates-page::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 50% at 50% 0%, rgba(212,175,55,0.10) 0%, transparent 60%),
+      radial-gradient(ellipse 80% 70% at 50% 40%, rgba(91,163,245,0.03) 0%, transparent 70%);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* === CIEL ÉTOILÉ — fixe sur tout le viewport (étoiles qui clignotent) === */
+  .twinkle-stars {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .twinkle-star {
+    position: absolute;
+    background: #F0D77A;
+    border-radius: 50%;
+    opacity: 0;
+    animation: twinkle 4s infinite ease-in-out;
+    box-shadow: 0 0 4px #D4AF37, 0 0 8px rgba(240,215,122,0.5);
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0; transform: scale(0.6); }
+    50%      { opacity: 1; transform: scale(1.3); }
+  }
+  .twinkle-star.big {
+    width: 4px; height: 4px;
+    box-shadow: 0 0 8px #D4AF37, 0 0 18px rgba(240,215,122,0.9);
+  }
+  .twinkle-star.medium {
+    width: 2.5px; height: 2.5px;
+    box-shadow: 0 0 5px #D4AF37, 0 0 12px rgba(240,215,122,0.7);
+  }
+  .twinkle-star.small {
+    width: 1.5px; height: 1.5px;
+  }
+
+  /* === ZONE TOP avec ÉTOILES FILANTES (hyperdrive) === */
+  .dates-hero-top {
+    position: relative;
+    padding: 130px 20px 40px;
+    overflow: hidden;
+    z-index: 1;
+  }
+  .shooting-stars {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .hyper-star {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 2px; height: 2px;
+    background: var(--gold-pale);
+    border-radius: 50%;
+    box-shadow: 0 0 6px var(--gold), 0 0 12px var(--gold-pale);
+    transform-origin: center;
+    will-change: transform, opacity;
+    opacity: 0;
+  }
+  .hyper-star::after {
+    content: '';
+    position: absolute;
+    right: 100%; top: 50%;
+    height: 1px;
+    width: 60px;
+    transform: translateY(-50%);
+    background: linear-gradient(to left, var(--gold-pale), transparent);
+    opacity: 0.85;
+  }
+  @keyframes hyperWarp {
+    0%   { opacity: 0; transform: rotate(var(--angle, 0deg)) translateX(0) scale(0.5); box-shadow: 0 0 2px var(--gold-pale); }
+    15%  { opacity: 1; box-shadow: 0 0 6px var(--gold), 0 0 12px var(--gold-pale); }
+    85%  { opacity: 1; }
+    100% { opacity: 0; transform: rotate(var(--angle, 0deg)) translateX(80vmax) scale(2.5); box-shadow: 0 0 14px var(--gold), 0 0 30px var(--gold-pale); }
+  }
+
+  /* Contenu de la zone top au-dessus des étoiles filantes */
+  .dates-hero-top-content {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  /* === CONTENU WIDGET (le reste de la page) === */
+  .dates-stage-content {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px;
+    text-align: center;
+  }
+  .dates-hero-h1 {
+    font-family: var(--serif);
+    color: var(--cream);
+    font-size: clamp(32px, 5vw, 52px);
+    letter-spacing: 2px;
+    margin-bottom: 26px;
+    font-weight: 500;
+    text-shadow: 0 0 30px rgba(212,175,55,0.4);
+  }
+  .dates-hero-visual {
+    width: 100%;
+    max-width: 900px;
+    display: block;
+    margin: 0 auto;
+    border-radius: 14px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.7), 0 0 80px rgba(212,175,55,0.25);
+    border: 1px solid rgba(212,175,55,0.35);
+    object-fit: cover;
+    aspect-ratio: auto;
+  }
+  .search-eyebrow {
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: var(--cream);
+    font-weight: 700;
+    margin-bottom: 14px;
+    margin-top: 36px;
+  }
+  .search-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(0,0,0,0.55);
+    border: 1px solid rgba(212,175,55,0.3);
+    border-radius: 999px;
+    padding: 14px 22px;
+    max-width: 560px;
+    margin: 0 auto 26px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .search-bar:focus-within {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 4px rgba(212,175,55,0.12);
+  }
+  .search-bar input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--cream);
+    font-family: var(--sans);
+    font-size: 14px;
+    font-style: italic;
+  }
+  .search-bar input::placeholder { color: var(--smoke); }
+
+  .region-toggle {
+    color: var(--gold);
+    font-size: 11px;
+    letter-spacing: 3px;
+    font-weight: 700;
+    margin-top: 30px;
+    cursor: pointer;
+    user-select: none;
+    transition: opacity 0.2s;
+    display: inline-block;
+  }
+  .region-toggle:hover { opacity: 0.8; }
+  .region-toggle .arrow { display: inline-block; transition: transform 0.3s; }
+  .region-toggle.open .arrow { transform: rotate(180deg); }
+  .region-grid {
+    display: none;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    max-width: 600px;
+    margin: 18px auto 0;
+  }
+  .region-grid.open { display: grid; }
+
+  /* ============ BANDEAU PROMO -10% MEMBRES ============ */
+  .promo-banner {
+    max-width: 900px;
+    margin: 0 auto 26px;
+    background: var(--noir);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    border-left: 4px solid var(--gold);
+    border-radius: 0;
+    padding: 14px 18px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 14px;
+    align-items: center;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+    animation: royalEcarlate 1.5s ease-in-out infinite;
+  }
+  .promo-banner-inline {
+    margin: 30px auto 30px;
+  }
+  .promo-banner:hover {
+    background: var(--gold) !important;
+    animation: none;
+    transform: translateX(4px);
+  }
+  .promo-banner:hover .promo-banner-title,
+  .promo-banner:hover .promo-banner-text,
+  .promo-banner:hover .promo-banner-link { color: var(--noir); }
+  .promo-banner:hover .promo-banner-icon {
+    background: var(--noir);
+    color: var(--gold);
+  }
+  .promo-banner:hover .promo-banner-title .pct {
+    background: var(--noir);
+    color: var(--gold);
+  }
+  @keyframes royalEcarlate {
+    0%, 100% {
+      background: var(--noir);
+      box-shadow: inset 0 0 0 rgba(139, 0, 0, 0);
+    }
+    50% {
+      background: linear-gradient(90deg, var(--noir) 0%, rgba(139, 0, 0, 0.85) 50%, var(--noir) 100%);
+      box-shadow: inset 0 0 20px rgba(139, 0, 0, 0.5), 0 0 16px rgba(139, 0, 0, 0.3);
+    }
+  }
+  .promo-banner-icon {
+    background: var(--gold);
+    color: var(--noir);
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    font-weight: 800;
+    flex-shrink: 0;
+    transition: all 0.3s;
+    position: relative;
+    z-index: 2;
+  }
+  .promo-banner-content {
+    display: flex; flex-direction: column; gap: 2px;
+    position: relative;
+    z-index: 2;
+  }
+  .promo-banner-title {
+    color: var(--gold);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    transition: color 0.3s;
+  }
+  .promo-banner-title .pct {
+    background: var(--gold);
+    color: var(--noir);
+    padding: 1px 8px;
+    border-radius: 4px;
+    margin-left: 6px;
+    font-size: 11px;
+    font-weight: 800;
+    transition: all 0.3s;
+  }
+  .promo-banner-text {
+    color: var(--cream);
+    font-size: 12px;
+    line-height: 1.5;
+    transition: color 0.3s;
+  }
+  .promo-banner-link {
+    color: var(--gold-pale);
+    font-size: 11px;
+    margin-top: 4px;
+    display: inline-block;
+    transition: color 0.3s;
+  }
+
+  /* ============ RECHERCHE ============ */
+  .search-zone {
+    /* Plus utilisé — gardé pour rétro-compatibilité */
+    display: none;
+  }
+  .search-eyebrow {
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: var(--cream);
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+  .search-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(0,0,0,0.55);
+    border: 1px solid rgba(212,175,55,0.3);
+    border-radius: 999px;
+    padding: 14px 22px;
+    max-width: 560px;
+    margin: 0 auto;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .search-bar:focus-within {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 4px rgba(212,175,55,0.12);
+  }
+  .search-bar input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--cream);
+    font-family: var(--sans);
+    font-size: 14px;
+    font-style: italic;
+  }
+  .search-bar input::placeholder { color: var(--smoke); }
+
+  .region-toggle {
+    color: var(--gold);
+    font-size: 11px;
+    letter-spacing: 3px;
+    font-weight: 700;
+    margin-top: 18px;
+    cursor: pointer;
+    user-select: none;
+    transition: opacity 0.2s;
+    display: inline-block;
+  }
+  .region-toggle:hover { opacity: 0.8; }
+  .region-toggle .arrow { display: inline-block; transition: transform 0.3s; }
+  .region-toggle.open .arrow { transform: rotate(180deg); }
+  .region-grid {
+    display: none;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    max-width: 600px;
+    margin: 18px auto 0;
+  }
+  .region-grid.open { display: grid; }
+  .region-btn {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--charcoal);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    border-radius: 999px;
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, transform 0.15s;
+    color: var(--cream);
+    font-size: 13px;
+    font-weight: 500;
+    text-align: left;
+    font-family: inherit;
+  }
+  .region-btn:hover { border-color: rgba(212,175,55,0.55); transform: translateY(-1px); }
+  .region-btn.active {
+    background: linear-gradient(135deg, rgba(212,175,55,0.25), rgba(212,175,55,0.08));
+    border-color: var(--gold);
+    box-shadow: 0 0 12px rgba(212,175,55,0.25);
+    color: var(--gold);
+  }
+  .region-btn-icon { font-size: 16px; line-height: 1; flex-shrink: 0; }
+  @media (max-width: 500px) { .region-grid { grid-template-columns: 1fr; } }
+
+  /* ============ FILTRES STATUT ============ */
+  .filters-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 30px auto 20px;
+    flex-wrap: wrap;
+  }
+  .filter-tab {
+    background: transparent;
+    border: 1px solid rgba(212,175,55,0.3);
+    color: var(--cream);
+    padding: 8px 18px;
+    border-radius: 999px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .filter-tab:hover { border-color: var(--gold); }
+  .filter-tab.active {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--noir);
+  }
+
+  /* ============ LISTE DES DATES ============ */
+  .dates-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px 0 0;
+    position: relative;
+    z-index: 2;
+  }
+  .month-group {
+    margin-bottom: 28px;
+  }
+  .month-title {
+    font-family: var(--serif);
+    color: var(--gold);
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    letter-spacing: 1.5px;
+    padding-left: 4px;
+    text-transform: capitalize;
+    text-shadow: 0 0 12px rgba(212, 175, 55, 0.25);
+  }
+  .date-row {
+    display: grid;
+    grid-template-columns: 64px 1fr auto;
+    gap: 16px;
+    align-items: center;
+    padding: 14px 18px;
+    background: linear-gradient(180deg, rgba(20,20,20,0.85) 0%, rgba(10,10,10,0.95) 100%);
+    border: 1px solid rgba(212,175,55,0.18);
+    border-radius: 14px;
+    margin-bottom: 10px;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+  }
+  .date-row:hover {
+    border-color: var(--gold);
+    transform: translateX(4px);
+    box-shadow: 0 10px 30px rgba(212,175,55,0.12);
+  }
+  .date-box {
+    background: linear-gradient(135deg, rgba(212,175,55,0.18), rgba(212,175,55,0.05));
+    border: 1px solid rgba(212,175,55,0.45);
+    border-radius: 10px;
+    padding: 10px 16px !important;
+    text-align: left !important;
+    min-width: 78px;
+    display: block !important;
+  }
+  .date-num {
+    font-family: var(--serif);
+    color: var(--gold);
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1;
+    text-align: left !important;
+    display: block !important;
+    width: 100%;
+  }
+  .date-mois {
+    color: var(--cream);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 4px;
+    text-align: left !important;
+    display: block !important;
+    width: 100%;
+  }
+  .date-info { min-width: 0; }
+  .date-ville {
+    color: var(--cream);
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .date-salle {
+    color: var(--smoke);
+    font-size: 13px;
+    margin-top: 3px;
+  }
+  .date-arrow {
+    color: var(--gold);
+    font-size: 20px;
+    width: 38px; height: 38px;
+    border: 1px solid rgba(212,175,55,0.35);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .date-row:hover .date-arrow {
+    background: var(--gold);
+    color: var(--noir);
+    transform: rotate(-45deg);
+  }
+  .date-row.complet { border-color: var(--cramoisi); }
+  .date-row.complet .date-num { color: var(--cramoisi); }
+  .date-row.complet .date-arrow { color: var(--cramoisi); border-color: var(--cramoisi); }
+  .date-row.bientot { opacity: 0.85; }
+
+  .status-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .status-badge.complet {
+    background: var(--cramoisi);
+    color: #fff;
+  }
+  .status-badge.bientot {
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+  }
+
+  .empty-state, .loading-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--smoke);
+    font-style: italic;
+    font-size: 15px;
+  }
+  .closest-box {
+    max-width: 600px;
+    margin: 30px auto;
+    background: rgba(20,20,20,0.7);
+    border: 1px dashed rgba(212,175,55,0.45);
+    border-radius: 14px;
+    padding: 22px;
+    text-align: center;
+  }
+  .closest-box-label { color: var(--cream); font-size: 15px; margin-bottom: 4px; }
+  .closest-box-label strong { color: var(--gold); text-transform: capitalize; }
+  .closest-box-tag { color: var(--gold); font-size: 12px; letter-spacing: 2px; font-weight: 700; margin-bottom: 12px; }
+
+  /* ============ POPUP BILLETTERIE ============ */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(8px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    padding: 20px;
+  }
+  .modal-backdrop.open { display: flex; }
+  .modal-card {
+    background: linear-gradient(180deg, #141414 0%, #0a0a0a 100%);
+    border: 1px solid rgba(212,175,55,0.4);
+    border-radius: 18px;
+    padding: 30px 24px;
+    max-width: 480px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 60px rgba(212,175,55,0.15);
+    position: relative;
+  }
+  .modal-close {
+    position: absolute;
+    top: 12px; right: 12px;
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid rgba(212,175,55,0.4);
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    font-family: inherit;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .modal-close:hover { background: var(--gold); color: var(--noir); }
+  .modal-eyebrow {
+    color: var(--gold);
+    font-size: 11px;
+    letter-spacing: 4px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 6px;
+  }
+  .modal-title {
+    font-family: var(--serif);
+    color: var(--cream);
+    font-size: 22px;
+    text-align: center;
+    margin-bottom: 4px;
+    letter-spacing: 1px;
+  }
+  .modal-date-info {
+    color: var(--gold-pale);
+    font-size: 13px;
+    text-align: center;
+    margin-bottom: 22px;
+    font-style: italic;
+  }
+  .modal-cta-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  /* Liens billetterie popup → royal écarlate */
+  .modal-cta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 22px;
+    background: var(--noir);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    border-left: 4px solid var(--gold);
+    border-radius: 0;
+    color: var(--gold);
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 12px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+    animation: royalEcarlate 1.5s ease-in-out infinite;
+  }
+  .modal-cta:hover {
+    background: var(--gold);
+    color: var(--noir);
+    border-color: var(--gold);
+    transform: translateX(6px);
+    animation: none;
+  }
+  .modal-cta-icon { font-size: 22px; }
+  .modal-cta-arrow { margin-left: auto; transition: transform 0.25s; }
+  .modal-cta:hover .modal-cta-arrow { transform: translateX(4px); }
+  .modal-empty { color: var(--smoke); font-style: italic; text-align: center; padding: 20px; }
+
+  /* ============ FOOTER (identique index) ============ */
+  footer {
+    background: #050505;
+    border-top: 1px solid rgba(212, 175, 55, 0.15);
+    padding: 50px 20px 24px;
+    margin-top: 60px;
+  }
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+  }
+  .footer-col h5 {
+    color: var(--gold);
+    font-size: 12px;
+    letter-spacing: 4px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .footer-col p, .footer-col a {
+    color: var(--cream);
+    font-size: 13px;
+    line-height: 1.8;
+    opacity: 0.85;
+    display: block;
+  }
+  .footer-col a:hover { color: var(--gold); opacity: 1; }
+  .footer-bottom {
+    border-top: 1px solid rgba(212,175,55,0.1);
+    margin-top: 36px;
+    padding-top: 20px;
+    text-align: center;
+    color: var(--smoke);
+    font-size: 11px;
+    letter-spacing: 1px;
+  }
+  .gold-text { color: var(--gold); font-weight: 700; }
+  @media (max-width: 768px) {
+    .footer-inner { grid-template-columns: 1fr 1fr; gap: 26px; }
+  }
+  @media (max-width: 500px) {
+    .footer-inner { grid-template-columns: 1fr; gap: 22px; }
+  }
+
+  /* ============ NEWSLETTER BLOCK ============ */
+  .newsletter-block { position: relative; z-index: 3; background: linear-gradient(180deg, #0a0a0a 0%, #050505 100%); border-top: 1px solid rgba(212,175,55,0.15); border-bottom: 1px solid rgba(212,175,55,0.15); padding: 50px 20px; }
+  .newsletter-wrap { max-width: 600px; margin: 0 auto; text-align: center; }
+  .newsletter-eyebrow { color: var(--gold); font-size: 11px; letter-spacing: 5px; font-weight: 700; margin-bottom: 10px; }
+  .newsletter-title { font-family: var(--serif); color: var(--cream); font-size: clamp(24px, 4vw, 32px); font-weight: 500; letter-spacing: 1px; margin-bottom: 8px; }
+  .newsletter-text { color: var(--cream); font-size: 13px; line-height: 1.5; opacity: 0.85; margin-bottom: 22px; }
+  .newsletter-form { display: flex; gap: 10px; max-width: 480px; margin: 0 auto 12px; flex-wrap: wrap; justify-content: center; }
+  .newsletter-form input { flex: 1; min-width: 200px; background: rgba(0,0,0,0.5); border: 1px solid rgba(212,175,55,0.3); color: var(--cream); padding: 12px 18px; border-radius: 999px; font-family: inherit; font-size: 14px; outline: none; transition: border-color 0.2s; }
+  .newsletter-form input:focus { border-color: var(--gold); }
+  .newsletter-form input::placeholder { color: var(--smoke); }
+  .newsletter-form button {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--noir);
+    color: var(--gold);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    border-left: 4px solid var(--gold);
+    border-radius: 0;
+    padding: 12px 22px;
+    font-family: inherit;
+    font-size: 12px;
+    letter-spacing: 3px;
+    font-weight: 800;
+    cursor: pointer;
+    text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+    animation: royalEcarlate 1.5s ease-in-out infinite;
+  }
+  .newsletter-form button::before {
+    content: '♕';
+    font-size: 14px;
+    line-height: 1;
+    color: var(--gold);
+    transition: color 0.3s;
+  }
+  .newsletter-form button:hover {
+    background: var(--gold);
+    color: var(--noir);
+    border-color: var(--gold);
+    transform: translateX(4px);
+    animation: none;
+  }
+  .newsletter-form button:hover::before { color: var(--noir); }
+  .newsletter-helper { color: var(--smoke); font-size: 11px; font-style: italic; }
+  .newsletter-success { color: #10b981; font-size: 13px; margin-top: 12px; display: none; }
+  .newsletter-success.show { display: block; }
+
+
+  /* ============ DROPDOWN ESPACE PRO ============ */
+  .nav-dropdown { position: relative; }
+  .nav-dropdown-toggle {
+    color: var(--gold);
+    font-size: 12px;
+    letter-spacing: 2px;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 6px 0;
+    border-bottom: 2px solid transparent;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    user-select: none;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    font-family: inherit;
+    transition: border-color 0.2s;
+  }
+  .nav-dropdown-toggle:hover { border-bottom-color: var(--gold); }
+  .nav-dropdown-toggle .chev { font-size: 9px; transition: transform 0.2s; }
+  .nav-dropdown.open .nav-dropdown-toggle .chev { transform: rotate(180deg); }
+  .nav-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 200px;
+    background: rgba(10,10,10,0.98);
+    border: 1px solid rgba(212,175,55,0.35);
+    border-radius: 12px;
+    padding: 6px;
+    display: none;
+    flex-direction: column;
+    gap: 2px;
+    box-shadow: 0 14px 36px rgba(0,0,0,0.7), 0 0 30px rgba(212,175,55,0.1);
+    z-index: 200;
+  }
+  .nav-dropdown.open .nav-dropdown-menu,
+  .nav-dropdown:hover .nav-dropdown-menu { display: flex; }
+  .nav-dropdown-menu a {
+    color: var(--cream) !important;
+    font-size: 11px !important;
+    letter-spacing: 2px;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 10px 14px !important;
+    border-radius: 8px;
+    border-bottom: none !important;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+  }
+  .nav-dropdown-menu a:hover {
+    background: rgba(212,175,55,0.15);
+    color: var(--gold) !important;
+  }
+  @media (max-width: 980px) {
+    .nav-dropdown { width: 100%; }
+    .nav-dropdown-toggle {
+      width: 100%;
+      justify-content: space-between;
+      padding: 12px 0 !important;
+      border-bottom: 1px solid rgba(212,175,55,0.10) !important;
+    }
+    .nav-dropdown-menu {
+      position: static;
+      background: rgba(0,0,0,0.4);
+      margin: 4px 0 8px;
+      width: 100%;
+      border: none;
+      border-left: 2px solid rgba(212,175,55,0.3);
+      border-radius: 0;
+      padding: 4px 0 4px 14px;
+      box-shadow: none;
+    }
+    .nav-dropdown-menu a {
+      padding: 8px 0 !important;
+    }
+  }
+
+
+  /* ============ BRAND HOVER ============ */
+  .brand {
+    text-decoration: none;
+    transition: filter 0.2s, text-shadow 0.2s;
+    cursor: pointer;
+  }
+  .brand:hover {
+    filter: brightness(1.15);
+    text-shadow: 0 0 14px rgba(212, 175, 55, 0.45);
+  }
+  .brand:hover small { color: var(--gold); }
+
+
+  /* ============ MODAL NIVEAUX ============ */
+  .levels-modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(8px); z-index: 9997; display: none; align-items: flex-start; justify-content: center; padding: 50px 20px; overflow-y: auto; }
+  .levels-modal-overlay.open { display: flex; animation: fadeIn 0.25s ease; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .levels-modal { background: linear-gradient(180deg, #1a1a1a, #0a0a0a); border: 1px solid var(--gold); border-radius: 18px; max-width: 600px; width: 100%; padding: 28px 24px 32px; box-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 50px rgba(212,175,55,0.15); position: relative; }
+  .levels-modal-close { position: absolute; top: 18px; right: 18px; width: 36px; height: 36px; border-radius: 50%; background: rgba(0,0,0,0.6); border: 1px solid var(--gold); color: var(--gold); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+  .levels-modal-close:hover { background: var(--gold); color: var(--noir); }
+  .levels-modal-eyebrow { color: var(--gold); font-size: 11px; letter-spacing: 4px; font-weight: 700; margin-bottom: 6px; text-transform: uppercase; }
+  .levels-modal-title { font-family: var(--serif); color: var(--cream); font-size: 26px; font-weight: 500; margin-bottom: 6px; letter-spacing: 1px; }
+  .levels-modal-subtitle { color: var(--gold-pale); font-size: 13px; font-style: italic; margin-bottom: 20px; }
+  .level-card { background: rgba(0,0,0,0.4); border: 1px solid rgba(212,175,55,0.18); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+  .level-card.or { background: linear-gradient(135deg, rgba(212,175,55,0.12), rgba(212,175,55,0.02)); border-color: rgba(212,175,55,0.5); }
+  .level-card.platine { background: linear-gradient(135deg, rgba(179,212,245,0.10), rgba(179,212,245,0.02)); border-color: rgba(179,212,245,0.4); }
+  .level-head { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+  .level-emoji { font-size: 24px; }
+  .level-name { font-family: var(--serif); color: var(--cream); font-size: 17px; font-weight: 500; letter-spacing: 1px; }
+  .level-tag { color: var(--smoke); font-size: 11px; margin-left: auto; }
+  .level-list { list-style: none; padding: 0; margin: 0; }
+  .level-list li { color: var(--cream); font-size: 13px; line-height: 1.7; padding-left: 22px; position: relative; opacity: 0.92; }
+  .level-list li::before { content: '✓'; position: absolute; left: 0; top: 0; color: var(--gold); font-weight: 700; }
+  .levels-modal-footer { margin-top: 18px; padding-top: 16px; border-top: 1px solid rgba(212,175,55,0.18); text-align: center; }
+  .levels-modal-footer p { color: var(--smoke); font-size: 11px; margin-bottom: 12px; font-style: italic; }
+  .levels-modal-cta { display: inline-block; background: var(--gold); color: var(--noir); padding: 12px 24px; border-radius: 999px; font-size: 13px; letter-spacing: 1.5px; font-weight: 700; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; }
+  .levels-modal-cta:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(212,175,55,0.3); }
+
+
+  /* ============ FOOTER MAIL BUTTON ============ */
+  .footer-mail-btn {
+    display: inline-block !important;
+    margin-top: 8px;
+    padding: 8px 16px !important;
+    background: rgba(212, 175, 55, 0.08);
+    border: 1px solid var(--gold);
+    border-radius: 999px;
+    color: var(--gold) !important;
+    font-size: 12px !important;
+    letter-spacing: 1px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.2s;
+    opacity: 1 !important;
+  }
+  .footer-mail-btn:hover {
+    background: var(--gold);
+    color: var(--noir) !important;
+    transform: translateY(-2px);
+  }
+
+
+
+
+
+
+  /* ============ 🎨 CHARTE TYPOGRAPHIQUE UNIFIÉE (toutes pages) ============ */
+  /* IMPORTANT: ne s'applique PAS au header (.site-header) */
+
+  /* H1 — Titres principaux de page (tous variants) */
+  .hero-title, .page-title,
+  main .moi-hero h1, .ct-hero h1, .boutique-hero h1, .medias-hero h1, .presse-hero h1, .contact-hero h1,
+  .dates-hero-h1, .ct-hero-h1,
+  section.hero h1, .hero-eyebrow + h1, .hero-content h1 {
+    font-size: clamp(36px, 5.5vw, 52px) !important;
+    line-height: 1.1 !important;
+    letter-spacing: 2px !important;
+  }
+  /* H2 — Titres de section (hors header) */
+  body .section-title, body .newsletter-title, body .boutique-title, body .category-title {
+    font-size: clamp(26px, 4vw, 36px) !important;
+    line-height: 1.15 !important;
+    letter-spacing: 1px !important;
+  }
+  /* Sous-titres / hero subtitle */
+  .hero-subtitle, .ct-hero-text, .moi-hero-sub, .dates-hero-sub,
+  .boutique-subtitle, .presse-subtitle, .contact-subtitle {
+    font-size: 14px !important;
+    line-height: 1.65 !important;
+  }
+  /* Titres de cartes / sous-sections */
+  .fan-card-title, .show-card-title, .artist-name, .shop-title,
+  .live-card-title, .review-bubble .review-author,
+  .reels-card-title, .backstage-card-real .backstage-cap-real,
+  .product-title, .category-card-title, .perk-title, .feature-title,
+  .resource-title, .info-title, .request-title {
+    font-size: 18px !important;
+    line-height: 1.3 !important;
+    letter-spacing: 0.5px !important;
+  }
+  /* Eyebrows (hors header/nav) */
+  main .section-eyebrow, .shop-eyebrow, .live-card-eyebrow,
+  .reels-eyebrow, .accordion-eyebrow, .boutique-eyebrow,
+  .category-eyebrow, .perk-eyebrow, main .hero-eyebrow,
+  .ct-hero-eyebrow, .moi-hero-sub, .presse-eyebrow {
+    font-size: 11px !important;
+    letter-spacing: 4px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+  }
+  /* Texte courant */
+  .section-text, .fan-card-text, .show-card-text, .shop-text,
+  .category-text, .perk-text, .request-text {
+    font-size: 14px !important;
+    line-height: 1.65 !important;
+  }
+
+  /* PROTECTION DU HEADER : tailles fixes pour le logo */
+  .site-header .brand {
+    font-size: 16px !important;
+    letter-spacing: 2.5px !important;
+    line-height: 1.2 !important;
+  }
+  .site-header .brand small {
+    font-size: 9px !important;
+    letter-spacing: 3px !important;
+    line-height: 1.2 !important;
+  }
+  .site-header .main-nav a {
+    font-size: 12px !important;
+    letter-spacing: 1.5px !important;
+  }
+  /* ============ FIN CHARTE TYPOGRAPHIQUE ============ */
+
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="brand">
+      THE WORLD OF QUEEN
+      <small>L'ÉTERNELLE LÉGENDE</small>
+    </a>
+    <button class="menu-toggle" onclick="toggleMenu()" aria-label="Menu">☰</button>
+    <nav class="main-nav" id="mainNav">
+      <a href="index.html" onclick="closeMenu()">LE SHOW</a>
+      <a href="https://www.theworldofqueen.com/concerts/" onclick="closeMenu()" style="color:var(--gold);border-bottom-color:var(--gold);">DATES</a>
+      <a href="artistes.html" onclick="closeMenu()">ARTISTES</a>
+      <a href="fanzone.html" onclick="closeMenu()">FAN ZONE</a>
+      <a href="medias.html" onclick="closeMenu()">MÉDIAS</a>
+      <a href="boutique.html" onclick="closeMenu()">🛍️ BOUTIQUE</a>
+      <a href="moi.html" onclick="closeMenu()">MOI</a>
+      <a href="contact-prod.html" onclick="closeMenu()">CONTACT PROD</a>
+      <div class="nav-dropdown" id="navDropdown">
+        <button type="button" class="nav-dropdown-toggle" onclick="toggleDropdown(event)">ESPACE PRO <span class="chev">▾</span></button>
+        <div class="nav-dropdown-menu">
+          <a href="espace-pro.html" onclick="closeMenu(); closeDropdown();">Espace Pro</a>
+          <a href="espace-presse.html" onclick="closeMenu(); closeDropdown();">Espace Presse</a>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<!-- ============ PAGE COMPLÈTE avec 2 effets stellaires ============ -->
+<section class="dates-page">
+  <!-- Ciel étoilé qui clignote — fond GLOBAL de toute la page -->
+  <div class="twinkle-stars" id="twinkleStars"></div>
+
+  <!-- ZONE TOP : titre + visuel avec ÉTOILES FILANTES localisées -->
+  <div class="dates-hero-top">
+    <div class="shooting-stars" id="shootingStars"></div>
+    <div class="dates-hero-top-content">
+      <h1 class="dates-hero-h1">Les dates de tournée</h1>
+      <img src="https://regisohmyprod-sys.github.io/twoq-pwa/assets/banner-twoq.jpg" alt="THE WORLD OF QUEEN - L'Éternelle Légende" class="dates-hero-visual" onerror="this.src='https://regisohmyprod-sys.github.io/twoq-pwa/assets/VISUEL_3.jpeg';this.onerror=function(){this.style.display='none';};">
+    </div>
+  </div>
+
+  <!-- ZONE WIDGET : recherche + promo + régions + filtres + dates -->
+  <div class="dates-stage-content">
+    <!-- RECHERCHE -->
+    <div class="search-eyebrow">RECHERCHER MA DATE</div>
+    <label class="search-bar" for="datesSearchInput">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--gold);"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="datesSearchInput" type="text" placeholder="Tape ta ville..." autocomplete="off" />
+    </label>
+
+    <!-- BLOC PROMO TARIFS RÉDUITS : maintenant inséré dynamiquement avant le mois de mai dans la liste -->
+
+    <!-- RÉGIONS + FILTRES -->
+    <div class="region-toggle" id="regionToggle">OU CHERCHE PAR RÉGION <span class="arrow">▼</span></div>
+    <div class="region-grid" id="regionGrid"></div>
+
+    <div class="filters-tabs">
+      <button type="button" class="filter-tab active" data-filter="avenir">À VENIR</button>
+      <button type="button" class="filter-tab" data-filter="passees">PASSÉES</button>
+      <button type="button" class="filter-tab" data-filter="toutes">TOUTES</button>
+    </div>
+
+    <!-- LISTE DES DATES -->
+    <div class="dates-container" id="datesContainer">
+      <!-- SEO : dates en dur, lisibles par Google. Le JS ci-dessous les rafraîchit pour les visiteurs. -->
+      <div class="promo-banner promo-banner-inline" onclick="toggleLevelsModal()" role="button" tabindex="0" style="cursor:pointer;">
+        <div class="promo-banner-icon">⚡</div>
+        <div class="promo-banner-content">
+          <div class="promo-banner-title">TARIFS RÉDUITS<span class="pct">-10%</span></div>
+          <div class="promo-banner-text">Réservés aux membres 🥇 OR &amp; 💎 PLATINE · Sur ~90% des dates*</div>
+          <span class="promo-banner-link">→ Voir les avantages des niveaux</span>
+        </div>
+      </div>
+      <div class="month-group">
+        <div class="month-title">Septembre 2026</div>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-narbonne-19-septembre-2026/">
+          <div class="date-box"><div class="date-num">19</div><div class="date-mois">SEP</div></div>
+          <div class="date-info"><div class="date-ville">NARBONNE</div><div class="date-salle">NARBONNE Arena</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+      </div>
+      <div class="month-group">
+        <div class="month-title">Octobre 2026</div>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-lyon-1-octobre-2026/">
+          <div class="date-box"><div class="date-num">1</div><div class="date-mois">OCT</div></div>
+          <div class="date-info"><div class="date-ville">LYON</div><div class="date-salle">LYON Halle Tony Garnier</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-clermont-ferrand-2-octobre-2026/">
+          <div class="date-box"><div class="date-num">2</div><div class="date-mois">OCT</div></div>
+          <div class="date-info"><div class="date-ville">CLERMONT FERRAND</div><div class="date-salle">CLERMONT F Zénith</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-longuenesse-8-octobre-2026/">
+          <div class="date-box"><div class="date-num">8</div><div class="date-mois">OCT</div></div>
+          <div class="date-info"><div class="date-ville">LONGUENESSE</div><div class="date-salle">LONGUENESSE SCENEO</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-amiens-9-octobre-2026/">
+          <div class="date-box"><div class="date-num">9</div><div class="date-mois">OCT</div></div>
+          <div class="date-info"><div class="date-ville">AMIENS</div><div class="date-salle">AMIENS Zénith</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+      </div>
+      <div class="month-group">
+        <div class="month-title">Novembre 2026</div>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-lille-5-novembre-2026/">
+          <div class="date-box"><div class="date-num">5</div><div class="date-mois">NOV</div></div>
+          <div class="date-info"><div class="date-ville">LILLE</div><div class="date-salle">LILLE Zénith arena</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-brest-12-novembre-2026/">
+          <div class="date-box"><div class="date-num">12</div><div class="date-mois">NOV</div></div>
+          <div class="date-info"><div class="date-ville">BREST</div><div class="date-salle">BREST Arena</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-quimper-13-novembre-2026/">
+          <div class="date-box"><div class="date-num">13</div><div class="date-mois">NOV</div></div>
+          <div class="date-info"><div class="date-ville">QUIMPER</div><div class="date-salle">QUIMPER LE PAVILLON</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-rennes-14-novembre-2026/">
+          <div class="date-box"><div class="date-num">14</div><div class="date-mois">NOV</div></div>
+          <div class="date-info"><div class="date-ville">RENNES</div><div class="date-salle">RENNES Liberté</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-nantes-20-novembre-2026/">
+          <div class="date-box"><div class="date-num">20</div><div class="date-mois">NOV</div></div>
+          <div class="date-info"><div class="date-ville">NANTES</div><div class="date-salle">NANTES Zénith</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-angers-21-novembre-2026/">
+          <div class="date-box"><div class="date-num">21</div><div class="date-mois">NOV</div></div>
+          <div class="date-info"><div class="date-ville">ANGERS</div><div class="date-salle">ANGERS Amphitéa</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-reims-27-novembre-2026/">
+          <div class="date-box"><div class="date-num">27</div><div class="date-mois">NOV</div></div>
+          <div class="date-info"><div class="date-ville">REIMS</div><div class="date-salle">REIMS Arena</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-paris-28-novembre-2026/">
+          <div class="date-box"><div class="date-num">28</div><div class="date-mois">NOV</div></div>
+          <div class="date-info"><div class="date-ville">PARIS</div><div class="date-salle">PARIS Dôme Palais des sports</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+      </div>
+      <div class="promo-banner promo-banner-inline" onclick="toggleLevelsModal()" role="button" tabindex="0" style="cursor:pointer;">
+        <div class="promo-banner-icon">⚡</div>
+        <div class="promo-banner-content">
+          <div class="promo-banner-title">TARIFS RÉDUITS<span class="pct">-10%</span></div>
+          <div class="promo-banner-text">Réservés aux membres 🥇 OR &amp; 💎 PLATINE · Sur ~90% des dates*</div>
+          <span class="promo-banner-link">→ Voir les avantages des niveaux</span>
+        </div>
+      </div>
+      <div class="month-group">
+        <div class="month-title">Décembre 2026</div>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-montbeliard-5-décembre-2026/">
+          <div class="date-box"><div class="date-num">5</div><div class="date-mois">DÉC</div></div>
+          <div class="date-info"><div class="date-ville">MONTBELIARD</div><div class="date-salle">MONTBELIARD Axone</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-le-havre-10-décembre-2026/">
+          <div class="date-box"><div class="date-num">10</div><div class="date-mois">DÉC</div></div>
+          <div class="date-info"><div class="date-ville">LE HAVRE</div><div class="date-salle">LE HAVRE CARRE DES DOCKS</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-fougeres-11-décembre-2026/">
+          <div class="date-box"><div class="date-num">11</div><div class="date-mois">DÉC</div></div>
+          <div class="date-info"><div class="date-ville">FOUGERES</div><div class="date-salle">FOUGERES Aumaillerie</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-alencon-12-décembre-2026/">
+          <div class="date-box"><div class="date-num">12</div><div class="date-mois">DÉC</div></div>
+          <div class="date-info"><div class="date-ville">ALENCON</div><div class="date-salle">ALENCON ANOVA</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-limoges-17-décembre-2026/">
+          <div class="date-box"><div class="date-num">17</div><div class="date-mois">DÉC</div></div>
+          <div class="date-info"><div class="date-ville">LIMOGES</div><div class="date-salle">LIMOGES Zénith</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-mouilleron-le-captif-18-décembre-2026/">
+          <div class="date-box"><div class="date-num">18</div><div class="date-mois">DÉC</div></div>
+          <div class="date-info"><div class="date-ville">MOUILLERON LE CAPTIF</div><div class="date-salle">VENDESPACE</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+      </div>
+      <div class="month-group">
+        <div class="month-title">Janvier 2027</div>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-bourges-21-janvier-2027/">
+          <div class="date-box"><div class="date-num">21</div><div class="date-mois">JAN</div></div>
+          <div class="date-info"><div class="date-ville">BOURGES</div><div class="date-salle">BOURGES Palais d&#39;Auron</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-chartres-22-janvier-2027/">
+          <div class="date-box"><div class="date-num">22</div><div class="date-mois">JAN</div></div>
+          <div class="date-info"><div class="date-ville">CHARTRES</div><div class="date-salle">CHARTRES Le colisé Arena</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-annecy-30-janvier-2027/">
+          <div class="date-box"><div class="date-num">30</div><div class="date-mois">JAN</div></div>
+          <div class="date-info"><div class="date-ville">ANNECY</div><div class="date-salle">ANNECY ARCADIUM</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+      </div>
+      <div class="month-group">
+        <div class="month-title">Février 2027</div>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-montpellier-5-février-2027/">
+          <div class="date-box"><div class="date-num">5</div><div class="date-mois">FÉV</div></div>
+          <div class="date-info"><div class="date-ville">MONTPELLIER</div><div class="date-salle">MONTPELLIER ZENITH</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-montelimar-6-février-2027/">
+          <div class="date-box"><div class="date-num">6</div><div class="date-mois">FÉV</div></div>
+          <div class="date-info"><div class="date-ville">MONTELIMAR</div><div class="date-salle">MONTELIMAR Palais des Congrès</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-boulazac-13-février-2027/">
+          <div class="date-box"><div class="date-num">13</div><div class="date-mois">FÉV</div></div>
+          <div class="date-info"><div class="date-ville">BOULAZAC</div><div class="date-salle">BOULAZAC Palio</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+      </div>
+      <div class="promo-banner promo-banner-inline" onclick="toggleLevelsModal()" role="button" tabindex="0" style="cursor:pointer;">
+        <div class="promo-banner-icon">⚡</div>
+        <div class="promo-banner-content">
+          <div class="promo-banner-title">TARIFS RÉDUITS<span class="pct">-10%</span></div>
+          <div class="promo-banner-text">Réservés aux membres 🥇 OR &amp; 💎 PLATINE · Sur ~90% des dates*</div>
+          <span class="promo-banner-link">→ Voir les avantages des niveaux</span>
+        </div>
+      </div>
+      <div class="month-group">
+        <div class="month-title">Mars 2027</div>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-boulogne-sur-mer-5-mars-2027/">
+          <div class="date-box"><div class="date-num">5</div><div class="date-mois">MAR</div></div>
+          <div class="date-info"><div class="date-ville">BOULOGNE SUR MER</div><div class="date-salle">BOULOGNE SUR MER L&#39;EMBARCADERE</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-beauvais-6-mars-2027/">
+          <div class="date-box"><div class="date-num">6</div><div class="date-mois">MAR</div></div>
+          <div class="date-info"><div class="date-ville">BEAUVAIS</div><div class="date-salle">BEAUVAIS ELISPACE</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-nice-11-mars-2027/">
+          <div class="date-box"><div class="date-num">11</div><div class="date-mois">MAR</div></div>
+          <div class="date-info"><div class="date-ville">NICE</div><div class="date-salle">NICE Nikaia</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-marseille-12-mars-2027/">
+          <div class="date-box"><div class="date-num">12</div><div class="date-mois">MAR</div></div>
+          <div class="date-info"><div class="date-ville">MARSEILLE</div><div class="date-salle">MARSEILLE LE SILO</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-rouen-18-mars-2027/">
+          <div class="date-box"><div class="date-num">18</div><div class="date-mois">MAR</div></div>
+          <div class="date-info"><div class="date-ville">ROUEN</div><div class="date-salle">ROUEN Zénith</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-caen-19-mars-2027/">
+          <div class="date-box"><div class="date-num">19</div><div class="date-mois">MAR</div></div>
+          <div class="date-info"><div class="date-ville">CAEN</div><div class="date-salle">CAEN Zénith</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-sables-d-olonnes-27-mars-2027/">
+          <div class="date-box"><div class="date-num">27</div><div class="date-mois">MAR</div></div>
+          <div class="date-info"><div class="date-ville">SABLES D&#39;OLONNES</div><div class="date-salle">SABLES OLONNE Arena</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+      </div>
+      <div class="month-group">
+        <div class="month-title">Mai 2027</div>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-grenoble-21-mai-2027/">
+          <div class="date-box"><div class="date-num">21</div><div class="date-mois">MAI</div></div>
+          <div class="date-info"><div class="date-ville">GRENOBLE</div><div class="date-salle">GRENOBLE Summum</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-saint-etienne-22-mai-2027/">
+          <div class="date-box"><div class="date-num">22</div><div class="date-mois">MAI</div></div>
+          <div class="date-info"><div class="date-ville">SAINT ETIENNE</div><div class="date-salle">ST ETIENNE Zénith</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-troyes-28-mai-2027/">
+          <div class="date-box"><div class="date-num">28</div><div class="date-mois">MAI</div></div>
+          <div class="date-info"><div class="date-ville">TROYES</div><div class="date-salle">TROYES LE CUBE</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-orleans-29-mai-2027/">
+          <div class="date-box"><div class="date-num">29</div><div class="date-mois">MAI</div></div>
+          <div class="date-info"><div class="date-ville">ORLEANS</div><div class="date-salle">ORLEANS Zénith</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+      </div>
+      <div class="month-group">
+        <div class="month-title">Octobre 2027</div>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-dunkerque-8-octobre-2027/">
+          <div class="date-box"><div class="date-num">8</div><div class="date-mois">OCT</div></div>
+          <div class="date-info"><div class="date-ville">DUNKERQUE</div><div class="date-salle">DUNKERQUE KURSAAL GRANDE SALLE</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-lievin-9-octobre-2027/">
+          <div class="date-box"><div class="date-num">9</div><div class="date-mois">OCT</div></div>
+          <div class="date-info"><div class="date-ville">LIEVIN</div><div class="date-salle">LIEVIN Stade couvert</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+      </div>
+      <div class="promo-banner promo-banner-inline" onclick="toggleLevelsModal()" role="button" tabindex="0" style="cursor:pointer;">
+        <div class="promo-banner-icon">⚡</div>
+        <div class="promo-banner-content">
+          <div class="promo-banner-title">TARIFS RÉDUITS<span class="pct">-10%</span></div>
+          <div class="promo-banner-text">Réservés aux membres 🥇 OR &amp; 💎 PLATINE · Sur ~90% des dates*</div>
+          <span class="promo-banner-link">→ Voir les avantages des niveaux</span>
+        </div>
+      </div>
+      <div class="month-group">
+        <div class="month-title">Novembre 2027</div>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-pau-13-novembre-2027/">
+          <div class="date-box"><div class="date-num">13</div><div class="date-mois">NOV</div></div>
+          <div class="date-info"><div class="date-ville">PAU</div><div class="date-salle">PAU Zénith</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-poitiers-18-novembre-2027/">
+          <div class="date-box"><div class="date-num">18</div><div class="date-mois">NOV</div></div>
+          <div class="date-info"><div class="date-ville">POITIERS</div><div class="date-salle">POITIERS ARENA</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row bientot" href="https://www.theworldofqueen.com/concerts/concert-queen-le-mans-19-novembre-2027/">
+          <div class="date-box"><div class="date-num">19</div><div class="date-mois">NOV</div></div>
+          <div class="date-info"><div class="date-ville">LE MANS<span class="status-badge bientot">BIENTÔT</span></div><div class="date-salle">LE MANS Antarès</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-laval-20-novembre-2027/">
+          <div class="date-box"><div class="date-num">20</div><div class="date-mois">NOV</div></div>
+          <div class="date-info"><div class="date-ville">LAVAL</div><div class="date-salle">LAVAL ESPACE MAYENNE ARENA</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-macon-25-novembre-2027/">
+          <div class="date-box"><div class="date-num">25</div><div class="date-mois">NOV</div></div>
+          <div class="date-info"><div class="date-ville">MACON</div><div class="date-salle">MACON LE SPOT</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-chambery-26-novembre-2027/">
+          <div class="date-box"><div class="date-num">26</div><div class="date-mois">NOV</div></div>
+          <div class="date-info"><div class="date-ville">CHAMBERY</div><div class="date-salle">CHAMBERY LE PHARE</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+      </div>
+      <div class="month-group">
+        <div class="month-title">Décembre 2027</div>
+        <a class="date-row bientot" href="https://www.theworldofqueen.com/concerts/concert-queen-epernay-3-décembre-2027/">
+          <div class="date-box"><div class="date-num">3</div><div class="date-mois">DÉC</div></div>
+          <div class="date-info"><div class="date-ville">EPERNAY<span class="status-badge bientot">BIENTÔT</span></div><div class="date-salle">EPERNAY Milesium</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-compiegne-4-décembre-2027/">
+          <div class="date-box"><div class="date-num">4</div><div class="date-mois">DÉC</div></div>
+          <div class="date-info"><div class="date-ville">COMPIEGNE</div><div class="date-salle">COMPIEGNE LE TIGRE</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+      </div>
+      <div class="month-group">
+        <div class="month-title">Janvier 2028</div>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-roanne-22-janvier-2028/">
+          <div class="date-box"><div class="date-num">22</div><div class="date-mois">JAN</div></div>
+          <div class="date-info"><div class="date-ville">ROANNE</div><div class="date-salle">ROANNE LE SCARABEE</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row bientot" href="https://www.theworldofqueen.com/concerts/concert-queen-trelaze-27-janvier-2028/">
+          <div class="date-box"><div class="date-num">27</div><div class="date-mois">JAN</div></div>
+          <div class="date-info"><div class="date-ville">TRELAZE<span class="status-badge bientot">BIENTÔT</span></div><div class="date-salle">ANGERS TRELAZE ARENA</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-niort-28-janvier-2028/">
+          <div class="date-box"><div class="date-num">28</div><div class="date-mois">JAN</div></div>
+          <div class="date-info"><div class="date-ville">NIORT</div><div class="date-salle">NIORT Acclameur</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+      </div>
+      <div class="promo-banner promo-banner-inline" onclick="toggleLevelsModal()" role="button" tabindex="0" style="cursor:pointer;">
+        <div class="promo-banner-icon">⚡</div>
+        <div class="promo-banner-content">
+          <div class="promo-banner-title">TARIFS RÉDUITS<span class="pct">-10%</span></div>
+          <div class="promo-banner-text">Réservés aux membres 🥇 OR &amp; 💎 PLATINE · Sur ~90% des dates*</div>
+          <span class="promo-banner-link">→ Voir les avantages des niveaux</span>
+        </div>
+      </div>
+      <div class="month-group">
+        <div class="month-title">Mars 2028</div>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-aurillac-2-mars-2028/">
+          <div class="date-box"><div class="date-num">2</div><div class="date-mois">MAR</div></div>
+          <div class="date-info"><div class="date-ville">AURILLAC</div><div class="date-salle">AURILLAC LE PRISME</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row bientot" href="https://www.theworldofqueen.com/concerts/concert-queen-clermont-ferrand-3-mars-2028/">
+          <div class="date-box"><div class="date-num">3</div><div class="date-mois">MAR</div></div>
+          <div class="date-info"><div class="date-ville">CLERMONT FERRAND<span class="status-badge bientot">BIENTÔT</span></div><div class="date-salle">CLERMONT F Zénith</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row bientot" href="https://www.theworldofqueen.com/concerts/concert-queen-lyon-4-mars-2028/">
+          <div class="date-box"><div class="date-num">4</div><div class="date-mois">MAR</div></div>
+          <div class="date-info"><div class="date-ville">LYON<span class="status-badge bientot">BIENTÔT</span></div><div class="date-salle">LYON Halle Tony Garnier</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-toulouse-11-mars-2028/">
+          <div class="date-box"><div class="date-num">11</div><div class="date-mois">MAR</div></div>
+          <div class="date-info"><div class="date-ville">TOULOUSE</div><div class="date-salle">TOULOUSE Zénith</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row bientot" href="https://www.theworldofqueen.com/concerts/concert-queen-longuenesse-17-mars-2028/">
+          <div class="date-box"><div class="date-num">17</div><div class="date-mois">MAR</div></div>
+          <div class="date-info"><div class="date-ville">LONGUENESSE<span class="status-badge bientot">BIENTÔT</span></div><div class="date-salle">LONGUENESSE SCENEO</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row bientot" href="https://www.theworldofqueen.com/concerts/concert-queen-lille-18-mars-2028/">
+          <div class="date-box"><div class="date-num">18</div><div class="date-mois">MAR</div></div>
+          <div class="date-info"><div class="date-ville">LILLE<span class="status-badge bientot">BIENTÔT</span></div><div class="date-salle">LILLE Zénith arena</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row bientot" href="https://www.theworldofqueen.com/concerts/concert-queen-paris-25-mars-2028/">
+          <div class="date-box"><div class="date-num">25</div><div class="date-mois">MAR</div></div>
+          <div class="date-info"><div class="date-ville">PARIS<span class="status-badge bientot">BIENTÔT</span></div><div class="date-salle">PARIS Dôme Palais des sports</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row bientot" href="https://www.theworldofqueen.com/concerts/concert-queen-reims-31-mars-2028/">
+          <div class="date-box"><div class="date-num">31</div><div class="date-mois">MAR</div></div>
+          <div class="date-info"><div class="date-ville">REIMS<span class="status-badge bientot">BIENTÔT</span></div><div class="date-salle">REIMS Arena</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+      </div>
+      <div class="month-group">
+        <div class="month-title">Avril 2028</div>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-dijon-1-avril-2028/">
+          <div class="date-box"><div class="date-num">1</div><div class="date-mois">AVR</div></div>
+          <div class="date-info"><div class="date-ville">DIJON</div><div class="date-salle">DIJON Zénith</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+      </div>
+      <div class="month-group">
+        <div class="month-title">Mai 2028</div>
+        <a class="date-row bientot" href="https://www.theworldofqueen.com/concerts/concert-queen-metz-12-mai-2028/">
+          <div class="date-box"><div class="date-num">12</div><div class="date-mois">MAI</div></div>
+          <div class="date-info"><div class="date-ville">METZ<span class="status-badge bientot">BIENTÔT</span></div><div class="date-salle">METZ ARENES</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row bientot" href="https://www.theworldofqueen.com/concerts/concert-queen-strasbourg-13-mai-2028/">
+          <div class="date-box"><div class="date-num">13</div><div class="date-mois">MAI</div></div>
+          <div class="date-info"><div class="date-ville">STRASBOURG<span class="status-badge bientot">BIENTÔT</span></div><div class="date-salle">STRASBOURG Zénith Europe</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row bientot" href="https://www.theworldofqueen.com/concerts/concert-queen-limoges-19-mai-2028/">
+          <div class="date-box"><div class="date-num">19</div><div class="date-mois">MAI</div></div>
+          <div class="date-info"><div class="date-ville">LIMOGES<span class="status-badge bientot">BIENTÔT</span></div><div class="date-salle">LIMOGES Zénith</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-deols-20-mai-2028/">
+          <div class="date-box"><div class="date-num">20</div><div class="date-mois">MAI</div></div>
+          <div class="date-info"><div class="date-ville">DEOLS</div><div class="date-salle">DEOLS</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+      </div>
+      <div class="promo-banner promo-banner-inline" onclick="toggleLevelsModal()" role="button" tabindex="0" style="cursor:pointer;">
+        <div class="promo-banner-icon">⚡</div>
+        <div class="promo-banner-content">
+          <div class="promo-banner-title">TARIFS RÉDUITS<span class="pct">-10%</span></div>
+          <div class="promo-banner-text">Réservés aux membres 🥇 OR &amp; 💎 PLATINE · Sur ~90% des dates*</div>
+          <span class="promo-banner-link">→ Voir les avantages des niveaux</span>
+        </div>
+      </div>
+      <div class="month-group">
+        <div class="month-title">Novembre 2028</div>
+        <a class="date-row bientot" href="https://www.theworldofqueen.com/concerts/concert-queen-brest-3-novembre-2028/">
+          <div class="date-box"><div class="date-num">3</div><div class="date-mois">NOV</div></div>
+          <div class="date-info"><div class="date-ville">BREST<span class="status-badge bientot">BIENTÔT</span></div><div class="date-salle">BREST Arena</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row bientot" href="https://www.theworldofqueen.com/concerts/concert-queen-nantes-4-novembre-2028/">
+          <div class="date-box"><div class="date-num">4</div><div class="date-mois">NOV</div></div>
+          <div class="date-info"><div class="date-ville">NANTES<span class="status-badge bientot">BIENTÔT</span></div><div class="date-salle">NANTES Zénith</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row bientot" href="https://www.theworldofqueen.com/concerts/concert-queen-boulogne-sur-mer-9-novembre-2028/">
+          <div class="date-box"><div class="date-num">9</div><div class="date-mois">NOV</div></div>
+          <div class="date-info"><div class="date-ville">BOULOGNE SUR MER<span class="status-badge bientot">BIENTÔT</span></div><div class="date-salle">BOULOGNE SUR MER L&#39;EMBARCADERE</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row bientot" href="https://www.theworldofqueen.com/concerts/concert-queen-amiens-10-novembre-2028/">
+          <div class="date-box"><div class="date-num">10</div><div class="date-mois">NOV</div></div>
+          <div class="date-info"><div class="date-ville">AMIENS<span class="status-badge bientot">BIENTÔT</span></div><div class="date-salle">AMIENS Zénith</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row bientot" href="https://www.theworldofqueen.com/concerts/concert-queen-alencon-17-novembre-2028/">
+          <div class="date-box"><div class="date-num">17</div><div class="date-mois">NOV</div></div>
+          <div class="date-info"><div class="date-ville">ALENCON<span class="status-badge bientot">BIENTÔT</span></div><div class="date-salle">ALENCON ANOVA</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row bientot" href="https://www.theworldofqueen.com/concerts/concert-queen-chartres-18-novembre-2028/">
+          <div class="date-box"><div class="date-num">18</div><div class="date-mois">NOV</div></div>
+          <div class="date-info"><div class="date-ville">CHARTRES<span class="status-badge bientot">BIENTÔT</span></div><div class="date-salle">CHARTRES Le colisé Arena</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row bientot" href="https://www.theworldofqueen.com/concerts/concert-queen-rouen-23-novembre-2028/">
+          <div class="date-box"><div class="date-num">23</div><div class="date-mois">NOV</div></div>
+          <div class="date-info"><div class="date-ville">ROUEN<span class="status-badge bientot">BIENTÔT</span></div><div class="date-salle">ROUEN Zénith</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row bientot" href="https://www.theworldofqueen.com/concerts/concert-queen-caen-24-novembre-2028/">
+          <div class="date-box"><div class="date-num">24</div><div class="date-mois">NOV</div></div>
+          <div class="date-info"><div class="date-ville">CAEN<span class="status-badge bientot">BIENTÔT</span></div><div class="date-salle">CAEN Zénith</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row bientot" href="https://www.theworldofqueen.com/concerts/concert-queen-le-havre-25-novembre-2028/">
+          <div class="date-box"><div class="date-num">25</div><div class="date-mois">NOV</div></div>
+          <div class="date-info"><div class="date-ville">LE HAVRE<span class="status-badge bientot">BIENTÔT</span></div><div class="date-salle">LE HAVRE CARRE DES DOCKS</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row bientot" href="https://www.theworldofqueen.com/concerts/concert-queen-nice-30-novembre-2028/">
+          <div class="date-box"><div class="date-num">30</div><div class="date-mois">NOV</div></div>
+          <div class="date-info"><div class="date-ville">NICE<span class="status-badge bientot">BIENTÔT</span></div><div class="date-salle">NICE Nikaia</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+      </div>
+      <div class="month-group">
+        <div class="month-title">Décembre 2028</div>
+        <a class="date-row bientot" href="https://www.theworldofqueen.com/concerts/concert-queen-toulon-1-décembre-2028/">
+          <div class="date-box"><div class="date-num">1</div><div class="date-mois">DÉC</div></div>
+          <div class="date-info"><div class="date-ville">TOULON<span class="status-badge bientot">BIENTÔT</span></div><div class="date-salle">TOULON Zénith</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row bientot" href="https://www.theworldofqueen.com/concerts/concert-queen-marseille-2-décembre-2028/">
+          <div class="date-box"><div class="date-num">2</div><div class="date-mois">DÉC</div></div>
+          <div class="date-info"><div class="date-ville">MARSEILLE<span class="status-badge bientot">BIENTÔT</span></div><div class="date-salle">MARSEILLE Dôme</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row bientot" href="https://www.theworldofqueen.com/concerts/concert-queen-mouilleron-le-captif-9-décembre-2028/">
+          <div class="date-box"><div class="date-num">9</div><div class="date-mois">DÉC</div></div>
+          <div class="date-info"><div class="date-ville">MOUILLERON LE CAPTIF<span class="status-badge bientot">BIENTÔT</span></div><div class="date-salle">VENDESPACE</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+        <a class="date-row " href="https://www.theworldofqueen.com/concerts/concert-queen-bordeaux-16-décembre-2028/">
+          <div class="date-box"><div class="date-num">16</div><div class="date-mois">DÉC</div></div>
+          <div class="date-info"><div class="date-ville">BORDEAUX</div><div class="date-salle">BORDEAUX Arkéa</div></div>
+          <div class="date-arrow">→</div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ POPUP BILLETTERIE ============ -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal-card" role="dialog" aria-modal="true">
+    <button class="modal-close" onclick="closeModal()" aria-label="Fermer">✕</button>
+    <div class="modal-eyebrow">🎟️ RÉSERVER</div>
+    <div class="modal-title" id="modalTitle">Ville</div>
+    <div class="modal-date-info" id="modalDate">Date · Salle</div>
+    <div class="modal-cta-list" id="modalCtaList"></div>
+  </div>
+</div>
+
+<!-- ============ FOOTER ============ -->
+
+<!-- ============ ABONNEZ-VOUS À LA NEWSLETTER ============ -->
+<section class="newsletter-block">
+  <div class="newsletter-wrap">
+    <div class="newsletter-eyebrow">RESTE INFORMÉ</div>
+    <h3 class="newsletter-title">Abonnez-vous à la newsletter</h3>
+    <p class="newsletter-text">Nouvelles dates, coulisses exclusives, concours &amp; promos — directement dans ta boîte mail.</p>
+    <form class="newsletter-form" onsubmit="event.preventDefault(); subscribeNewsletter(this);">
+      <input type="email" placeholder="ton.email@exemple.com" required />
+      <button type="submit">S'abonner</button>
+    </form>
+    <div class="newsletter-helper">📧 Tu peux te désabonner à tout moment · Aucun spam, promis.</div>
+    <div class="newsletter-success" id="newsletterSuccess">✅ Merci ! Tu es bien inscrit·e à la newsletter TWOQ 🎤</div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-col">
+      <h5>THE WORLD OF QUEEN</h5>
+      <p>L'Éternelle Légende — Le show référence en hommage à Queen, produit par Oh My Prod.</p>
+    </div>
+        <div class="footer-col">
+      <h5>Navigation</h5>
+      <a href="index.html">Le Show</a>
+      <a href="https://www.theworldofqueen.com/concerts/">Dates Tour</a>
+      <a href="artistes.html">Artistes</a>
+      <a href="fanzone.html">Fan Zone</a>
+      <a href="medias.html">Médias</a>
+      <a href="moi.html">Mon Espace</a>
+    </div>
+        <div class="footer-col">
+      <h5>Professionnels</h5>
+      <a href="contact-prod.html">Contact Prod</a>
+      <a href="espace-pro.html">Espace Pro</a>
+      <a href="espace-presse.html">Espace Presse</a>
+      <a href="https://app.theworldofqueen.com" target="_blank">Appli TWOQ ↗</a>
+    </div>
+    <div class="footer-col">
+      <h5>Contact</h5>
+      <p>SAS OH MY PROD</p>
+      <a href="mailto:contact@theworldofqueen.com" class="footer-mail-btn">✉️ Nous écrire</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    © 2026 <span class="gold-text">THE WORLD OF QUEEN</span> — Production <span class="gold-text">OH MY PROD</span>. Tous droits réservés.
+  </div>
+</footer>
+
+<script>
+  function toggleMenu() { document.getElementById('mainNav').classList.toggle('open'); }
+  function closeMenu() { document.getElementById('mainNav').classList.remove('open'); }
+
+  // ===== Constantes Supabase =====
+  const SUPABASE_URL  = 'https://nhxqcavianozskxgfcbt.supabase.co';
+  const SUPABASE_KEY  = 'sb_publishable_59Pg7368sxCT6y3j9nNw0g_i8ILGRZ3';
+  const TWOQ_ETERNELLE_ID = '22222222-2222-2222-2222-222222222222';
+  const TWOQ_HOMMAGE_ID   = '11111111-1111-1111-1111-111111111111';
+
+  // ===== Base GPS villes (pour "ville la plus proche") =====
+  const CITIES_GPS = {
+    'paris':[48.8566,2.3522],'marseille':[43.2965,5.3698],'lyon':[45.764,4.8357],
+    'toulouse':[43.6047,1.4442],'nice':[43.7102,7.262],'nantes':[47.2184,-1.5536],
+    'montpellier':[43.6109,3.8772],'strasbourg':[48.5734,7.7521],'bordeaux':[44.8378,-0.5792],
+    'lille':[50.6292,3.0573],'rennes':[48.1173,-1.6778],'reims':[49.2583,4.0317],
+    'le havre':[49.4944,0.1079],'saint-etienne':[45.4397,4.3872],'toulon':[43.1242,5.928],
+    'grenoble':[45.1885,5.7245],'dijon':[47.322,5.0415],'angers':[47.4784,-0.5632],
+    'nimes':[43.8367,4.3601],'aix-en-provence':[43.5297,5.4474],'aix en provence':[43.5297,5.4474],
+    'clermont-ferrand':[45.7772,3.087],'clermont ferrand':[45.7772,3.087],
+    'le mans':[48.0061,0.1996],'brest':[48.3905,-4.4861],'amiens':[49.8941,2.2958],
+    'tours':[47.3941,0.6848],'limoges':[45.8336,1.2611],'annecy':[45.8992,6.1294],
+    'perpignan':[42.6886,2.8946],'besancon':[47.238,6.0244],'besançon':[47.238,6.0244],
+    'orleans':[47.9029,1.9039],'orléans':[47.9029,1.9039],
+    'metz':[49.1193,6.1757],'rouen':[49.4431,1.0993],'mulhouse':[47.7508,7.3359],
+    'caen':[49.1829,-0.3707],'nancy':[48.6921,6.1844],'avignon':[43.9493,4.8055],
+    'poitiers':[46.5802,0.3404],'pau':[43.2951,-0.3708],'la rochelle':[46.1591,-1.1518],
+    'cannes':[43.5528,7.0174],'antibes':[43.5808,7.1251],'merignac':[44.8336,-0.6471],
+    'mérignac':[44.8336,-0.6471],'beauvais':[49.4295,2.0808],'troyes':[48.2973,4.0744],
+    'narbonne':[43.1838,3.0042],'la roche-sur-yon':[46.6705,-1.4262],'mouilleron-le-captif':[46.7166,-1.4666],
+    'chartres':[48.4469,1.4894],'bourges':[47.0844,2.3964],'montbéliard':[47.5108,6.7993],'montbeliard':[47.5108,6.7993],
+    'alençon':[48.4319,0.0916],'alencon':[48.4319,0.0916],'chamonix':[45.9237,6.8694],
+    'chateauroux':[46.8103,1.6909],'châteauroux':[46.8103,1.6909],
+    'niort':[46.3236,-0.4647],'agen':[44.2049,0.6212],'futuroscope':[46.6739,0.3681],
+    'lons-le-saunier':[46.6736,5.5499],'mâcon':[46.3055,4.8294],'macon':[46.3055,4.8294],
+    'fougères':[48.354,-1.2056],'fougeres':[48.354,-1.2056],
+    'quimper':[47.9961,-4.1024],'le grand-quevilly':[49.4133,1.0571],
+    'boulogne-sur-mer':[50.7264,1.6147],'les sables d\'olonne':[46.4961,-1.7836],
+    'sables d\'olonne':[46.4961,-1.7836],'périgueux':[45.1909,0.7184],'perigueux':[45.1909,0.7184],
+    'boulazac':[45.1842,0.7558],'montélimar':[44.5556,4.7497],'montelimar':[44.5556,4.7497],
+    'biarritz':[43.4832,-1.5586],'bayonne':[43.4929,-1.4748],'anglet':[43.4843,-1.5158],
+    'dax':[43.7039,-1.0521],'hendaye':[43.3573,-1.7747],'arcachon':[44.6582,-1.1683],
+    'tarbes':[43.2329,0.0712],'lourdes':[43.0921,-0.0466],'angoulême':[45.6483,0.1561],
+    'angouleme':[45.6483,0.1561],'royan':[45.6261,-1.0289],'saintes':[45.7459,-0.6275],
+    'fréjus':[43.4332,6.737],'frejus':[43.4332,6.737],'hyères':[43.1205,6.1286],'hyeres':[43.1205,6.1286],
+    'saint-tropez':[43.2677,6.6407],'valence':[44.9333,4.8919],'aubagne':[43.2935,5.5707],
+    'nevers':[46.9896,3.1626],'vichy':[46.1273,3.4252],'auxerre':[47.7982,3.5734],
+    'epinal':[48.1741,6.4506],'épinal':[48.1741,6.4506],'belfort':[47.6379,6.8628],
+    'evreux':[49.0241,1.1508],'évreux':[49.0241,1.1508],'bayeux':[49.2768,-0.7029],
+    'carcassonne':[43.213,2.3491],'béziers':[43.3445,3.2191],'beziers':[43.3445,3.2191],
+    'sète':[43.4036,3.6963],'sete':[43.4036,3.6963],'albi':[43.9298,2.1481],
+    'saint-malo':[48.6492,-2.0258],'lorient':[47.7484,-3.3702],'vannes':[47.6582,-2.7607],
+  };
+
+  // ===== Mapping ville → région =====
+  const CITY_TO_REGION = {
+    // Nord
+    'lille':'nord','amiens':'nord','boulogne-sur-mer':'nord','beauvais':'nord','arras':'nord','dunkerque':'nord','calais':'nord',
+    // Normandie
+    'le havre':'normandie','caen':'normandie','rouen':'normandie','le grand-quevilly':'normandie','alençon':'normandie','alencon':'normandie',
+    // Ouest
+    'brest':'ouest','quimper':'ouest','rennes':'ouest','lorient':'ouest','vannes':'ouest','saint-malo':'ouest',
+    'nantes':'ouest','angers':'ouest','mouilleron-le-captif':'ouest','les sables d\'olonne':'ouest',
+    'le mans':'ouest','la roche-sur-yon':'ouest','fougères':'ouest','fougeres':'ouest',
+    // Île-de-France
+    'paris':'idf','versailles':'idf','créteil':'idf','creteil':'idf',
+    // Est
+    'strasbourg':'est','metz':'est','nancy':'est','mulhouse':'est','reims':'est','troyes':'est',
+    'dijon':'est','besançon':'est','besancon':'est','montbéliard':'est','montbeliard':'est','belfort':'est','epinal':'est','épinal':'est',
+    // Centre
+    'orléans':'centre','orleans':'centre','tours':'centre','chartres':'centre','bourges':'centre',
+    'châteauroux':'centre','chateauroux':'centre','poitiers':'centre','futuroscope':'centre','nevers':'centre','auxerre':'centre',
+    // Sud-Ouest
+    'bordeaux':'sud-ouest','toulouse':'sud-ouest','pau':'sud-ouest','la rochelle':'sud-ouest',
+    'limoges':'sud-ouest','agen':'sud-ouest','périgueux':'sud-ouest','perigueux':'sud-ouest',
+    'narbonne':'sud-ouest','perpignan':'sud-ouest','montpellier':'sud-ouest','nimes':'sud-ouest','niort':'sud-ouest',
+    'biarritz':'sud-ouest','bayonne':'sud-ouest','tarbes':'sud-ouest','lourdes':'sud-ouest','angoulême':'sud-ouest','angouleme':'sud-ouest',
+    'carcassonne':'sud-ouest','béziers':'sud-ouest','beziers':'sud-ouest','albi':'sud-ouest',
+    // Sud-Est
+    'marseille':'sud-est','nice':'sud-est','toulon':'sud-est','aix-en-provence':'sud-est',
+    'cannes':'sud-est','antibes':'sud-est','avignon':'sud-est','montélimar':'sud-est','montelimar':'sud-est',
+    'fréjus':'sud-est','frejus':'sud-est','hyères':'sud-est','hyeres':'sud-est','saint-tropez':'sud-est',
+    // Centre-Est
+    'lyon':'centre-est','grenoble':'centre-est','saint-etienne':'centre-est','clermont-ferrand':'centre-est',
+    'annecy':'centre-est','chamonix':'centre-est','valence':'centre-est','vichy':'centre-est',
+    'mâcon':'centre-est','macon':'centre-est','lons-le-saunier':'centre-est',
+  };
+
+  const REGIONS = [
+    { id:'nord',       icon:'🌾', name:'Nord' },
+    { id:'ouest',      icon:'⚓', name:'Ouest' },
+    { id:'est',        icon:'🍇', name:'Est' },
+    { id:'sud-est',    icon:'☀️', name:'Sud-Est' },
+    { id:'sud-ouest',  icon:'🍷', name:'Sud-Ouest' },
+    { id:'normandie',  icon:'🌊', name:'Normandie' },
+    { id:'idf',        icon:'🗼', name:'Île-de-France' },
+    { id:'centre',     icon:'🏰', name:'Centre' },
+    { id:'centre-est', icon:'⛰️', name:'Centre-Est' },
+  ];
+
+  function haversineKm(lat1, lon1, lat2, lon2) {
+    const R = 6371;
+    const toRad = x => x * Math.PI / 180;
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
+    const a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;
+    return Math.round(2 * R * Math.asin(Math.sqrt(a)));
+  }
+
+  // ===== État global =====
+  let _allDates = [];
+  let _currentFilter = 'avenir';      // 'avenir' | 'passees' | 'toutes'
+  let _currentRegion = null;          // id région ou null
+  let _currentSearch = '';
+  let _searchTimer = null;
+
+  async function loadAllDates() {
+    try {
+      if (typeof supabase === 'undefined') {
+        console.warn('Supabase SDK pas chargé');
+        return [];
+      }
+      const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      const { data, error } = await sb
+        .from('public_dates_twoq')
+        .select('*')
+        .in('tournee_id', [TWOQ_ETERNELLE_ID, TWOQ_HOMMAGE_ID])
+        .order('date_concert', { ascending: true });
+      if (error) { console.warn('Erreur Supabase :', error); return []; }
+      console.log(`[Dates] ${(data||[]).length} dates chargées depuis Supabase`);
+      return data || [];
+    } catch (e) {
+      console.warn('Exception Supabase :', e);
+      return [];
+    }
+  }
+
+  function findClosestDate(query, datesList) {
+    const q = query.toLowerCase().trim();
+    const queryGps = CITIES_GPS[q];
+    if (!queryGps) return null;
+    let best = null;
+    for (const d of datesList) {
+      const cityKey = (d.ville || '').toLowerCase().trim();
+      const cityGps = CITIES_GPS[cityKey];
+      if (!cityGps) continue;
+      const dist = haversineKm(queryGps[0], queryGps[1], cityGps[0], cityGps[1]);
+      if (!best || dist < best.distance) best = { date: d, distance: dist };
+    }
+    return best;
+  }
+
+  function applyFilters() {
+    const today = new Date().toISOString().split('T')[0];
+    let filtered = _allDates;
+
+    // Filtre statut (avenir/passées/toutes)
+    if (_currentFilter === 'avenir') {
+      filtered = filtered.filter(d => d.date_concert >= today);
+    } else if (_currentFilter === 'passees') {
+      filtered = filtered.filter(d => d.date_concert < today).reverse();
+    }
+
+    // Filtre région
+    if (_currentRegion) {
+      filtered = filtered.filter(d => {
+        const cityKey = (d.ville || '').toLowerCase().trim();
+        return CITY_TO_REGION[cityKey] === _currentRegion;
+      });
+    }
+
+    // Filtre recherche texte
+    if (_currentSearch) {
+      const q = _currentSearch.toLowerCase();
+      filtered = filtered.filter(d =>
+        (d.ville || '').toLowerCase().includes(q) ||
+        (d.nom_salle || '').toLowerCase().includes(q)
+      );
+    }
+
+    renderDates(filtered);
+  }
+
+  function groupByMonth(dates) {
+    const groups = {};
+    const mois = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+    for (const d of dates) {
+      const dt = new Date(d.date_concert + 'T00:00:00');
+      const key = `${dt.getFullYear()}-${String(dt.getMonth()).padStart(2,'0')}`;
+      const label = `${mois[dt.getMonth()]} ${dt.getFullYear()}`;
+      if (!groups[key]) groups[key] = { label, dates: [] };
+      groups[key].dates.push(d);
+    }
+    return Object.keys(groups).sort().map(k => groups[k]);
+  }
+
+  function renderPromoBanner() {
+    return `
+      <div class="promo-banner promo-banner-inline" onclick="toggleLevelsModal()" role="button" tabindex="0" style="cursor:pointer;">
+        <div class="promo-banner-icon">⚡</div>
+        <div class="promo-banner-content">
+          <div class="promo-banner-title">TARIFS RÉDUITS<span class="pct">-10%</span></div>
+          <div class="promo-banner-text">Réservés aux membres 🥇 OR &amp; 💎 PLATINE · Sur ~90% des dates*</div>
+          <span class="promo-banner-link">→ Voir les avantages des niveaux</span>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderDates(dates) {
+    const container = document.getElementById('datesContainer');
+
+    if (dates.length === 0) {
+      // Si recherche → essaie ville la plus proche
+      if (_currentSearch) {
+        const closest = findClosestDate(_currentSearch, _allDates.filter(d => d.date_concert >= new Date().toISOString().split('T')[0]));
+        if (closest) {
+          const ville = _currentSearch.charAt(0).toUpperCase() + _currentSearch.slice(1).toLowerCase();
+          container.innerHTML = `
+            <div class="closest-box">
+              <div class="closest-box-label">Aucune date à <strong>${escapeHtml(ville)}</strong></div>
+              <div class="closest-box-tag">📍 LA PLUS PROCHE — ${closest.distance} km</div>
+              ${renderDateRow(closest.date)}
+            </div>
+          `;
+          attachRowHandlers();
+          return;
+        }
+      }
+      container.innerHTML = '<div class="empty-state">Aucune date trouvée. Essaie un autre filtre.</div>';
+      return;
+    }
+
+    const groups = groupByMonth(dates);
+    let html = '';
+    let promoInserted = false;
+    for (const g of groups) {
+      // Insérer le promo banner JUSTE AVANT le premier mois de mai trouvé
+      if (!promoInserted && /^mai\s/i.test(g.label)) {
+        html += renderPromoBanner();
+        promoInserted = true;
+      }
+      html += `
+        <div class="month-group">
+          <div class="month-title">${g.label}</div>
+          ${g.dates.map(d => renderDateRow(d)).join('')}
+        </div>
+      `;
+    }
+    // Si aucun mois de mai dans la liste, on insère le promo banner en fin
+    if (!promoInserted) {
+      html += renderPromoBanner();
+    }
+    container.innerHTML = html;
+    attachRowHandlers();
+  }
+
+  function renderDateRow(d) {
+    const dt = new Date(d.date_concert + 'T00:00:00');
+    const moisCourt = ['JAN','FÉV','MAR','AVR','MAI','JUIN','JUIL','AOÛT','SEP','OCT','NOV','DÉC'];
+    const statut = (d.statut_public || '').toUpperCase();
+    let badge = '';
+    let extraClass = '';
+    if (statut === 'COMPLET') {
+      badge = '<span class="status-badge complet">COMPLET</span>';
+      extraClass = 'complet';
+    } else if (statut === 'BIENTOT' || statut === 'BIENTÔT' || statut === 'BIENTOT_EN_VENTE') {
+      badge = '<span class="status-badge bientot">BIENTÔT</span>';
+      extraClass = 'bientot';
+    }
+    return `
+      <div class="date-row ${extraClass}" data-id="${d.id}">
+        <div class="date-box">
+          <div class="date-num">${dt.getDate()}</div>
+          <div class="date-mois">${moisCourt[dt.getMonth()]}</div>
+        </div>
+        <div class="date-info">
+          <div class="date-ville">${escapeHtml(d.ville || '')}${badge}</div>
+          <div class="date-salle">${escapeHtml(d.nom_salle || '')}</div>
+        </div>
+        <div class="date-arrow">→</div>
+      </div>
+    `;
+  }
+
+  function attachRowHandlers() {
+    document.querySelectorAll('.date-row').forEach(row => {
+      row.addEventListener('click', () => {
+        const id = row.dataset.id;
+        const date = _allDates.find(x => x.id === id);
+        if (date) openModal(date);
+      });
+    });
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  }
+
+  // ===== Popup billetterie =====
+  function openModal(d) {
+    const backdrop = document.getElementById('modalBackdrop');
+    document.getElementById('modalTitle').textContent = d.ville || '';
+    const dt = new Date(d.date_concert + 'T00:00:00');
+    const mois = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+    const dateFr = `${dt.getDate()} ${mois[dt.getMonth()]} ${dt.getFullYear()}`;
+    const heure = d.heure_show ? ' · ' + d.heure_show.slice(0,5).replace(':','h') : '';
+    document.getElementById('modalDate').textContent = `${dateFr}${heure} · ${d.nom_salle || ''}`;
+
+    // Ordre des réseaux : Ticketmaster → Oh My Prod → Fnac → Salle → PMR
+    const links = d.liens_billetterie || {};
+    const ordered = [
+      { key:'ticketmaster', icon:'🎟️', label:'Ticketmaster', url: links.ticketmaster || d.lien_billetterie_principal || '' },
+      { key:'ohmyprod',     icon:'🎬', label:'Oh My Prod',    url: links.ohmyprod || links.oh_my_prod || '' },
+      { key:'fnac',         icon:'🛍️', label:'Fnac Spectacles', url: links.fnac || '' },
+      { key:'salle',        icon:'🏟️', label:'Billetterie de la salle', url: links.salle || '' },
+      { key:'pmr',          icon:'♿', label:'Accès PMR',     url: links.pmr || '' },
+    ].filter(l => l.url && l.url.trim() !== '');
+
+    const list = document.getElementById('modalCtaList');
+    if (ordered.length === 0) {
+      list.innerHTML = '<div class="modal-empty">Aucun lien de billetterie disponible pour le moment.</div>';
+    } else {
+      list.innerHTML = ordered.map(l => `
+        <a class="modal-cta" href="${escapeHtml(l.url)}" target="_blank" rel="noopener">
+          <span class="modal-cta-icon">${l.icon}</span>
+          <span>${l.label}</span>
+          <span class="modal-cta-arrow">→</span>
+        </a>
+      `).join('');
+    }
+    backdrop.classList.add('open');
+  }
+  function closeModal() { document.getElementById('modalBackdrop').classList.remove('open'); }
+  document.getElementById('modalBackdrop').addEventListener('click', (e) => {
+    if (e.target.id === 'modalBackdrop') closeModal();
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+  // ===== Setup recherche / régions / filtres =====
+  function setupSearch() {
+    const input = document.getElementById('datesSearchInput');
+    input.addEventListener('input', () => {
+      clearTimeout(_searchTimer);
+      _currentSearch = input.value.trim();
+      // Désélectionne région quand on tape
+      if (_currentSearch) {
+        document.querySelectorAll('.region-btn.active').forEach(b => b.classList.remove('active'));
+        _currentRegion = null;
+      }
+      _searchTimer = setTimeout(applyFilters, 150);
+    });
+  }
+
+  function setupRegions() {
+    const grid = document.getElementById('regionGrid');
+    const toggle = document.getElementById('regionToggle');
+    grid.innerHTML = REGIONS.map(r => `
+      <button type="button" class="region-btn" data-region="${r.id}">
+        <span class="region-btn-icon">${r.icon}</span>
+        <span>${r.name}</span>
+      </button>
+    `).join('');
+    toggle.addEventListener('click', () => {
+      grid.classList.toggle('open');
+      toggle.classList.toggle('open');
+    });
+    grid.querySelectorAll('.region-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const wasActive = btn.classList.contains('active');
+        grid.querySelectorAll('.region-btn.active').forEach(b => b.classList.remove('active'));
+        if (wasActive) {
+          _currentRegion = null;
+        } else {
+          btn.classList.add('active');
+          _currentRegion = btn.dataset.region;
+          // Reset recherche texte
+          document.getElementById('datesSearchInput').value = '';
+          _currentSearch = '';
+        }
+        applyFilters();
+      });
+    });
+  }
+
+  function setupFilters() {
+    document.querySelectorAll('.filter-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.filter-tab.active').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        _currentFilter = tab.dataset.filter;
+        applyFilters();
+      });
+    });
+  }
+
+  // ===== Génération des ÉTOILES FILANTES (hyperdrive) — TOP ZONE seulement =====
+  function generateShootingStars() {
+    const bg = document.getElementById('shootingStars');
+    if (!bg) return;
+    const count = 40;
+    for (let i = 0; i < count; i++) {
+      const star = document.createElement('div');
+      star.className = 'hyper-star';
+      const angle = Math.random() * 360;
+      star.style.setProperty('--angle', angle + 'deg');
+      const duration = 2.5 + Math.random() * 2;
+      const delay = (Math.random() * 4) + 's';
+      star.style.animation = `hyperWarp ${duration}s linear infinite`;
+      star.style.animationDelay = delay;
+      bg.appendChild(star);
+    }
+  }
+
+  // ===== Génération du CIEL ÉTOILÉ (twinkle) — GLOBAL et FIXE =====
+  function generateTwinkleStars() {
+    const bg = document.getElementById('twinkleStars');
+    if (!bg) return;
+    const count = 220;
+    const frag = document.createDocumentFragment();
+    for (let i = 0; i < count; i++) {
+      const star = document.createElement('div');
+      const r = Math.random();
+      let size = 'small';
+      if (r < 0.12) size = 'big';
+      else if (r < 0.40) size = 'medium';
+      star.className = 'twinkle-star ' + size;
+      star.style.left = Math.random() * 100 + '%';
+      star.style.top = Math.random() * 100 + '%';
+      star.style.animationDelay = (Math.random() * 4) + 's';
+      star.style.animationDuration = (2.5 + Math.random() * 3.5) + 's';
+      frag.appendChild(star);
+    }
+    bg.appendChild(frag);
+  }
+
+  // ===== Init =====
+  (async () => {
+    generateTwinkleStars();
+    generateShootingStars();
+    setupSearch();
+    setupRegions();
+    setupFilters();
+    _allDates = await loadAllDates();
+    applyFilters();
+  })();
+  // ============ NEWSLETTER ============
+  async function subscribeNewsletter(form) {
+    const input = form.querySelector('input');
+    const email = (input.value || '').trim().toLowerCase();
+    if (!email) return;
+    const success = document.getElementById('newsletterSuccess');
+    try {
+      const res = await fetch('https://nhxqcavianozskxgfcbt.supabase.co/rest/v1/newsletter_subscribers', {
+        method: 'POST',
+        headers: {
+          'apikey': 'sb_publishable_59Pg7368sxCT6y3j9nNw0g_i8ILGRZ3',
+          'Authorization': 'Bearer sb_publishable_59Pg7368sxCT6y3j9nNw0g_i8ILGRZ3',
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({ email: email, source: window.location.pathname })
+      });
+      if (!res.ok && res.status !== 409) {
+        // 409 = duplicate (déjà inscrit), on considère ça comme un succès
+        console.warn('[Newsletter] HTTP', res.status, await res.text());
+      } else {
+        console.log('[Newsletter] OK :', email);
+      }
+    } catch (e) {
+      console.warn('[Newsletter] Erreur réseau :', e);
+    }
+    form.style.display = 'none';
+    if (success) success.classList.add('show');
+  }
+// ============ DROPDOWN ESPACE PRO ============
+  function toggleDropdown(e) {
+    if (e) e.stopPropagation();
+    const dd = document.getElementById('navDropdown');
+    if (dd) dd.classList.toggle('open');
+  }
+  function closeDropdown() {
+    const dd = document.getElementById('navDropdown');
+    if (dd) dd.classList.remove('open');
+  }
+  document.addEventListener('click', function(e) {
+    const dd = document.getElementById('navDropdown');
+    if (dd && !dd.contains(e.target)) dd.classList.remove('open');
+  });
+
+
+  // ============ MODAL NIVEAUX D'AVANTAGES ============
+  function toggleLevelsModal() {
+    const m = document.getElementById('levelsModal');
+    if (!m) return;
+    const isOpen = m.classList.toggle('open');
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  }
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      const m = document.getElementById('levelsModal');
+      if (m && m.classList.contains('open')) {
+        m.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+    }
+  });
+
+</script>
+
+
+<!-- ============ MODAL NIVEAUX D'AVANTAGES ============ -->
+<div class="levels-modal-overlay" id="levelsModal" onclick="if(event.target.id==='levelsModal') toggleLevelsModal()">
+  <div class="levels-modal">
+    <button class="levels-modal-close" onclick="toggleLevelsModal()" aria-label="Fermer">✕</button>
+    <div class="levels-modal-eyebrow">PROGRAMME DE FIDÉLITÉ</div>
+    <h2 class="levels-modal-title">Les 4 niveaux d'avantages</h2>
+    <p class="levels-modal-subtitle">Crée ton compte fan et débloque des avantages exclusifs.</p>
+
+    <div class="level-card">
+      <div class="level-head">
+        <span class="level-emoji">👤</span>
+        <span class="level-name">FAN</span>
+        <span class="level-tag">Gratuit</span>
+      </div>
+      <ul class="level-list">
+        <li>Accès au Wall of Fans et aux concours</li>
+        <li>Newsletter exclusive avec les nouvelles dates</li>
+        <li>Vote pour la chanson surprise en concert</li>
+      </ul>
+    </div>
+
+    <div class="level-card">
+      <div class="level-head">
+        <span class="level-emoji">⭐</span>
+        <span class="level-name">VIP</span>
+        <span class="level-tag">Atteint par engagement</span>
+      </div>
+      <ul class="level-list">
+        <li>Tous les avantages FAN</li>
+        <li>Badge VIP sur le Wall of Fans</li>
+        <li>Concours exclusifs réservés VIP</li>
+        <li>Notifications prioritaires</li>
+      </ul>
+    </div>
+
+    <div class="level-card or">
+      <div class="level-head">
+        <span class="level-emoji">🥇</span>
+        <span class="level-name">OR</span>
+        <span class="level-tag" style="color:var(--gold);font-weight:700;">−10% sur les billets</span>
+      </div>
+      <ul class="level-list">
+        <li>Tous les avantages VIP</li>
+        <li><strong style="color:var(--gold);">Tarif réduit −10%</strong> sur ~90% des dates</li>
+        <li>Accès anticipé aux nouvelles tournées</li>
+        <li>Cadeaux et goodies exclusifs</li>
+      </ul>
+    </div>
+
+    <div class="level-card platine">
+      <div class="level-head">
+        <span class="level-emoji">💎</span>
+        <span class="level-name">PLATINE</span>
+        <span class="level-tag" style="color:#b3d4f5;font-weight:700;">L'élite TWOQ</span>
+      </div>
+      <ul class="level-list">
+        <li>Tous les avantages OR</li>
+        <li>Accès backstage exclusif sur dates sélectionnées</li>
+        <li>Meet &amp; greet avec Fred et l'équipe</li>
+        <li>Invitations aux événements privés TWOQ</li>
+      </ul>
+    </div>
+
+    <div class="levels-modal-footer">
+      <p>Inscription gratuite · 1 minute · Aucun spam</p>
+      <a href="https://app.theworldofqueen.com" target="_blank" class="levels-modal-cta">Je crée mon compte →</a>
+    </div>
+  </div>
+</div>
+
+
+<style>a.date-row{color:inherit;text-decoration:none;}</style>
+<script>
+/* Hub SEO /concerts/ : les lignes de date deviennent des liens vers la page de présentation */
+function _seoConcertUrl(d){
+  var MOIS=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+  var dt=new Date(d.date_concert+'T00:00:00');
+  var v=(d.ville||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+  return 'https://www.theworldofqueen.com/concerts/concert-queen-'+v+'-'+dt.getDate()+'-'+MOIS[dt.getMonth()]+'-'+dt.getFullYear()+'/';
+}
+function renderDateRow(d){
+  var dt=new Date(d.date_concert+'T00:00:00');
+  var moisCourt=['JAN','FÉV','MAR','AVR','MAI','JUIN','JUIL','AOÛT','SEP','OCT','NOV','DÉC'];
+  var statut=(d.statut_public||'').toUpperCase();
+  var badge='',extra='';
+  if(statut==='COMPLET'){badge='<span class="status-badge complet">COMPLET</span>';extra='complet';}
+  else if(statut==='BIENTOT'||statut==='BIENTÔT'||statut==='BIENTOT_EN_VENTE'){badge='<span class="status-badge bientot">BIENTÔT</span>';extra='bientot';}
+  return '<a class="date-row '+extra+'" href="'+_seoConcertUrl(d)+'">'
+    +'<div class="date-box"><div class="date-num">'+dt.getDate()+'</div><div class="date-mois">'+moisCourt[dt.getMonth()]+'</div></div>'
+    +'<div class="date-info"><div class="date-ville">'+escapeHtml(d.ville||'')+badge+'</div><div class="date-salle">'+escapeHtml(d.nom_salle||'')+'</div></div>'
+    +'<div class="date-arrow">→</div></a>';
+}
+function attachRowHandlers(){}
+</script>
+
+</body>
+</html>
