@@ -220,6 +220,7 @@ function fanGateMarkup(ev, fanUrl) {
           if(!email||email.indexOf('@')<1||email.lastIndexOf('.')<email.indexOf('@')+2||email.lastIndexOf('.')>=email.length-1){if(i){i.style.borderColor='#8B0000';i.focus();}return;}
           var b=$('fanGateBtn');if(b){b.textContent='Un instant\u2026';b.disabled=true;}
           try{fetch('${SUPABASE_URL}/rest/v1/newsletter_subscribers',{method:'POST',keepalive:true,headers:{'apikey':'${SUPABASE_PUB}','Authorization':'Bearer ${SUPABASE_PUB}','Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({email:email,source:SRC})}).catch(function(){});}catch(err){}
+          try{if(window.fbq)fbq('track','Lead',{content_name:SRC});}catch(e){}
           window.location.href=BK;
         };
         var g=$('fanGate');if(g)g.addEventListener('click',function(e){if(e.target===this)twoqFanClose();});
@@ -484,6 +485,11 @@ function renderPage(ev, others) {
   footer .soc a{color:var(--or);letter-spacing:.1em;text-transform:uppercase;font-size:.72rem}
   @media(max-width:560px){.infos{grid-template-columns:1fr}.others ul{grid-template-columns:1fr}}
 </style>
+<!-- Meta Pixel -->
+<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','692674530241748');fbq('track','PageView');</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=692674530241748&ev=PageView&noscript=1"/></noscript>
+<script>document.addEventListener('click',function(e){var a=(e.target&&e.target.closest)?e.target.closest('a[href]'):null;if(!a)return;var h=(a.href||'').toLowerCase();if(h.indexOf('ticketmaster')>-1||h.indexOf('fnac')>-1||h.indexOf('digitick')>-1||h.indexOf('seetickets')>-1||h.indexOf('billetterie')>-1){if(window.fbq)fbq('track','InitiateCheckout');}},true);</script>
+<!-- End Meta Pixel -->
 </head>
 <body>
   <header class="site-header">
@@ -746,6 +752,10 @@ function renderIndex(events) {
   footer .soc a{color:var(--or);letter-spacing:.1em;text-transform:uppercase;font-size:.72rem}
   @media(max-width:560px){ul.dates li{flex-direction:column}ul.dates li a.d-main{flex-direction:column;align-items:flex-start;gap:8px}.d-right{text-align:left}a.d-book{justify-content:center;padding:13px}}
 </style>
+<!-- Meta Pixel -->
+<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','692674530241748');fbq('track','PageView');</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=692674530241748&ev=PageView&noscript=1"/></noscript>
+<!-- End Meta Pixel -->
 </head>
 <body>
   <header>
@@ -844,7 +854,7 @@ function buildHubFromTemplate(events, tpl) {
   let html = tpl;
 
   // 1) <base> + canonical : liens relatifs vers la racine, et URL canonique = /concerts/
-  html = html.replace('<head>', `<head>\n<base href="${SITE_ORIGIN}/">\n<link rel="canonical" href="${SITE_ORIGIN}/${OUTPUT_DIR}/">`);
+  html = html.replace('<head>', `<head>\n<base href="${SITE_ORIGIN}/">\n<link rel="canonical" href="${SITE_ORIGIN}/${OUTPUT_DIR}/">\n<!-- Meta Pixel -->\n<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','692674530241748');fbq('track','PageView');</script>\n<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=692674530241748&ev=PageView&noscript=1"/></noscript>\n<!-- End Meta Pixel -->`);
 
   // 2) Nav "DATES" -> pointe vers la page elle-même
   html = html.replace(
