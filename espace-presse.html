@@ -640,11 +640,14 @@
     </a>
   </div>
 
-  <div class="resource-card soon">
+  <div class="resource-card" onclick="openResModal('teaser')" style="cursor:pointer;">
     <div class="resource-icon">🎬</div>
     <div class="resource-title">Teaser & vidéos officielles</div>
     <div class="resource-desc">Extraits du show, teaser de la tournée 2026, captations live — pour vos diffusions médias.</div>
-    <span class="resource-soon-badge">⏳ En cours</span>
+    <a href="#" onclick="event.preventDefault(); event.stopPropagation(); openResModal('teaser');" class="kit-version-btn">
+      <span>📂</span>
+      <span>Voir les dossiers</span>
+    </a>
   </div>
 
   <div class="resource-card soon">
@@ -849,16 +852,17 @@
       title: 'Photos officielles HD',
       sub: 'Visuels libres de droits pour publication — crédits photos : @michel barsby & @sarahprost.',
       items: [
-        { label: 'Photos — Tournée L\'Éternelle Légende (en cours)', url: 'https://www.dropbox.com/scl/fo/jho1669a9683s0abq8nhz/AAJ3dJoM_3znzEPYpTMWoA8?rlkey=5i0e7897jnpl8oikg9gkcxp7s&dl=0' },
-        { label: 'Photos — Tournée L\'Hommage à la Légende (terminée)', url: 'https://www.dropbox.com/scl/fo/csrcdx3jkv4j8ddmcexk2/ABi2uXda0J2poKKCm-R62E4?rlkey=e5dgrt02sljc5mk8qxynbfawv&dl=0' }
+        { label: 'Photos — Tournée L\'Hommage à la Légende (terminée)', url: 'https://www.dropbox.com/scl/fo/csrcdx3jkv4j8ddmcexk2/ABi2uXda0J2poKKCm-R62E4?rlkey=e5dgrt02sljc5mk8qxynbfawv&dl=0' },
+        { label: 'Photos — Tournée L\'Éternelle Légende (en cours)', url: 'https://www.dropbox.com/scl/fo/jho1669a9683s0abq8nhz/AAJ3dJoM_3znzEPYpTMWoA8?rlkey=5i0e7897jnpl8oikg9gkcxp7s&dl=0' }
       ]
     },
     teaser: {
       icon: '🎬',
       title: 'Teaser & vidéos officielles',
-      sub: 'Extraits du show, teaser de la tournée 2026, captations live.',
+      sub: 'Extraits du show, teaser de la tournée, captations live — choisissez le show.',
       items: [
-        // { label: 'Teaser officiel 2026 (YouTube)', url: 'COLLE_LE_LIEN_ICI' },
+        { label: 'Vidéos — Tournée L\'Hommage à la Légende (terminée)', url: 'https://www.dropbox.com/scl/fo/cnq28j0bvmr0nafl52ouv/APMPDHREA_w3Tk8mAuZt-Q8?rlkey=pd1n7q5z5sj6sx6fxuxfbmt9s&dl=0' },
+        { label: 'Vidéos — Tournée L\'Éternelle Légende (en cours)', url: 'https://www.dropbox.com/scl/fo/619gwbx0u24f21fs650y0/ANxoIbZxJI57D9bwLsCRbjU?rlkey=0e7k70fpsy169q66pez6hkibh&dl=0' }
       ]
     },
     logos: {
