@@ -77,7 +77,10 @@
   .contact-banner {
     max-width: 900px;
     margin: 30px auto 50px;
-    background: linear-gradient(135deg, rgba(139, 0, 0, 0.18), rgba(212, 175, 55, 0.08));
+    background:
+      linear-gradient(135deg, rgba(10,10,10,0.88), rgba(20,20,20,0.70)),
+      linear-gradient(135deg, rgba(139, 0, 0, 0.25), rgba(212, 175, 55, 0.12)),
+      url('img/contact-presse-bg.jpg') center/cover no-repeat;
     border: 2px solid var(--gold);
     border-radius: 22px;
     padding: 36px 30px;
@@ -196,6 +199,8 @@
     margin-bottom: 16px;
   }
   .resource-card.soon .resource-icon { background: linear-gradient(135deg, rgba(212,175,55,0.3), rgba(139,116,38,0.3)); color: rgba(0,0,0,0.5); }
+  .resource-icon.has-photo { background: none; padding: 0; overflow: hidden; }
+  .resource-icon img { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; display: block; }
   .resource-title { font-family: var(--serif); color: var(--cream); font-size: 18px; font-weight: 500; margin-bottom: 8px; letter-spacing: 0.5px; }
   .resource-desc { color: var(--smoke); font-size: 13px; line-height: 1.5; margin-bottom: 16px; }
   .resource-soon-badge { display: inline-block; background: rgba(212,175,55,0.15); border: 1px dashed rgba(212,175,55,0.4); color: var(--gold-pale); padding: 5px 14px; border-radius: 999px; font-size: 10px; letter-spacing: 1.5px; font-weight: 700; text-transform: uppercase; }
@@ -614,7 +619,7 @@
   </div>
 
   <div class="resource-card" onclick="openResModal('visuels')" style="cursor:pointer;">
-    <div class="resource-icon">🎨</div>
+    <div class="resource-icon has-photo"><img src="img/icon-visuels.jpg" alt="Visuels officiels"></div>
     <div class="resource-title">Visuels officiels & pitch</div>
     <div class="resource-desc">Affiches, visuels promotionnels et clés de communication TWOQ — pour vos publications et supports médias.</div>
     <a href="#" onclick="event.preventDefault(); event.stopPropagation(); openResModal('visuels');" class="kit-version-btn">
