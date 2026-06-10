@@ -619,7 +619,7 @@
   </div>
 
   <div class="resource-card" onclick="openResModal('visuels')" style="cursor:pointer;">
-    <div class="resource-icon has-photo"><img src="img/icon-visuels.jpg" alt="Visuels officiels"></div>
+    <div class="resource-icon has-photo"><img src="img/icon-visuels.jpg" alt="Visuels officiels" onerror="this.parentNode.classList.remove('has-photo'); this.parentNode.textContent='🖼️';"></div>
     <div class="resource-title">Visuels officiels & pitch</div>
     <div class="resource-desc">Affiches, visuels promotionnels et clés de communication TWOQ — pour vos publications et supports médias.</div>
     <a href="#" onclick="event.preventDefault(); event.stopPropagation(); openResModal('visuels');" class="kit-version-btn">
