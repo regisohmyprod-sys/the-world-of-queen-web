@@ -199,6 +199,23 @@
   .resource-title { font-family: var(--serif); color: var(--cream); font-size: 18px; font-weight: 500; margin-bottom: 8px; letter-spacing: 0.5px; }
   .resource-desc { color: var(--smoke); font-size: 13px; line-height: 1.5; margin-bottom: 16px; }
   .resource-soon-badge { display: inline-block; background: rgba(212,175,55,0.15); border: 1px dashed rgba(212,175,55,0.4); color: var(--gold-pale); padding: 5px 14px; border-radius: 999px; font-size: 10px; letter-spacing: 1.5px; font-weight: 700; text-transform: uppercase; }
+
+  /* ============ MODULE RESSOURCES — POPUP DÉTAIL DOSSIERS ============ */
+  .res-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.78); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 9999; padding: 20px; }
+  .res-modal-overlay.open { display: flex; }
+  .res-modal { background: var(--charcoal); border: 1px solid rgba(212,175,55,0.4); border-radius: 18px; max-width: 460px; width: 100%; padding: 34px 28px 30px; position: relative; box-shadow: 0 24px 60px rgba(0,0,0,0.6); animation: resModalIn 0.25s ease; max-height: 85vh; overflow-y: auto; }
+  @keyframes resModalIn { from { opacity: 0; transform: translateY(16px) scale(0.98); } to { opacity: 1; transform: none; } }
+  .res-modal-close { position: absolute; top: 14px; right: 16px; background: none; border: none; color: var(--smoke); font-size: 20px; cursor: pointer; line-height: 1; transition: color 0.2s; }
+  .res-modal-close:hover { color: var(--gold); }
+  .res-modal-icon { font-size: 34px; text-align: center; margin-bottom: 8px; }
+  .res-modal-title { font-family: var(--serif); color: var(--cream); font-size: 22px; text-align: center; margin: 0 0 4px; letter-spacing: 0.5px; }
+  .res-modal-sub { color: var(--smoke); font-size: 13px; text-align: center; margin: 0 0 22px; line-height: 1.4; }
+  .res-modal-list { display: flex; flex-direction: column; gap: 10px; }
+  .res-modal-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: rgba(212,175,55,0.07); border: 1px solid rgba(212,175,55,0.25); border-radius: 12px; padding: 14px 16px; text-decoration: none; transition: background 0.2s, border-color 0.2s, transform 0.2s; }
+  .res-modal-item:hover { background: rgba(212,175,55,0.14); border-color: rgba(212,175,55,0.55); transform: translateY(-2px); }
+  .res-modal-item-label { color: var(--cream); font-size: 14px; font-weight: 500; }
+  .res-modal-item-arrow { color: var(--gold); font-size: 16px; flex-shrink: 0; }
+  .res-modal-empty { text-align: center; color: var(--gold-pale); font-size: 13px; padding: 18px; border: 1px dashed rgba(212,175,55,0.4); border-radius: 12px; }
   .resource-action {
     display: inline-flex; align-items: center; gap: 8px;
     background: var(--gold); color: var(--noir);
@@ -436,11 +453,6 @@
   /* ============ FIN CHARTE TYPOGRAPHIQUE ============ */
 
 </style>
-<!-- Meta Pixel -->
-<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','692674530241748');fbq('track','PageView');</script>
-<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=692674530241748&ev=PageView&noscript=1"/></noscript>
-<script>document.addEventListener('click',function(e){var a=(e.target&&e.target.closest)?e.target.closest('a[href]'):null;if(!a)return;var h=(a.href||'').toLowerCase();if(h.indexOf('ticketmaster')>-1||h.indexOf('fnac')>-1||h.indexOf('digitick')>-1||h.indexOf('seetickets')>-1||h.indexOf('billetterie')>-1){if(window.fbq)fbq('track','InitiateCheckout');}},true);</script>
-<!-- End Meta Pixel -->
 </head>
 <body>
 
@@ -573,7 +585,7 @@
             <div class="kit-version-period">Tournée 2022 → mai 2026</div>
           </div>
         </div>
-        <div class="kit-version-desc">Le show originel — le tribute incontournable qui a accueilli plus de 1,3 million de spectateurs.</div>
+        <div class="kit-version-desc">Le show originel — le tribute incontournable qui a accueilli plus d'un million de spectateurs.</div>
         <!-- POULETTE : remplace le href ci-dessous par l'URL du kit de presse Hommage -->
         <a href="#" onclick="event.preventDefault(); requestKit('hommage');" class="kit-version-btn">
           <span>📥</span>
@@ -615,11 +627,14 @@
     <span class="resource-soon-badge">⏳ En cours</span>
   </div>
 
-  <div class="resource-card soon">
+  <div class="resource-card" onclick="openResModal('visuels')" style="cursor:pointer;">
     <div class="resource-icon">🎨</div>
     <div class="resource-title">Visuels officiels</div>
     <div class="resource-desc">Affiches, visuels promotionnels et clés de communication TWOQ — pour vos publications et supports médias.</div>
-    <span class="resource-soon-badge">⏳ En cours</span>
+    <a href="#" onclick="event.preventDefault(); event.stopPropagation(); openResModal('visuels');" class="kit-version-btn">
+      <span>📂</span>
+      <span>Voir les dossiers</span>
+    </a>
   </div>
 
   <div class="resource-card soon">
@@ -811,6 +826,80 @@
     if (dd && !dd.contains(e.target)) dd.classList.remove('open');
   });
 
+  // ============ MODULE RESSOURCES — DOSSIERS DÉTAILLÉS ============
+  // POULETTE : pour ajouter un dossier, ajoute une ligne { label: "...", url: "LIEN_DROPBOX" }
+  // dans la liste "items" de la catégorie concernée. C'est tout.
+  const PRESS_RESOURCES = {
+    visuels: {
+      icon: '🎨',
+      title: 'Visuels officiels',
+      sub: 'Affiches, visuels promo & clés de communication — choisissez le dossier.',
+      items: [
+        { label: 'Visuels — Tournée L\'Éternelle Légende', url: 'https://www.dropbox.com/scl/fo/o0246f6uz2x4xjr8or66o/h?rlkey=xcljic4u3mg6b7dekxfu6p3j4&dl=0' }
+        // { label: 'Visuels — Dôme de Paris 28/11/2026', url: 'COLLE_LE_LIEN_DROPBOX_ICI' },
+        // { label: 'Visuels — Affiche générique tournée', url: 'COLLE_LE_LIEN_DROPBOX_ICI' },
+      ]
+    },
+    photos: {
+      icon: '📸',
+      title: 'Photos officielles HD',
+      sub: 'Visuels libres de droits : photos de scène, portraits Fred Caramia, équipe.',
+      items: [
+        // { label: 'Photos — Concert (live)', url: 'COLLE_LE_LIEN_DROPBOX_ICI' },
+        // { label: 'Photos — Portraits Fred Caramia', url: 'COLLE_LE_LIEN_DROPBOX_ICI' },
+      ]
+    },
+    teaser: {
+      icon: '🎬',
+      title: 'Teaser & vidéos officielles',
+      sub: 'Extraits du show, teaser de la tournée 2026, captations live.',
+      items: [
+        // { label: 'Teaser officiel 2026 (YouTube)', url: 'COLLE_LE_LIEN_ICI' },
+      ]
+    },
+    logos: {
+      icon: '🎨',
+      title: 'Logos & charte graphique',
+      sub: 'Logos officiels TWOQ HD (PNG, SVG, EPS) pour vos publications.',
+      items: [
+        // { label: 'Logos TWOQ (pack complet)', url: 'COLLE_LE_LIEN_DROPBOX_ICI' },
+      ]
+    },
+    articles: {
+      icon: '📄',
+      title: 'Articles de presse',
+      sub: 'La revue de presse TWOQ — presse écrite, web, radios et télés.',
+      items: [
+        // { label: 'Revue de presse 2026 (PDF)', url: 'COLLE_LE_LIEN_ICI' },
+      ]
+    }
+  };
+
+  function openResModal(key) {
+    const data = PRESS_RESOURCES[key];
+    if (!data) return;
+    document.getElementById('resModalIcon').textContent = data.icon;
+    document.getElementById('resModalTitle').textContent = data.title;
+    document.getElementById('resModalSub').textContent = data.sub;
+    const list = document.getElementById('resModalList');
+    if (!data.items || data.items.length === 0) {
+      list.innerHTML = '<div class="res-modal-empty">⏳ Dossiers en cours de préparation — contactez Régis directement.</div>';
+    } else {
+      list.innerHTML = data.items.map(function(it) {
+        return '<a class="res-modal-item" href="' + it.url + '" target="_blank" rel="noopener">'
+             + '<span class="res-modal-item-label">' + it.label + '</span>'
+             + '<span class="res-modal-item-arrow">📥</span></a>';
+      }).join('');
+    }
+    document.getElementById('resModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeResModal() {
+    document.getElementById('resModal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeResModal(); });
+
   // ============ KIT DE PRESSE ============
   // Quand le PDF est en ligne, remplace ces URLs :
   const KIT_PRESSE_URLS = {
@@ -927,6 +1016,17 @@
   }
 </script>
 <!-- 📊 OMP Analytics tracker (site web TWOQ) -->
+<!-- MODULE RESSOURCES — popup détail dossiers -->
+<div class="res-modal-overlay" id="resModal" onclick="if(event.target===this)closeResModal()">
+  <div class="res-modal" role="dialog" aria-modal="true">
+    <button class="res-modal-close" onclick="closeResModal()" aria-label="Fermer">✕</button>
+    <div class="res-modal-icon" id="resModalIcon">🎨</div>
+    <h3 class="res-modal-title" id="resModalTitle">Ressource</h3>
+    <p class="res-modal-sub" id="resModalSub"></p>
+    <div class="res-modal-list" id="resModalList"></div>
+  </div>
+</div>
+
 <script src="analytics.js" defer></script>
 
 </body>
