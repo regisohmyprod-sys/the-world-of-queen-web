@@ -613,11 +613,14 @@
     </div>
   </div>
 
-  <div class="resource-card soon">
-    <div class="resource-icon">📄</div>
-    <div class="resource-title">Articles de presse</div>
-    <div class="resource-desc">La revue de presse de TWOQ — articles parus dans la presse écrite, web, radios et télés.</div>
-    <span class="resource-soon-badge">⏳ En cours</span>
+  <div class="resource-card" onclick="openResModal('visuels')" style="cursor:pointer;">
+    <div class="resource-icon">🎨</div>
+    <div class="resource-title">Visuels officiels</div>
+    <div class="resource-desc">Affiches, visuels promotionnels et clés de communication TWOQ — pour vos publications et supports médias.</div>
+    <a href="#" onclick="event.preventDefault(); event.stopPropagation(); openResModal('visuels');" class="kit-version-btn">
+      <span>📂</span>
+      <span>Voir les dossiers</span>
+    </a>
   </div>
 
   <div class="resource-card" onclick="openResModal('photos')" style="cursor:pointer;">
@@ -625,16 +628,6 @@
     <div class="resource-title">Photos officielles HD</div>
     <div class="resource-desc">Visuels libres de droits pour publication — crédits photos&nbsp;: @michel barsby &amp; @sarahprost.</div>
     <a href="#" onclick="event.preventDefault(); event.stopPropagation(); openResModal('photos');" class="kit-version-btn">
-      <span>📂</span>
-      <span>Voir les dossiers</span>
-    </a>
-  </div>
-
-  <div class="resource-card" onclick="openResModal('visuels')" style="cursor:pointer;">
-    <div class="resource-icon">🎨</div>
-    <div class="resource-title">Visuels officiels</div>
-    <div class="resource-desc">Affiches, visuels promotionnels et clés de communication TWOQ — pour vos publications et supports médias.</div>
-    <a href="#" onclick="event.preventDefault(); event.stopPropagation(); openResModal('visuels');" class="kit-version-btn">
       <span>📂</span>
       <span>Voir les dossiers</span>
     </a>
@@ -654,6 +647,13 @@
     <div class="resource-icon">🎨</div>
     <div class="resource-title">Logos & charte graphique</div>
     <div class="resource-desc">Logos officiels TWOQ haute définition (PNG, SVG, EPS) pour vos publications.</div>
+    <span class="resource-soon-badge">⏳ En cours</span>
+  </div>
+
+  <div class="resource-card soon">
+    <div class="resource-icon">📄</div>
+    <div class="resource-title">Articles de presse</div>
+    <div class="resource-desc">La revue de presse de TWOQ — articles parus dans la presse écrite, web, radios et télés.</div>
     <span class="resource-soon-badge">⏳ En cours</span>
   </div>
 
