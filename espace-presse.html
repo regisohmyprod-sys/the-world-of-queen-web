@@ -615,7 +615,7 @@
 
   <div class="resource-card" onclick="openResModal('visuels')" style="cursor:pointer;">
     <div class="resource-icon">🎨</div>
-    <div class="resource-title">Visuels officiels</div>
+    <div class="resource-title">Visuels officiels & pitch</div>
     <div class="resource-desc">Affiches, visuels promotionnels et clés de communication TWOQ — pour vos publications et supports médias.</div>
     <a href="#" onclick="event.preventDefault(); event.stopPropagation(); openResModal('visuels');" class="kit-version-btn">
       <span>📂</span>
@@ -640,6 +640,46 @@
     <a href="#" onclick="event.preventDefault(); event.stopPropagation(); openResModal('teaser');" class="kit-version-btn">
       <span>📂</span>
       <span>Voir les dossiers</span>
+    </a>
+  </div>
+
+  <div class="resource-card" onclick="openResModal('extraits')" style="cursor:pointer;">
+    <div class="resource-icon">🎥</div>
+    <div class="resource-title">Extraits live</div>
+    <div class="resource-desc">Captations live du show en concert — pour vos diffusions médias.</div>
+    <a href="#" onclick="event.preventDefault(); event.stopPropagation(); openResModal('extraits');" class="kit-version-btn">
+      <span>📂</span>
+      <span>Voir les dossiers</span>
+    </a>
+  </div>
+
+  <div class="resource-card" onclick="window.open('https://www.dropbox.com/scl/fo/dsrpe2v100zu7cxzpaf8o/AEsa5ZNcUPvOGw5niMvh2UI?rlkey=3g7xtui6g6yuf0updwbu717oy&dl=0','_blank','noopener')" style="cursor:pointer;">
+    <div class="resource-icon">📱</div>
+    <div class="resource-title">Reels / Vidéos courtes / Réseaux sociaux</div>
+    <div class="resource-desc">Formats courts prêts à publier pour vos réseaux sociaux — Reels, Shorts, TikTok.</div>
+    <a href="https://www.dropbox.com/scl/fo/dsrpe2v100zu7cxzpaf8o/AEsa5ZNcUPvOGw5niMvh2UI?rlkey=3g7xtui6g6yuf0updwbu717oy&dl=0" target="_blank" rel="noopener" onclick="event.stopPropagation();" class="kit-version-btn">
+      <span>📥</span>
+      <span>Voir les vidéos</span>
+    </a>
+  </div>
+
+  <div class="resource-card" onclick="window.open('https://www.dropbox.com/scl/fo/o3dru32st07vv6a5cmg8z/ALmWxhXFKDdCF28nSBONXJw?rlkey=tv6d90xh1ukhx6vmo6l12ymcf&dl=0','_blank','noopener')" style="cursor:pointer;">
+    <div class="resource-icon">📺</div>
+    <div class="resource-title">Émission TV / Radios</div>
+    <div class="resource-desc">Passages TV et radios du show TWOQ — captations et extraits pour vos diffusions médias.</div>
+    <a href="https://www.dropbox.com/scl/fo/o3dru32st07vv6a5cmg8z/ALmWxhXFKDdCF28nSBONXJw?rlkey=tv6d90xh1ukhx6vmo6l12ymcf&dl=0" target="_blank" rel="noopener" onclick="event.stopPropagation();" class="kit-version-btn">
+      <span>📥</span>
+      <span>Voir les passages</span>
+    </a>
+  </div>
+
+  <div class="resource-card" onclick="window.open('https://www.dropbox.com/scl/fo/ckl6w6lyt5x96r7y7jo9u/h?rlkey=ne7hrh0yc3siuljya85taz2ys&dl=0','_blank','noopener')" style="cursor:pointer;">
+    <div class="resource-icon">🔊</div>
+    <div class="resource-title">Sons pour promo</div>
+    <div class="resource-desc">Pistes audio et jingles officiels TWOQ — prêts pour vos spots radio et habillages.</div>
+    <a href="https://www.dropbox.com/scl/fo/ckl6w6lyt5x96r7y7jo9u/h?rlkey=ne7hrh0yc3siuljya85taz2ys&dl=0" target="_blank" rel="noopener" onclick="event.stopPropagation();" class="kit-version-btn">
+      <span>📥</span>
+      <span>Voir les sons</span>
     </a>
   </div>
 
@@ -844,7 +884,7 @@
   const PRESS_RESOURCES = {
     visuels: {
       icon: '🎨',
-      title: 'Visuels officiels',
+      title: 'Visuels officiels & pitch',
       sub: 'Affiches, visuels promo & clés de communication — choisissez le dossier.',
       items: [
         { label: 'Visuels — Tournée L\'Éternelle Légende (en cours)', url: 'https://www.dropbox.com/scl/fo/uvy1o9novvveev31zaebk/AJ-8AupVyQ-Hn2SOOofxmPA?rlkey=5kxzatktuem5risdht5xlbp4z&dl=0' },
@@ -869,6 +909,16 @@
       items: [
         { label: 'Vidéos — Tournée L\'Hommage à la Légende (terminée)', url: 'https://www.dropbox.com/scl/fo/cnq28j0bvmr0nafl52ouv/APMPDHREA_w3Tk8mAuZt-Q8?rlkey=pd1n7q5z5sj6sx6fxuxfbmt9s&dl=0' },
         { label: 'Vidéos — Tournée L\'Éternelle Légende (en cours)', url: 'https://www.dropbox.com/scl/fo/619gwbx0u24f21fs650y0/ANxoIbZxJI57D9bwLsCRbjU?rlkey=0e7k70fpsy169q66pez6hkibh&dl=0' }
+      ]
+    },
+    extraits: {
+      icon: '🎥',
+      title: 'Extraits live',
+      sub: 'Captations live du show en concert — choisissez le show.',
+      items: [
+        { label: 'Extraits live — Tournée L\'Éternelle Légende (en cours)', url: 'https://www.dropbox.com/scl/fo/2e4rydd6zdhmb9liqwyad/ALOIEobSF_sgHQMA55whzM0?rlkey=4nnyisjb8xn1nei8i0pb1cd33&dl=0' }
+        // POULETTE : Hommage en attente — le lien fourni était un doublon de l'Éternelle. Décommente et colle le vrai lien :
+        // { label: 'Extraits live — Tournée L\'Hommage à la Légende (terminée)', url: 'COLLE_LE_VRAI_LIEN_HOMMAGE_ICI' }
       ]
     },
     logos: {
