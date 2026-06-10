@@ -643,18 +643,24 @@
     </a>
   </div>
 
-  <div class="resource-card soon">
+  <div class="resource-card" onclick="openResModal('logos')" style="cursor:pointer;">
     <div class="resource-icon">🎨</div>
     <div class="resource-title">Logos & charte graphique</div>
     <div class="resource-desc">Logos officiels TWOQ haute définition (PNG, SVG, EPS) pour vos publications.</div>
-    <span class="resource-soon-badge">⏳ En cours</span>
+    <a href="#" onclick="event.preventDefault(); event.stopPropagation(); openResModal('logos');" class="kit-version-btn">
+      <span>📂</span>
+      <span>Voir les dossiers</span>
+    </a>
   </div>
 
-  <div class="resource-card soon">
+  <div class="resource-card" onclick="window.open('https://www.dropbox.com/scl/fo/ccm0ieohk08unno5e5ft8/h?rlkey=2xshynx23xqbaoadyhveitlv2&dl=0','_blank','noopener')" style="cursor:pointer;">
     <div class="resource-icon">📄</div>
     <div class="resource-title">Articles de presse</div>
     <div class="resource-desc">La revue de presse de TWOQ — articles parus dans la presse écrite, web, radios et télés.</div>
-    <span class="resource-soon-badge">⏳ En cours</span>
+    <a href="https://www.dropbox.com/scl/fo/ccm0ieohk08unno5e5ft8/h?rlkey=2xshynx23xqbaoadyhveitlv2&dl=0" target="_blank" rel="noopener" onclick="event.stopPropagation();" class="kit-version-btn">
+      <span>📥</span>
+      <span>Voir la revue de presse</span>
+    </a>
   </div>
 
 </div>
@@ -868,9 +874,10 @@
     logos: {
       icon: '🎨',
       title: 'Logos & charte graphique',
-      sub: 'Logos officiels TWOQ HD (PNG, SVG, EPS) pour vos publications.',
+      sub: 'Logos officiels TWOQ HD (PNG, SVG, EPS) — choisissez le show.',
       items: [
-        // { label: 'Logos TWOQ (pack complet)', url: 'COLLE_LE_LIEN_DROPBOX_ICI' },
+        { label: 'Logos — Tournée L\'Éternelle Légende (en cours)', url: 'https://www.dropbox.com/scl/fo/mmu9gwp2afxnn9lrgyo8c/AMb3qciZd7HcOX_XH6rYZzQ?rlkey=eq1geon4cdj1pf0vgxesd31wf&dl=0' },
+        { label: 'Logos — Tournée L\'Hommage à la Légende (terminée)', url: 'https://www.dropbox.com/scl/fo/whltwtg7akmwcoga1doy6/AGlpenV3Go20n7d4EEQmPJ4?rlkey=gnw3cssuk7neysmct0gjgi6ti&dl=0' }
       ]
     },
     articles: {
