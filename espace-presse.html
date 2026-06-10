@@ -620,11 +620,14 @@
     <span class="resource-soon-badge">⏳ En cours</span>
   </div>
 
-  <div class="resource-card soon">
+  <div class="resource-card" onclick="openResModal('photos')" style="cursor:pointer;">
     <div class="resource-icon">📸</div>
     <div class="resource-title">Photos officielles HD</div>
-    <div class="resource-desc">Visuels libres de droits pour publication : photos de scène, portraits Fred Caramia, équipe.</div>
-    <span class="resource-soon-badge">⏳ En cours</span>
+    <div class="resource-desc">Visuels libres de droits pour publication — crédits photos&nbsp;: @michel barsby &amp; @sarahprost.</div>
+    <a href="#" onclick="event.preventDefault(); event.stopPropagation(); openResModal('photos');" class="kit-version-btn">
+      <span>📂</span>
+      <span>Voir les dossiers</span>
+    </a>
   </div>
 
   <div class="resource-card" onclick="openResModal('visuels')" style="cursor:pointer;">
@@ -835,7 +838,8 @@
       title: 'Visuels officiels',
       sub: 'Affiches, visuels promo & clés de communication — choisissez le dossier.',
       items: [
-        { label: 'Visuels — Tournée L\'Éternelle Légende', url: 'https://www.dropbox.com/scl/fo/o0246f6uz2x4xjr8or66o/h?rlkey=xcljic4u3mg6b7dekxfu6p3j4&dl=0' }
+        { label: 'Visuels — Tournée L\'Éternelle Légende (en cours)', url: 'https://www.dropbox.com/scl/fo/uvy1o9novvveev31zaebk/AJ-8AupVyQ-Hn2SOOofxmPA?rlkey=5kxzatktuem5risdht5xlbp4z&dl=0' },
+        { label: 'Visuels — Tournée L\'Hommage à la Légende (terminée)', url: 'https://www.dropbox.com/scl/fo/qdk3cu2hykbhsg66cv6u1/AAv0RvjLmF0cmAJQrH5JkQw?rlkey=lhd2kl7w9ieya6hycenkoy8ir&dl=0' }
         // { label: 'Visuels — Dôme de Paris 28/11/2026', url: 'COLLE_LE_LIEN_DROPBOX_ICI' },
         // { label: 'Visuels — Affiche générique tournée', url: 'COLLE_LE_LIEN_DROPBOX_ICI' },
       ]
@@ -843,10 +847,10 @@
     photos: {
       icon: '📸',
       title: 'Photos officielles HD',
-      sub: 'Visuels libres de droits : photos de scène, portraits Fred Caramia, équipe.',
+      sub: 'Visuels libres de droits pour publication — crédits photos : @michel barsby & @sarahprost.',
       items: [
-        // { label: 'Photos — Concert (live)', url: 'COLLE_LE_LIEN_DROPBOX_ICI' },
-        // { label: 'Photos — Portraits Fred Caramia', url: 'COLLE_LE_LIEN_DROPBOX_ICI' },
+        { label: 'Photos — Tournée L\'Éternelle Légende (en cours)', url: 'https://www.dropbox.com/scl/fo/jho1669a9683s0abq8nhz/AAJ3dJoM_3znzEPYpTMWoA8?rlkey=5i0e7897jnpl8oikg9gkcxp7s&dl=0' },
+        { label: 'Photos — Tournée L\'Hommage à la Légende (terminée)', url: 'https://www.dropbox.com/scl/fo/csrcdx3jkv4j8ddmcexk2/ABi2uXda0J2poKKCm-R62E4?rlkey=e5dgrt02sljc5mk8qxynbfawv&dl=0' }
       ]
     },
     teaser: {
