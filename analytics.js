@@ -238,3 +238,49 @@
   if (window.console) console.log('%c📊 OMP Analytics ON','color:#D4AF37;font-weight:700');
 
 })();
+
+
+/* ════════════════════════════════════════════════════════════════
+   📈 GOOGLE ADS — Conversion « Clic billetterie » (AW-17179539275)
+   Déclenche la conversion Google Ads sur tout clic SORTANT vers une
+   billetterie (Ticketmaster, Fnac, See Tickets, Digitick, etc.).
+   Additif : n'interfère pas avec le tracker OMP ci-dessus.
+   ════════════════════════════════════════════════════════════════ */
+(function() {
+  'use strict';
+  var AW_ID   = 'AW-17179539275';
+  var SEND_TO = 'AW-17179539275/VoIMCIDH7L0cEMvu6_8_';
+
+  // 1) Charger la balise Google (gtag.js) si absente
+  if (typeof window.gtag !== 'function') {
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + AW_ID;
+    document.head.appendChild(s);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function() { window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    window.gtag('config', AW_ID);
+  }
+
+  // 2) Domaines / motifs de billetterie (clic sortant)
+  function isBilletterie(url) {
+    url = (url || '').toLowerCase();
+    return /ticketmaster|fnac\.com|francebillet|seetickets|see-tickets|digitick|weezevent|placeminute|ticketnet|nuitdartistes|nuit-d-artistes|lesderniers|derniers-couches|\/billet|billetterie/.test(url);
+  }
+
+  // 3) Au clic sur un lien sortant de billetterie → conversion Google Ads
+  document.addEventListener('click', function(e) {
+    try {
+      var a = e.target && e.target.closest && e.target.closest('a[href]');
+      if (!a) return;
+      var href = a.getAttribute('href') || '';
+      if (href.indexOf('http') !== 0) return;
+      if (new URL(href).host === location.host) return; // uniquement les clics SORTANTS
+      if (isBilletterie(href) && typeof window.gtag === 'function') {
+        window.gtag('event', 'conversion', { 'send_to': SEND_TO, 'value': 1.0, 'currency': 'EUR' });
+        if (window.console) console.log('%c📈 Google Ads — conversion Clic billetterie envoyée', 'color:#1E7A3D;font-weight:700');
+      }
+    } catch (_) {}
+  }, true);
+})();
