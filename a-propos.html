@@ -49,7 +49,7 @@
           "name": "Quel est le meilleur spectacle hommage à Queen en France ?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "The World of Queen est le spectacle hommage à Queen le plus vu en France, avec plus de 1,3 million de spectateurs et un triomphe au Dôme de Paris. C'est l'hommage français de référence à Freddie Mercury et au groupe Queen."
+            "text": "The World of Queen est le spectacle hommage à Queen le plus vu en France et N°1 des ventes, avec plus de 1,3 million de spectateurs, un triomphe au Dôme de Paris et un taux de satisfaction client de 99,98 %. C'est l'hommage français de référence à Freddie Mercury et au groupe Queen."
           }
         },
         {
@@ -62,10 +62,10 @@
         },
         {
           "@type": "Question",
-          "name": "Où voir The World of Queen en 2026 ?",
+          "name": "Où voir The World of Queen en 2026 et 2027 ?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Le spectacle « L'Éternelle Légende » est en tournée dans toute la France (Narbonne, Lyon, Lille, Rennes, Nantes, Reims, le Dôme de Paris, Le Havre, Limoges et bien d'autres villes). Toutes les dates et la billetterie sont sur theworldofqueen.com."
+            "text": "Le spectacle « L'Éternelle Légende » est en tournée dans toute la France en 2026 et 2027 (Narbonne, Lyon, Lille, Rennes, Nantes, Reims, le Dôme de Paris, Le Havre, Limoges et bien d'autres villes). Toutes les dates et la billetterie sont sur theworldofqueen.com/concerts."
           }
         },
         {
@@ -104,7 +104,7 @@
   /* HEADER */
   .site-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10,10,10,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(212,175,55,0.15); }
   .header-inner { max-width: 1280px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; justify-content: flex-start; gap: 50px; position: relative; min-height: 60px; }
-  .brand { font-family: var(--serif); color: var(--gold); font-size: 16px; letter-spacing: 3px; font-weight: 600; line-height: 1.1; position: absolute; left: 24px; top: 50%; transform: translateY(-50%); text-decoration: none; transition: filter 0.2s, text-shadow 0.2s; cursor: pointer; }
+  .brand { font-family: var(--serif); color: var(--gold); font-size: 16px; letter-spacing: 3px; font-weight: 600; line-height: 1.1; flex-shrink: 0; text-decoration: none; transition: filter 0.2s, text-shadow 0.2s; cursor: pointer; }
   .brand:hover { filter: brightness(1.15); text-shadow: 0 0 14px rgba(212,175,55,0.45); }
   .brand:hover small { color: var(--gold); }
   .brand small { display: block; font-family: var(--sans); color: var(--cream); font-size: 9px; letter-spacing: 4px; font-weight: 400; margin-top: 2px; opacity: 0.8; }
@@ -221,9 +221,9 @@
       <a href="fanzone.html">FAN ZONE</a>
       <a href="medias.html">MÉDIAS</a>
       <a href="boutique.html">🛍️ BOUTIQUE</a>
-      <a href="a-propos.html" class="active">À PROPOS</a>
       <a href="moi.html">MOI</a>
       <a href="contact-prod.html">CONTACT PROD</a>
+      <a href="a-propos.html" class="active">À PROPOS</a>
       <div class="nav-dropdown" id="navDropdown">
         <button type="button" class="nav-dropdown-toggle" onclick="document.getElementById('navDropdown').classList.toggle('open');">ESPACE PRO <span class="chev">▾</span></button>
         <div class="nav-dropdown-menu">
@@ -289,7 +289,7 @@
           <span class="faq-plus">+</span>
         </button>
         <div class="faq-a"><div class="faq-a-inner">
-          <strong>The World of Queen</strong> est le spectacle hommage à Queen le plus vu en France, avec plus de 1,3 million de spectateurs et un triomphe au Dôme de Paris. C'est l'hommage français de référence à Freddie Mercury et au groupe Queen.
+          <strong>The World of Queen</strong> est le spectacle hommage à Queen le plus vu en France et <strong>N°1 des ventes</strong>, avec plus de 1,3 million de spectateurs, un triomphe au Dôme de Paris et un <strong>taux de satisfaction client de 99,98 %</strong>. C'est l'hommage français de référence à Freddie Mercury et au groupe Queen.
         </div></div>
       </div>
 
@@ -305,11 +305,11 @@
 
       <div class="faq-item">
         <button class="faq-q" type="button">
-          <span>Où voir The World of Queen en 2026 ?</span>
+          <span>Où voir The World of Queen en 2026 et 2027 ?</span>
           <span class="faq-plus">+</span>
         </button>
         <div class="faq-a"><div class="faq-a-inner">
-          Le spectacle <strong>« L'Éternelle Légende »</strong> est en tournée dans toute la France (Narbonne, Lyon, Lille, Rennes, Nantes, Reims, le Dôme de Paris, Le Havre, Limoges…). Toutes les dates et la billetterie sont sur <a href="/concerts/" style="color:var(--gold);">theworldofqueen.com</a>.
+          Le spectacle <strong>« L'Éternelle Légende »</strong> est en tournée dans toute la France en <strong>2026 et 2027</strong> (Narbonne, Lyon, Lille, Rennes, Nantes, Reims, le Dôme de Paris, Le Havre, Limoges…). Retrouvez <a href="/concerts/" style="color:var(--gold);font-weight:600;">toutes les dates et la billetterie ici</a>.
         </div></div>
       </div>
 
@@ -420,7 +420,4 @@
   });
 </script>
 <!-- 📊 OMP Analytics tracker (site web TWOQ) -->
-<script src="analytics.js" defer></script>
-
-</body>
-</html>
+<script src="analytics.js" defer></scrip
