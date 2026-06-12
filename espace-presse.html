@@ -476,6 +476,7 @@
       <a href="fanzone.html">FAN ZONE</a>
       <a href="medias.html">MÉDIAS</a>
       <a href="boutique.html">🛍️ BOUTIQUE</a>
+      <a href="a-propos.html">À PROPOS</a>
       <a href="moi.html">MOI</a>
       <a href="contact-prod.html">CONTACT PROD</a>
       <div class="nav-dropdown" id="navDropdown">
@@ -619,7 +620,7 @@
   </div>
 
   <div class="resource-card" onclick="openResModal('visuels')" style="cursor:pointer;">
-    <div class="resource-icon has-photo"><img src="img/icon-visuels.jpg" alt="Visuels officiels" onerror="this.parentNode.classList.remove('has-photo'); this.parentNode.textContent='🖼️';"></div>
+    <div class="resource-icon has-photo"><img src="https://regisohmyprod-sys.github.io/twoq-pwa/icons/affiche-show.jpg" alt="Visuels officiels" onerror="this.parentNode.classList.remove('has-photo'); this.parentNode.textContent='🖼️';"></div>
     <div class="resource-title">Visuels officiels & pitch</div>
     <div class="resource-desc">Affiches, visuels promotionnels et clés de communication TWOQ — pour vos publications et supports médias.</div>
     <a href="#" onclick="event.preventDefault(); event.stopPropagation(); openResModal('visuels');" class="kit-version-btn">
@@ -629,7 +630,7 @@
   </div>
 
   <div class="resource-card" onclick="openResModal('photos')" style="cursor:pointer;">
-    <div class="resource-icon">📸</div>
+    <div class="resource-icon has-photo"><img src="img/icon-photos.jpg" alt="Photos officielles HD" onerror="this.parentNode.classList.remove('has-photo'); this.parentNode.textContent='📸';"></div>
     <div class="resource-title">Photos officielles HD</div>
     <div class="resource-desc">Visuels libres de droits pour publication — crédits photos&nbsp;: @michel barsby &amp; @sarahprost.</div>
     <a href="#" onclick="event.preventDefault(); event.stopPropagation(); openResModal('photos');" class="kit-version-btn">
@@ -639,7 +640,7 @@
   </div>
 
   <div class="resource-card" onclick="openResModal('teaser')" style="cursor:pointer;">
-    <div class="resource-icon">🎬</div>
+    <div class="resource-icon has-photo"><img src="img/icon-teaser.jpg" alt="Teaser & vidéos officielles" onerror="this.parentNode.classList.remove('has-photo'); this.parentNode.textContent='🎬';"></div>
     <div class="resource-title">Teaser & vidéos officielles</div>
     <div class="resource-desc">Extraits du show, teaser de la tournée 2026, captations live — pour vos diffusions médias.</div>
     <a href="#" onclick="event.preventDefault(); event.stopPropagation(); openResModal('teaser');" class="kit-version-btn">
@@ -649,7 +650,7 @@
   </div>
 
   <div class="resource-card" onclick="openResModal('extraits')" style="cursor:pointer;">
-    <div class="resource-icon">🎥</div>
+    <div class="resource-icon has-photo"><img src="img/icon-extraits.jpg" alt="Extraits live" onerror="this.parentNode.classList.remove('has-photo'); this.parentNode.textContent='🎥';"></div>
     <div class="resource-title">Extraits live</div>
     <div class="resource-desc">Captations live du show en concert — pour vos diffusions médias.</div>
     <a href="#" onclick="event.preventDefault(); event.stopPropagation(); openResModal('extraits');" class="kit-version-btn">
@@ -1085,19 +1086,4 @@
     }
   }
 </script>
-<!-- 📊 OMP Analytics tracker (site web TWOQ) -->
-<!-- MODULE RESSOURCES — popup détail dossiers -->
-<div class="res-modal-overlay" id="resModal" onclick="if(event.target===this)closeResModal()">
-  <div class="res-modal" role="dialog" aria-modal="true">
-    <button class="res-modal-close" onclick="closeResModal()" aria-label="Fermer">✕</button>
-    <div class="res-modal-icon" id="resModalIcon">🎨</div>
-    <h3 class="res-modal-title" id="resModalTitle">Ressource</h3>
-    <p class="res-modal-sub" id="resModalSub"></p>
-    <div class="res-modal-list" id="resModalList"></div>
-  </div>
-</div>
-
-<script src="analytics.js" defer></script>
-
-</body>
-</html>
+<!-- 📊 OMP Analytics tracker (site web TWOQ) 
