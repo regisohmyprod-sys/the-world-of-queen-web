@@ -284,3 +284,4 @@
     } catch (_) {}
   }, true);
 })();
+/* AJOUT widget dates : conversion billetterie via postMessage (iframe app.ohmyprod.com) */ (function(){'use strict';var SEND_TO='AW-17179539275/VoIMCIDH7L0cEMvu6_8_';window.addEventListener('message',function(e){try{var host='';try{host=new URL(e.origin).host;}catch(_){return;}if(host!=='ohmyprod.com'&&host!=='app.ohmyprod.com'&&host.indexOf('.ohmyprod.com')===-1)return;var d=e.data;if(d&&d.type==='twoq-billetterie-click'){if(typeof window.gtag==='function'){window.gtag('event','conversion',{'send_to':SEND_TO,'value':1.0,'currency':'EUR'});}if(window.OMP_ANALYTICS){window.OMP_ANALYTICS.conversion('billetterie_widget');}}}catch(_){}});})();
