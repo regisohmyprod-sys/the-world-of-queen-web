@@ -9,12 +9,27 @@
 <!-- End Meta Pixel -->
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Dates de tournée — THE WORLD OF QUEEN — L'Éternelle Légende</title>
-<meta name="description" content="Toutes les dates de tournée de THE WORLD OF QUEEN — L'Éternelle Légende. Réserve ta place dans la ville la plus proche." />
+<title>Dates de tournée 2026-2028 — The World of Queen | Spectacle hommage à Queen</title>
+<meta name="description" content="Toutes les dates de tournée de The World of Queen, le spectacle hommage à Queen et Freddie Mercury. Trouve la date la plus proche de chez toi et réserve ta place." />
+<link rel="canonical" href="https://www.theworldofqueen.com/dates.html" />
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="fr_FR" />
+<meta property="og:site_name" content="The World of Queen" />
+<meta property="og:title" content="Dates de tournée 2026-2028 — The World of Queen" />
+<meta property="og:description" content="Toutes les dates de tournée du spectacle hommage à Queen. Trouve la ville la plus proche et réserve." />
+<meta property="og:url" content="https://www.theworldofqueen.com/dates.html" />
+<meta property="og:image" content="https://regisohmyprod-sys.github.io/twoq-pwa/assets/banner-twoq.jpg" />
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Dates de tournée 2026-2028 — The World of Queen" />
+<meta name="twitter:description" content="Toutes les dates de tournée du spectacle hommage à Queen. Trouve la ville la plus proche et réserve." />
+<meta name="twitter:image" content="https://regisohmyprod-sys.github.io/twoq-pwa/assets/banner-twoq.jpg" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src=analytics.js defer></script>
 <style>
   :root {
     --noir: #0A0A0A;
@@ -1104,6 +1119,7 @@
       <a href="fanzone.html" onclick="closeMenu()">FAN ZONE</a>
       <a href="medias.html" onclick="closeMenu()">MÉDIAS</a>
       <a href="boutique.html" onclick="closeMenu()">🛍️ BOUTIQUE</a>
+      <a href="a-propos.html" onclick="closeMenu()">À PROPOS</a>
       <a href="moi.html" onclick="closeMenu()">MOI</a>
       <a href="contact-prod.html" onclick="closeMenu()">CONTACT PROD</a>
       <div class="nav-dropdown" id="navDropdown">
@@ -2130,6 +2146,70 @@
     bg.appendChild(frag);
   }
 
+  // ===== JSON-LD MusicEvent dynamique (SEO : faire apparaître les dates dans Google) =====
+  function buildEventsJsonLd(dates) {
+    const SITE = 'https://www.theworldofqueen.com';
+    const IMG  = 'https://regisohmyprod-sys.github.io/twoq-pwa/assets/banner-twoq.jpg';
+    return dates.map(d => {
+      const heure = (d.heure_show && /^\d{2}:\d{2}/.test(d.heure_show)) ? d.heure_show.slice(0, 5) : '20:00';
+      const startDate = `${d.date_concert}T${heure}:00+01:00`;
+      const statut = (d.statut_public || '').toUpperCase();
+      const links = d.liens_billetterie || {};
+      const billet = links.ticketmaster || d.lien_billetterie_principal || links.fnac
+        || links.ohmyprod || links.oh_my_prod || links.salle || (SITE + '/dates.html');
+      let availability = 'https://schema.org/InStock';
+      if (statut === 'COMPLET') availability = 'https://schema.org/SoldOut';
+      else if (statut.indexOf('BIENTOT') === 0 || statut === 'BIENTÔT') availability = 'https://schema.org/PreOrder';
+      return {
+        "@context": "https://schema.org",
+        "@type": "MusicEvent",
+        "name": `The World of Queen — ${d.ville || ''}`.trim(),
+        "description": "Spectacle hommage à Queen et Freddie Mercury par The World of Queen.",
+        "startDate": startDate,
+        "eventStatus": "https://schema.org/EventScheduled",
+        "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+        "image": [IMG],
+        "url": SITE + '/dates.html',
+        "location": {
+          "@type": "Place",
+          "name": d.nom_salle || (d.ville || ''),
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": d.ville || '',
+            "addressCountry": "FR"
+          }
+        },
+        "performer": { "@type": "MusicGroup", "name": "The World of Queen" },
+        "organizer": { "@type": "Organization", "name": "Oh My Prod", "url": SITE },
+        "offers": {
+          "@type": "Offer",
+          "url": billet,
+          "availability": availability,
+          "priceCurrency": "EUR"
+        }
+      };
+    });
+  }
+
+  function injectEventsJsonLd(dates) {
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      const upcoming = (dates || []).filter(d => d.date_concert >= today);
+      if (!upcoming.length) return;
+      const events = buildEventsJsonLd(upcoming);
+      const old = document.getElementById('events-jsonld');
+      if (old) old.remove();
+      const s = document.createElement('script');
+      s.type = 'application/ld+json';
+      s.id = 'events-jsonld';
+      s.textContent = JSON.stringify(events);
+      document.head.appendChild(s);
+      console.log(`[SEO] ${events.length} MusicEvent JSON-LD injectés pour Google`);
+    } catch (e) {
+      console.warn('[SEO] Injection JSON-LD events échouée :', e);
+    }
+  }
+
   // ===== Init =====
   (async () => {
     generateTwinkleStars();
@@ -2138,6 +2218,7 @@
     setupRegions();
     setupFilters();
     _allDates = await loadAllDates();
+    injectEventsJsonLd(_allDates);
     applyFilters();
   })();
   // ============ NEWSLETTER ============
