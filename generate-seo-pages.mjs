@@ -486,7 +486,7 @@ function renderPage(ev, others) {
   @media(max-width:560px){.infos{grid-template-columns:1fr}.others ul{grid-template-columns:1fr}}
 </style>
 <!-- Meta Pixel -->
-<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','692674530241748');fbq('track','PageView');</script>
+<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','692674530241748');fbq('track','PageView');</script><script src="/analytics.js" defer></script>
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=692674530241748&ev=PageView&noscript=1"/></noscript>
 <script>document.addEventListener('click',function(e){var a=(e.target&&e.target.closest)?e.target.closest('a[href]'):null;if(!a)return;var h=(a.href||'').toLowerCase();if(h.indexOf('ticketmaster')>-1||h.indexOf('fnac')>-1||h.indexOf('digitick')>-1||h.indexOf('seetickets')>-1||h.indexOf('billetterie')>-1){if(window.fbq)fbq('track','InitiateCheckout');}},true);</script>
 <!-- End Meta Pixel -->
@@ -753,7 +753,7 @@ function renderIndex(events) {
   @media(max-width:560px){ul.dates li{flex-direction:column}ul.dates li a.d-main{flex-direction:column;align-items:flex-start;gap:8px}.d-right{text-align:left}a.d-book{justify-content:center;padding:13px}}
 </style>
 <!-- Meta Pixel -->
-<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','692674530241748');fbq('track','PageView');</script>
+<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','692674530241748');fbq('track','PageView');</script><script src="/analytics.js" defer></script>
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=692674530241748&ev=PageView&noscript=1"/></noscript>
 <!-- End Meta Pixel -->
 </head>
@@ -854,7 +854,7 @@ function buildHubFromTemplate(events, tpl) {
   let html = tpl;
 
   // 1) <base> + canonical : liens relatifs vers la racine, et URL canonique = /concerts/
-  html = html.replace('<head>', `<head>\n<base href="${SITE_ORIGIN}/">\n<link rel="canonical" href="${SITE_ORIGIN}/${OUTPUT_DIR}/">\n<!-- Meta Pixel -->\n<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','692674530241748');fbq('track','PageView');</script>\n<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=692674530241748&ev=PageView&noscript=1"/></noscript>\n<!-- End Meta Pixel -->`);
+  html = html.replace('<head>', `<head>\n<base href="${SITE_ORIGIN}/">\n<link rel="canonical" href="${SITE_ORIGIN}/${OUTPUT_DIR}/">\n<!-- Meta Pixel -->\n<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','692674530241748');fbq('track','PageView');</script><script src="/analytics.js" defer></script>\n<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=692674530241748&ev=PageView&noscript=1"/></noscript>\n<!-- End Meta Pixel -->`);
 
   // 2) Nav "DATES" -> pointe vers la page elle-même
   html = html.replace(
@@ -906,7 +906,7 @@ function attachRowHandlers(){}
    ============================================================ */
 function renderSitemap(events) {
   const today = new Date().toISOString().slice(0, 10);
-  const staticPages = ['/', '/artistes.html', '/fanzone.html', '/medias.html', '/boutique.html', '/contact-prod.html', '/espace-presse.html'];
+  const staticPages = ['/', '/a-propos.html', '/dates.html', '/artistes.html', '/fanzone.html', '/medias.html', '/boutique.html', '/contact-prod.html', '/espace-presse.html'];
   const urls = [
     ...staticPages.map(p => ({ loc: SITE_ORIGIN + p, pri: p === '/' ? '1.0' : '0.7' })),
     { loc: `${SITE_ORIGIN}/${OUTPUT_DIR}/`, pri: '0.95' },   // page-hub des dates (maillage interne)
