@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://www.theworldofqueen.com/</loc><lastmod>2026-06-13</lastmod><priority>1.0</priority></url>
+  <url><loc>https://www.theworldofqueen.com/a-propos.html</loc><lastmod>2026-06-13</lastmod><priority>0.7</priority></url>
+  <url><loc>https://www.theworldofqueen.com/dates.html</loc><lastmod>2026-06-13</lastmod><priority>0.7</priority></url>
   <url><loc>https://www.theworldofqueen.com/artistes.html</loc><lastmod>2026-06-13</lastmod><priority>0.7</priority></url>
   <url><loc>https://www.theworldofqueen.com/fanzone.html</loc><lastmod>2026-06-13</lastmod><priority>0.7</priority></url>
   <url><loc>https://www.theworldofqueen.com/medias.html</loc><lastmod>2026-06-13</lastmod><priority>0.7</priority></url>
